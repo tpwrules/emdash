@@ -4,5 +4,6 @@
 #include "platform.h"
 
 void app_entry();
+void app_timer_interrupt();
 
 #endif

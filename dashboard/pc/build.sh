@@ -2,10 +2,10 @@
 
 cd "$(dirname "$0")"
 
-APP_PATH='../src'
+AP='../src'
 
 # build the application as a shared library
-clang -DPLATFORM_PC -dynamiclib -o libapp.so $APP_PATH/app.c
+clang -DPLATFORM_PC -dynamiclib -o libapp.so $AP/app.c $AP/platform_pc.c
 
 # build the python module with CFFI
 LIBRARY_PATH="." python3 app_build.py
