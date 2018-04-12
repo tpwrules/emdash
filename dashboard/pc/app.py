@@ -66,8 +66,17 @@ def scr_draw_text(x, y, text, inverted):
         ffi.string(text),
         True if inverted else False
     ))
-
 lib.pc_reg_scr_draw_text(lib.scr_draw_text)
+
+@ffi.def_extern()
+@term_main_thread
+def scr_draw_rect(x, y, w, h, white):
+    gfx_ops.put(("rect",
+        x, y, w, h,
+        True if white else False
+    ))
+lib.pc_reg_scr_draw_rect(lib.scr_draw_rect)
+
 
 # set up can emulator
 
@@ -95,6 +104,7 @@ pygame.init()
 
 # open display
 screen = pygame.display.set_mode((3*240+32, 3*64+32))
+screen.fill((90, 90, 90))
 
 # create surfaces for the screen data
 scr_gfx = pygame.Surface((240, 64))
@@ -140,6 +150,9 @@ while True:
                 sp = (6*(c%16), 8*(c>>4))
                 scr_text.blit(bm, (x, y), area=(sp, (6, 8)))
                 x += 6
+        elif cmd[0] == "rect":
+            color = (255, 255, 255) if cmd[5] else (0, 0, 0)
+            scr_gfx.fill(color, rect=((cmd[1], cmd[2]), (cmd[3], cmd[4])))
 
     if dirty:
         screen.blit(pygame.transform.scale(scr_gfx, (3*240, 3*64)), (16, 16))

@@ -7,13 +7,26 @@ volatile int timer_val = 0;
 volatile uint16_t rpm = 0;
 
 void app_entry() {
-    printf("we made it!\n");
+    // draw RPM border
+    scr_draw_rect(0, 7, 240-56, 1, 0);
+    scr_draw_rect(240-56, 0, 1, 8, 0);
+    // draw RPM text
+    scr_draw_text(31, 0, "RPM:", 0);
+
     char text[50];
     while (1) {
-        sprintf(text, "amount of seconds: %d", timer_val);
-        scr_draw_text(0, 0, text, timer_val & 1);
-        sprintf(text, "current rpm: %d", rpm);
-        scr_draw_text(0, 1, text, 0);
+        // erase RPM bar
+        scr_draw_rect(0, 0, 240-56, 7, 1);
+        // calculate new position and draw bar
+        uint32_t bar_rpm = rpm;
+        if (bar_rpm > 12000) {
+            bar_rpm = 12000;
+        }
+        scr_draw_rect(0, 0, bar_rpm*(240-56)/12000, 7, 0);
+
+        sprintf(text, "%5d", rpm);
+        scr_draw_text(35, 0, text, 0);
+
         interrupt_wait();
     }
 }

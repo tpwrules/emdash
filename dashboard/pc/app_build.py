@@ -18,6 +18,9 @@ fb.cdef(r"""
 
     extern "Python" void scr_draw_text(uint8_t x, uint8_t y, char* text, uint8_t inverted);
     void pc_reg_scr_draw_text(void (*cb)(uint8_t x, uint8_t y, char* text, uint8_t inverted));
+
+    extern "Python" void scr_draw_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t white);
+    void pc_reg_scr_draw_rect(void (*cb)(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t white));
 """)
 
 # the source is just linking against the app linked library
