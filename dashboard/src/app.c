@@ -14,18 +14,22 @@ void app_entry() {
     scr_draw_text(31, 0, "RPM:", 0);
 
     char text[50];
+    uint16_t old_rpm = 65535;
     while (1) {
-        // erase RPM bar
-        scr_draw_rect(0, 0, 240-56, 7, 1);
-        // calculate new position and draw bar
-        uint32_t bar_rpm = rpm;
-        if (bar_rpm > 12000) {
-            bar_rpm = 12000;
-        }
-        scr_draw_rect(0, 0, bar_rpm*(240-56)/12000, 7, 0);
+        if (rpm != old_rpm) {
+            // erase RPM bar
+            scr_draw_rect(0, 0, 240-56, 7, 1);
+            // calculate new position and draw bar
+            uint32_t bar_rpm = rpm;
+            if (bar_rpm > 12000) {
+                bar_rpm = 12000;
+            }
+            scr_draw_rect(0, 0, bar_rpm*(240-56)/12000, 7, 0);
 
-        sprintf(text, "%5d", rpm);
-        scr_draw_text(35, 0, text, 0);
+            sprintf(text, "%5d", rpm);
+            scr_draw_text(35, 0, text, 0);
+            old_rpm = rpm;
+        }
 
         interrupt_wait();
     }

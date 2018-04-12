@@ -50,7 +50,7 @@ def timer_thread_func():
         with interrupt_happened:
             interrupt_happened.notify_all()
 
-        time.sleep(1)
+        time.sleep(0.01)
 timer_thread = threading.Thread(target=timer_thread_func, daemon=True)
 
 # set up graphics emulation stiuff
