@@ -13,9 +13,22 @@ void app_entry() {
     // draw RPM text
     scr_draw_text(31, 0, "RPM:", 0);
 
+    // and gear indicator
+    scr_draw_pic(13, 16, 0, 0);
+
     char text[50];
     uint16_t old_rpm = 65535;
     while (1) {
+        if (rpm > 7800) {
+            // start flashing gear as a warning
+            if (timer_val % 10 == 0) {
+                scr_draw_pic(13, 16, 0, timer_val % 20 < 10);
+            }
+        } else if (old_rpm > 7800) {
+            // reset gear
+            scr_draw_pic(13, 16, 0, 0);
+        }
+
         if (rpm != old_rpm) {
             // erase RPM bar
             scr_draw_rect(0, 0, 240-56, 7, 1);

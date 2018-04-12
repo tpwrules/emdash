@@ -77,6 +77,14 @@ def scr_draw_rect(x, y, w, h, white):
     ))
 lib.pc_reg_scr_draw_rect(lib.scr_draw_rect)
 
+@ffi.def_extern()
+@term_main_thread
+def scr_draw_pic(x, y, pic, inverted):
+    gfx_ops.put(("pic",
+        x, y, pic,
+        True if inverted else False
+    ))
+lib.pc_reg_scr_draw_pic(lib.scr_draw_pic)
 
 # set up can emulator
 
@@ -118,6 +126,12 @@ font_bitmap_inv = pygame.Surface(font_bitmap.get_size())
 font_bitmap_inv.fill((255, 255, 255))
 font_bitmap_inv.blit(font_bitmap, (0, 0), special_flags=pygame.BLEND_RGB_SUB)
 
+# just for testing
+four = pygame.image.load("../pics/four.png").convert()
+four_inv = pygame.Surface(four.get_size())
+four_inv.fill((255, 255, 255))
+four_inv.blit(four, (0, 0), special_flags=pygame.BLEND_RGB_SUB)
+
 # set up thread for the actual app
 app_thread = threading.Thread(target=lib.app_entry, daemon=True)
 # and get it running
@@ -153,6 +167,9 @@ while True:
         elif cmd[0] == "rect":
             color = (255, 255, 255) if cmd[5] else (0, 0, 0)
             scr_gfx.fill(color, rect=((cmd[1], cmd[2]), (cmd[3], cmd[4])))
+        elif cmd[0] == "pic":
+            pic = four_inv if cmd[4] else four
+            scr_gfx.blit(pic, (cmd[1]*8, cmd[2]))
 
     if dirty:
         screen.blit(pygame.transform.scale(scr_gfx, (3*240, 3*64)), (16, 16))
