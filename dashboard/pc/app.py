@@ -45,12 +45,16 @@ lib.pc_reg_interrupt_wait(lib.interrupt_wait)
 # the first interrupt is a timer
 # which fires (currently) every second
 def timer_thread_func():
+    next_time = time.perf_counter() + 0.01
     while True:
         lib.app_timer_interrupt()
         with interrupt_happened:
             interrupt_happened.notify_all()
+        now = time.perf_counter()
+        if now < next_time:
+            time.sleep(next_time - now)
+        next_time += 0.01
 
-        time.sleep(0.01)
 timer_thread = threading.Thread(target=timer_thread_func, daemon=True)
 
 # set up graphics emulation stiuff
@@ -141,6 +145,7 @@ can_thread.start()
 
 # now enter pygame event loop
 dirty = True
+frame_clock = pygame.time.Clock()
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -178,4 +183,4 @@ while True:
         dirty = False
         pygame.display.flip()
 
-    time.sleep(0.05)
+    frame_clock.tick(60)

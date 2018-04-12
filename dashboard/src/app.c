@@ -21,8 +21,8 @@ void app_entry() {
     while (1) {
         if (rpm > 7800) {
             // start flashing gear as a warning
-            if (timer_val % 10 == 0) {
-                scr_draw_pic(13, 16, 0, timer_val % 20 < 10);
+            if (timer_val % 20 == 0) {
+                scr_draw_pic(13, 16, 0, timer_val % 40 < 20);
             }
         } else if (old_rpm > 7800) {
             // reset gear
