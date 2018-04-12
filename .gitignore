@@ -2,3 +2,4 @@
 *.so
 *.o
 dashboard/pc/_app.c
+__pycache__/

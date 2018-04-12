@@ -52,7 +52,6 @@ def timer_thread_func():
 
         time.sleep(1)
 timer_thread = threading.Thread(target=timer_thread_func, daemon=True)
-timer_thread.start()
 
 # set up graphics emulation stiuff
 
@@ -69,6 +68,24 @@ def scr_draw_text(x, y, text, inverted):
     ))
 
 lib.pc_reg_scr_draw_text(lib.scr_draw_text)
+
+# set up can emulator
+
+def can_send(msgid, data):
+    # create array in C for the data
+    d = ffi.new("uint8_t[]", len(data))
+    # put the data into it
+    ffi.memmove(d, data, len(data))
+    # now call C with it
+    lib.app_can_interrupt(msgid, len(data), d)
+    # free the array we made (not strictly necessary)
+    del d
+    # since this is an interrupt, alert that an interrupt happened
+    with interrupt_happened:
+        interrupt_happened.notify_all()
+
+import can
+can_thread = threading.Thread(target=can.do, args=(can_send,), daemon=True)
 
 # now get pygame up and running to make the graphics go
 
@@ -95,6 +112,8 @@ font_bitmap_inv.blit(font_bitmap, (0, 0), special_flags=pygame.BLEND_RGB_SUB)
 app_thread = threading.Thread(target=lib.app_entry, daemon=True)
 # and get it running
 app_thread.start()
+timer_thread.start()
+can_thread.start()
 
 # now enter pygame event loop
 dirty = True
@@ -114,7 +133,7 @@ while True:
         dirty = True
 
         if cmd[0] == "text":
-            y = cmd[2]
+            y = cmd[2]*8
             x = cmd[1]*6
             bm = font_bitmap_inv if cmd[4] else font_bitmap
             for c in cmd[3]:
