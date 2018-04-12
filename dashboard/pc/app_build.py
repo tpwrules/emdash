@@ -14,6 +14,9 @@ fb.cdef(r"""
 
     extern "Python" void interrupt_wait();
     void pc_reg_interrupt_wait(void (*cb)());
+
+    extern "Python" void scr_draw_text(uint8_t x, uint8_t y, char* text, uint8_t inverted);
+    void pc_reg_scr_draw_text(void (*cb)(uint8_t x, uint8_t y, char* text, uint8_t inverted));
 """)
 
 # the source is just linking against the app linked library
