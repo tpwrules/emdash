@@ -1,6 +1,7 @@
 import threading
 import queue
 import time
+import numpy as np
 
 # import the shared library made by CFFI
 from _app import lib, ffi
@@ -60,35 +61,78 @@ timer_thread = threading.Thread(target=timer_thread_func, daemon=True)
 # set up graphics emulation stiuff
 
 # there is a queue of graphics operations which need to be acted on
-gfx_ops = queue.Queue(maxsize=100)
+gfx_ops = queue.Queue(maxsize=10)
+
+NUM_TEXT_PAGES = 2
+NUM_GRAPHICS_PAGES = 2
 
 @ffi.def_extern()
-@term_main_thread
-def pc_scr_draw_text(x, y, text, inverted):
-    gfx_ops.put(("text",
-        x, y,
-        ffi.string(text),
-        True if inverted else False
+def pc_scr_show_page(text, page):
+    gfx_ops.put(("show",
+        page + (NUM_GRAPHICS_PAGES if text else 0)
     ))
-lib.scr_draw_text = lib.pc_scr_draw_text
+lib.scr_show_page = lib.pc_scr_show_page
 
 @ffi.def_extern()
-@term_main_thread
-def pc_scr_draw_rect(x, y, w, h, white):
-    gfx_ops.put(("rect",
-        x, y, w, h,
-        True if white else False
+def pc_scr_clear_page(text, page):
+    gfx_ops.put(("clear",
+        page + (NUM_GRAPHICS_PAGES if text else 0)
     ))
+lib.scr_clear_page = lib.pc_scr_clear_page
+
+@ffi.def_extern()
+def pc_scr_draw_rect(pixel_addr, w, h, color):
+    # here we do the hard work of selecting the rectangles
+    page = pixel_addr >> 14
+    x = pixel_addr & 0xFF
+    y = (pixel_addr >> 8) & 0x3F
+
+    # get RGB triplet for color bit
+    gc = lambda b: (0, 0, 0) if b else (255, 255, 255)
+
+    # there are three regions:
+    #   * the start of the byte to the start of the rect
+    l = x & 0xF8
+    #   * the start of the rect to the end of the rect
+    m = l - x
+    #   * the end of the rect to the end of the byte
+    r = m + w
+    e = (m+w+7)&0xF8
+
+    # collapse regions if they have the same color
+    if bool(color & 2) == bool(color & 1):
+        m = l
+    if bool(color & 4) == bool(color & 1):
+        r = e
+
+    rects = []
+    # draw regions if they are > 0
+    if m > l:
+        rects.append(((l, y), (m, h), gc(color & 2)))
+    rects.append(((l+m, y), (r-m, h), gc(color & 1)))
+    if e > r:
+        rects.append(((l+m+r, y), (e-r, h), gc(color & 4)))
+
+    gfx_ops.put(("rect", page, tuple(rects)))
 lib.scr_draw_rect = lib.pc_scr_draw_rect
 
 @ffi.def_extern()
-@term_main_thread
-def pc_scr_draw_pic(x, y, pic, inverted):
+def pc_scr_draw_pic(byte_addr, pic_id, inverted):
     gfx_ops.put(("pic",
-        x, y, pic,
-        True if inverted else False
+        byte_addr >> 11, # page
+        ((byte_addr & 0x1F)*8, (byte_addr >> 5) & 0x3F), # x, y
+        pic_id, bool(inverted)
     ))
 lib.scr_draw_pic = lib.pc_scr_draw_pic
+
+@ffi.def_extern()
+def pc_scr_draw_text(text_addr, text):
+    gfx_ops.put(("text",
+        (text_addr >> 9)+NUM_GRAPHICS_PAGES, # page
+        ((text_addr & 0x3F)*6, ((text_addr >> 6)&0x7)*8), # x, y
+        ffi.string(text)
+    ))
+lib.scr_draw_text = lib.pc_scr_draw_text
 
 # set up can emulator
 
@@ -118,17 +162,25 @@ pygame.init()
 screen = pygame.display.set_mode((3*240+32, 3*64+32))
 screen.fill((90, 90, 90))
 
-# create surfaces for the screen data
-scr_gfx = pygame.Surface((240, 64))
-scr_gfx.fill((255, 255, 255))
-scr_text = pygame.Surface((240, 64))
-scr_text.fill((255, 255, 255))
+# create surfaces for the screen pages
+pages = []
+for p in range(NUM_GRAPHICS_PAGES+NUM_TEXT_PAGES):
+    pages.append(pygame.Surface((240, 64)))
+pages = tuple(pages)
+#pages = tuple(map(lambda n: pygame.Surface((240, 64)), 
+#    range(NUM_GRAPHICS_PAGES+NUM_TEXT_PAGES)))
+# start off displaying page 0
+tcurr, gcurr = NUM_GRAPHICS_PAGES, 0
+
+composite = pygame.Surface((240, 64))
+scomposite = pygame.Surface((3*240, 3*64))
 
 # load font bitmap
-font_bitmap = pygame.image.load("../pics/font/font.png").convert()
-font_bitmap_inv = pygame.Surface(font_bitmap.get_size())
-font_bitmap_inv.fill((255, 255, 255))
-font_bitmap_inv.blit(font_bitmap, (0, 0), special_flags=pygame.BLEND_RGB_SUB)
+font_bitmap_inv = pygame.image.load("../pics/font/font.png").convert()
+font_bitmap = pygame.Surface(font_bitmap_inv.get_size())
+font_bitmap.fill((255, 255, 255))
+font_bitmap.blit(font_bitmap_inv, (0, 0), special_flags=pygame.BLEND_RGB_SUB)
+del font_bitmap_inv
 
 # just for testing
 four = pygame.image.load("../pics/four.png").convert()
@@ -159,27 +211,47 @@ while True:
             cmd = gfx_ops.get(block=False)
         except queue.Empty:
             break
-        dirty = True
 
-        if cmd[0] == "text":
-            y = cmd[2]*8
-            x = cmd[1]*6
-            bm = font_bitmap_inv if cmd[4] else font_bitmap
-            for c in cmd[3]:
-                sp = (6*(c%16), 8*(c>>4))
-                scr_text.blit(bm, (x, y), area=(sp, (6, 8)))
-                x += 6
+        if cmd[0] != "show" and (cmd[1] == tcurr or cmd[1] == gcurr):
+            dirty = True
+        page = pages[cmd[1]]
+        
+        if cmd[0] == "show":
+            new = cmd[1]
+            if new >= NUM_GRAPHICS_PAGES:
+                if new != tcurr:
+                    dirty = True
+                tcurr = new
+            else:
+                if new != gcurr:
+                    dirty = True
+                gcurr = new
+        elif cmd[0] == "clear":
+            if cmd[1] >= NUM_GRAPHICS_PAGES:
+                page.fill((0, 0, 0))
+            else:
+                page.fill((255, 255, 255))
         elif cmd[0] == "rect":
-            color = (255, 255, 255) if cmd[5] else (0, 0, 0)
-            scr_gfx.fill(color, rect=((cmd[1], cmd[2]), (cmd[3], cmd[4])))
+            for r in cmd[2]:
+                page.fill(r[2], rect=r[:2])
         elif cmd[0] == "pic":
             pic = four_inv if cmd[4] else four
-            scr_gfx.blit(pic, (cmd[1]*8, cmd[2]))
+            page.blit(pic, cmd[2])
+        elif cmd[0] == "text":
+            x, y = cmd[2]
+            for c in cmd[3]:
+                page.blit(font_bitmap, (x, y),
+                    area=((6*(c%16), 8*(c>>4)), (6, 8)))
+                x += 6
 
     if dirty:
-        screen.blit(pygame.transform.scale(scr_gfx, (3*240, 3*64)), (16, 16))
-        screen.blit(pygame.transform.scale(scr_text, (3*240, 3*64)), (16, 16), 
-            special_flags=pygame.BLEND_RGB_MIN)
+        aa = pygame.surfarray.pixels2d(pages[gcurr])
+        ba = pygame.surfarray.pixels2d(pages[tcurr])
+        ca = pygame.surfarray.pixels2d(composite)
+        ca[:] = np.bitwise_xor(aa, ba)
+        del aa, ba, ca
+        pygame.transform.scale(composite, (3*240, 3*64), scomposite)
+        screen.blit(scomposite, (16, 16))
         dirty = False
         pygame.display.flip()
 

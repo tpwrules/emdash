@@ -15,14 +15,18 @@ fb.cdef(r"""
     extern "Python" void pc_interrupt_wait();
     void (*interrupt_wait)();
 
-    extern "Python" void pc_scr_draw_text(uint8_t x, uint8_t y, char* text, uint8_t inverted);
-    void (*scr_draw_text)(uint8_t x, uint8_t y, char* text, uint8_t inverted);
+    extern "Python" void pc_scr_show_page(uint8_t text, uint8_t page);
+    extern "Python" void pc_scr_clear_page(uint8_t text, uint8_t page);
+    extern "Python" void pc_scr_draw_rect(uint32_t pixel_addr, uint8_t w, uint8_t h, uint8_t color);
+    extern "Python" void pc_scr_draw_pic(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted);
+    extern "Python" void pc_scr_draw_text(uint32_t text_addr, char *text);
 
-    extern "Python" void pc_scr_draw_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t white);
-    void (*scr_draw_rect)(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t white);
+    void (*scr_show_page)(uint8_t text, uint8_t page);
+    void (*scr_clear_page)(uint8_t text, uint8_t page);
+    void (*scr_draw_rect)(uint32_t pixel_addr, uint8_t w, uint8_t h, uint8_t color);
+    void (*scr_draw_pic)(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted);
+    void (*scr_draw_text)(uint32_t text_addr, char *text);
 
-    extern "Python" void pc_scr_draw_pic(uint8_t x, uint8_t y, uint32_t pic, uint8_t inverted);
-    void (*scr_draw_pic)(uint8_t x, uint8_t y, uint32_t pic, uint8_t inverted);
 """)
 
 # the source is just linking against the app linked library
@@ -32,11 +36,15 @@ fb.set_source('_app',
     void app_entry(void);
     void app_timer_interrupt(void);
     void app_can_interrupt(uint32_t msgid, uint8_t dlc, uint8_t *data);
-    
-    extern void (*interrupt_wait)(void);
-    extern void (*scr_draw_text)(uint8_t x, uint8_t y, char* text, uint8_t inverted);
-    extern void (*scr_draw_rect)(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t white);
-    extern void (*scr_draw_pic)(uint8_t x, uint8_t y, uint32_t pic, uint8_t inverted);
+
+    #define PCFUNC(type, name) extern type (*name)
+    PCFUNC(void, interrupt_wait)(void);
+    PCFUNC(void, scr_show_page)(uint8_t text, uint8_t page);
+    PCFUNC(void, scr_clear_page)(uint8_t text, uint8_t page);
+    PCFUNC(void, scr_draw_rect)(uint32_t pixel_addr, uint8_t w, uint8_t h, uint8_t color);
+    PCFUNC(void, scr_draw_pic)(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted);
+    PCFUNC(void, scr_draw_text)(uint32_t text_addr, char *text);
+
     """,
     libraries=['app'],
     define_macros=[('PLATFORM_PC', 'yes')])
