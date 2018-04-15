@@ -36,7 +36,11 @@ void app_entry(void) {
     char text[50];
     uint16_t old_rpm = 0;
     uint8_t old_bar_val = 0;
+
+    // turn on interrupts
+    interrupt_enable();
     while (1) {
+        interrupt_disable();
         if (rpm > 7800) {
             // start flashing screen as a warning
             if (timer_val % 20 == 0) {
@@ -74,7 +78,6 @@ void app_entry(void) {
             old_rpm = rpm;
             old_bar_val = bar_val;
         }
-
         interrupt_wait();
     }
 }

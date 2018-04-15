@@ -6,7 +6,9 @@
 #define PCFUNC(type, name) type (*name)
 
 // interrupt interface routines
-PCFUNC(void, interrupt_wait)(void);
+void (*interrupt_disable)(void);
+void (*interrupt_enable)(void);
+void (*interrupt_wait)(void);
 
 // screen emulation routines
 PCFUNC(void, scr_show_page)(uint8_t text, uint8_t page);

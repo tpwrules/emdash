@@ -31,6 +31,12 @@ def term_main_thread(fn):
 
 # set up interrupt stuff
 
+# create a lock that represents interrupts being enable
+# when the lock is taken, interrupts cannot happen
+interrupt_lock = threading.Lock()
+# start with interrupts turned off
+interrupt_lock.acquire()
+
 # we create a condition variable for when an interrupt happens
 # it is notified after every interrupt finishes
 # when interrupt_wait is called, it waits for a notification
@@ -38,8 +44,21 @@ interrupt_happened = threading.Condition()
 
 @ffi.def_extern()
 @term_main_thread
+def pc_interrupt_disable():
+    interrupt_lock.acquire()
+lib.interrupt_disable = lib.pc_interrupt_disable
+
+@ffi.def_extern()
+@term_main_thread
+def pc_interrupt_enable():
+    interrupt_lock.release()
+lib.interrupt_enable = lib.pc_interrupt_enable
+
+@ffi.def_extern()
+@term_main_thread
 def pc_interrupt_wait():
     with interrupt_happened:
+        interrupt_lock.release()
         interrupt_happened.wait()
 lib.interrupt_wait = lib.pc_interrupt_wait
 
@@ -48,9 +67,10 @@ lib.interrupt_wait = lib.pc_interrupt_wait
 def timer_thread_func():
     next_time = time.perf_counter() + 0.01
     while True:
-        lib.app_timer_interrupt()
-        with interrupt_happened:
-            interrupt_happened.notify_all()
+        with interrupt_lock:
+            lib.app_timer_interrupt()
+            with interrupt_happened:
+                interrupt_happened.notify_all()
         now = time.perf_counter()
         if now < next_time:
             time.sleep(next_time - now)
@@ -142,12 +162,13 @@ def can_send(msgid, data):
     # put the data into it
     ffi.memmove(d, data, len(data))
     # now call C with it
-    lib.app_can_interrupt(msgid, len(data), d)
+    with interrupt_lock:
+        lib.app_can_interrupt(msgid, len(data), d)
+        # since this is an interrupt, alert that an interrupt happened
+        with interrupt_happened:
+            interrupt_happened.notify_all()
     # free the array we made (not strictly necessary)
     del d
-    # since this is an interrupt, alert that an interrupt happened
-    with interrupt_happened:
-        interrupt_happened.notify_all()
 
 import can
 can_thread = threading.Thread(target=can.do, args=(can_send,), daemon=True)
