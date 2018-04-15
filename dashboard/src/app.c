@@ -22,7 +22,7 @@ void app_entry(void) {
     // fill it with black
     scr_draw_rect(SCR_PIXEL_ADDR(1, 0, 0), 240, 64, 1);
     // draw the gear indicator inverted
-    scr_draw_pic(SCR_BYTE_ADDR(1, 13, 16), 0, true);
+    scr_draw_pic(SCR_BYTE_ADDR(1, 13, 16), PIC_ID_DEMO_GEAR_FOUR, true);
 
     // draw RPM border
     scr_draw_rect(SCR_PIXEL_ADDR(0, 0, 7), 240-56, 1, 1);
@@ -31,7 +31,7 @@ void app_entry(void) {
     scr_draw_text(SCR_TEXT_ADDR(0, 31, 0), "RPM:");
 
     // and gear indicator
-    scr_draw_pic(SCR_BYTE_ADDR(0, 13, 16), 0, false);
+    scr_draw_pic(SCR_BYTE_ADDR(0, 13, 16), PIC_ID_DEMO_GEAR_FOUR, false);
 
     char text[50];
     uint16_t old_rpm = 0;

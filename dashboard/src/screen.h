@@ -2,6 +2,7 @@
 #define SCREEN_H
 
 #include "platform.h"
+#include "../pics/pic_ids.h"
 
 // this file defines the operations that can be done on the
 // graphic screen

@@ -2,6 +2,12 @@ import threading
 import queue
 import time
 import numpy as np
+import os
+
+# import picture list
+import sys
+sys.path.append("../pics/")
+from piclist import piclist
 
 # import the shared library made by CFFI
 from _app import lib, ffi
@@ -199,11 +205,25 @@ font_bitmap.fill((255, 255, 255))
 font_bitmap.blit(font_bitmap_inv, (0, 0), special_flags=pygame.BLEND_RGB_SUB)
 del font_bitmap_inv
 
-# just for testing
-four = pygame.image.load("../pics/four.png").convert()
-four_inv = pygame.Surface(four.get_size())
-four_inv.fill((255, 255, 255))
-four_inv.blit(four, (0, 0), special_flags=pygame.BLEND_RGB_SUB)
+# load pictures from piclist
+pics = []
+for pic in piclist:
+    # load the picture off disk
+    pic_in = pygame.image.load(os.path.join("../pics/", pic.path))
+    # blit it onto its own surface
+    size = pic_in.get_size()
+    dest = (0, 0)
+    if pic.area is not None:
+        dest = (pic.area[0], pic.area[1])
+        size = (pic.area[2], pic.area[3])
+    pic_surf = pygame.Surface(size)
+    pic_surf.blit(pic_in, dest)
+    # generate the inverted version
+    pic_surf_inv = pygame.Surface(size)
+    pic_surf_inv.fill((255, 255, 255))
+    pic_surf_inv.blit(pic_surf, (0, 0), special_flags=pygame.BLEND_RGB_SUB)
+    # and add to the piclist
+    pics.append((pic_surf, pic_surf_inv))
 
 # set up thread for the actual app
 app_thread = threading.Thread(target=lib.app_entry, daemon=True)
@@ -252,8 +272,7 @@ while True:
             for r in cmd[2]:
                 page.fill(r[2], rect=r[:2])
         elif cmd[0] == "pic":
-            pic = four_inv if cmd[4] else four
-            page.blit(pic, cmd[2])
+            page.blit(pics[cmd[3]][1 if cmd[4] else 0], cmd[2])
         elif cmd[0] == "text":
             x, y = cmd[2]
             for c in cmd[3]:
