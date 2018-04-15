@@ -9,6 +9,7 @@ volatile uint16_t rpm = 0;
 
 void app_entry(void) {
     // show page 0 for text and graphics
+    // (we'll draw the splash here)
     scr_show_page(false, 0);
     scr_show_page(true, 0);
 
@@ -18,11 +19,24 @@ void app_entry(void) {
         scr_clear_page(true, i);
     }
 
+    // draw splash onto first page
+    scr_draw_pic(SCR_BYTE_ADDR(0, 0, 0), PIC_ID_BOOTSPLASH, false);
+    scr_draw_text(SCR_TEXT_ADDR(0, 24, 0), "by Thomas Watson");
+
     // second page is used for flashing when to upshift
     // fill it with black
     scr_draw_rect(SCR_PIXEL_ADDR(1, 0, 0), 240, 64, 1);
     // draw the gear indicator inverted
     scr_draw_pic(SCR_BYTE_ADDR(1, 13, 16), PIC_ID_DEMO_GEAR_FOUR, true);
+
+    // turn on interrupts
+    interrupt_enable();
+    // wait a bit of time for the splash to be shown
+    while (timer_val < 120);
+
+    // now clear and build the main screen
+    scr_clear_page(false, 0);
+    scr_clear_page(true, 0);
 
     // draw RPM border
     scr_draw_rect(SCR_PIXEL_ADDR(0, 0, 7), 240-56, 1, 1);
@@ -37,8 +51,6 @@ void app_entry(void) {
     uint16_t old_rpm = 0;
     uint8_t old_bar_val = 0;
 
-    // turn on interrupts
-    interrupt_enable();
     while (1) {
         interrupt_disable();
         if (rpm > 7800) {
