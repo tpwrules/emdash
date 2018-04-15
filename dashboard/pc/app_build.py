@@ -8,9 +8,8 @@ fb = FFI()
 #   * interrupt functions
 #   * platform interface callback registrations
 fb.cdef(r"""
-    void app_entry();
-
-    void app_timer_interrupt();
+    void app_entry(void);
+    void app_timer_interrupt(void);
     void app_can_interrupt(uint32_t msgid, uint8_t dlc, uint8_t *data);
 
     extern "Python" void pc_interrupt_wait();
@@ -30,7 +29,11 @@ fb.cdef(r"""
 # we define the macro PLATFORM_PC to tell that this is the PC
 fb.set_source('_app',
     r"""
-    extern void (*interrupt_wait)();
+    void app_entry(void);
+    void app_timer_interrupt(void);
+    void app_can_interrupt(uint32_t msgid, uint8_t dlc, uint8_t *data);
+    
+    extern void (*interrupt_wait)(void);
     extern void (*scr_draw_text)(uint8_t x, uint8_t y, char* text, uint8_t inverted);
     extern void (*scr_draw_rect)(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t white);
     extern void (*scr_draw_pic)(uint8_t x, uint8_t y, uint32_t pic, uint8_t inverted);

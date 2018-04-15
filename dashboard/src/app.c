@@ -6,7 +6,7 @@
 volatile int timer_val = 0;
 volatile uint16_t rpm = 0;
 
-void app_entry() {
+void app_entry(void) {
     // draw RPM border
     scr_draw_rect(0, 7, 240-56, 1, 0);
     scr_draw_rect(240-56, 0, 1, 8, 0);
@@ -48,7 +48,7 @@ void app_entry() {
     }
 }
 
-void app_timer_interrupt() {
+void app_timer_interrupt(void) {
     timer_val++;
 }
 
