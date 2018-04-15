@@ -18,6 +18,12 @@ void app_entry(void) {
         scr_clear_page(true, i);
     }
 
+    // second page is used for flashing when to upshift
+    // fill it with black
+    scr_draw_rect(SCR_PIXEL_ADDR(1, 0, 0), 240, 64, 1);
+    // draw the gear indicator inverted
+    scr_draw_pic(SCR_BYTE_ADDR(1, 13, 16), 0, true);
+
     // draw RPM border
     scr_draw_rect(SCR_PIXEL_ADDR(0, 0, 7), 240-56, 1, 1);
     scr_draw_rect(SCR_PIXEL_ADDR(0, 240-56, 0), 1, 8, 1);
@@ -32,15 +38,16 @@ void app_entry(void) {
     uint8_t old_bar_val = 0;
     while (1) {
         if (rpm > 7800) {
-            // start flashing gear as a warning
+            // start flashing screen as a warning
             if (timer_val % 20 == 0) {
-                scr_draw_pic(SCR_BYTE_ADDR(0, 13, 16),
-                    0, timer_val % 40 < 20);
+                uint8_t flash = timer_val % 40 < 20;
+                scr_show_page(false, flash);
+                scr_show_page(true, flash);
             }
         } else if (old_rpm > 7800) {
-            // reset gear
-            scr_draw_pic(SCR_BYTE_ADDR(0, 13, 16),
-                0, 0);
+            // reset screen to regular display
+            scr_show_page(false, 0);
+            scr_show_page(true, 0);
         }
 
         if (rpm != old_rpm) {
