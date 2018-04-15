@@ -37,10 +37,10 @@ interrupt_happened = threading.Condition()
 
 @ffi.def_extern()
 @term_main_thread
-def interrupt_wait():
+def pc_interrupt_wait():
     with interrupt_happened:
         interrupt_happened.wait()
-lib.pc_reg_interrupt_wait(lib.interrupt_wait)
+lib.interrupt_wait = lib.pc_interrupt_wait
 
 # the first interrupt is a timer
 # which fires (currently) every second
@@ -64,31 +64,31 @@ gfx_ops = queue.Queue(maxsize=100)
 
 @ffi.def_extern()
 @term_main_thread
-def scr_draw_text(x, y, text, inverted):
+def pc_scr_draw_text(x, y, text, inverted):
     gfx_ops.put(("text",
         x, y,
         ffi.string(text),
         True if inverted else False
     ))
-lib.pc_reg_scr_draw_text(lib.scr_draw_text)
+lib.scr_draw_text = lib.pc_scr_draw_text
 
 @ffi.def_extern()
 @term_main_thread
-def scr_draw_rect(x, y, w, h, white):
+def pc_scr_draw_rect(x, y, w, h, white):
     gfx_ops.put(("rect",
         x, y, w, h,
         True if white else False
     ))
-lib.pc_reg_scr_draw_rect(lib.scr_draw_rect)
+lib.scr_draw_rect = lib.pc_scr_draw_rect
 
 @ffi.def_extern()
 @term_main_thread
-def scr_draw_pic(x, y, pic, inverted):
+def pc_scr_draw_pic(x, y, pic, inverted):
     gfx_ops.put(("pic",
         x, y, pic,
         True if inverted else False
     ))
-lib.pc_reg_scr_draw_pic(lib.scr_draw_pic)
+lib.scr_draw_pic = lib.pc_scr_draw_pic
 
 # set up can emulator
 
