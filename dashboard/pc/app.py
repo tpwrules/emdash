@@ -63,7 +63,7 @@ def pc_interrupt_wait():
 lib.interrupt_wait = lib.pc_interrupt_wait
 
 # the first interrupt is a timer
-# which fires (currently) every second
+# which fires every 10 milliseconds
 def timer_thread_func():
     next_time = time.perf_counter() + 0.01
     while True:
