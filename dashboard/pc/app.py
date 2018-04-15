@@ -94,24 +94,24 @@ def pc_scr_draw_rect(pixel_addr, w, h, color):
     #   * the start of the byte to the start of the rect
     l = x & 0xF8
     #   * the start of the rect to the end of the rect
-    m = l - x
+    m = x
     #   * the end of the rect to the end of the byte
     r = m + w
     e = (m+w+7)&0xF8
 
     # collapse regions if they have the same color
     if bool(color & 2) == bool(color & 1):
-        m = l
+        l = m
     if bool(color & 4) == bool(color & 1):
         r = e
 
     rects = []
     # draw regions if they are > 0
     if m > l:
-        rects.append(((l, y), (m, h), gc(color & 2)))
-    rects.append(((l+m, y), (r-m, h), gc(color & 1)))
+        rects.append(((l, y), (m-l, h), gc(color & 2)))
+    rects.append(((m, y), (r-m, h), gc(color & 1)))
     if e > r:
-        rects.append(((l+m+r, y), (e-r, h), gc(color & 4)))
+        rects.append(((r, y), (e-r, h), gc(color & 4)))
 
     gfx_ops.put(("rect", page, tuple(rects)))
 lib.scr_draw_rect = lib.pc_scr_draw_rect
@@ -163,12 +163,8 @@ screen = pygame.display.set_mode((3*240+32, 3*64+32))
 screen.fill((90, 90, 90))
 
 # create surfaces for the screen pages
-pages = []
-for p in range(NUM_GRAPHICS_PAGES+NUM_TEXT_PAGES):
-    pages.append(pygame.Surface((240, 64)))
-pages = tuple(pages)
-#pages = tuple(map(lambda n: pygame.Surface((240, 64)), 
-#    range(NUM_GRAPHICS_PAGES+NUM_TEXT_PAGES)))
+pages = tuple(map(lambda n: pygame.Surface((240, 64)), 
+    range(NUM_GRAPHICS_PAGES+NUM_TEXT_PAGES)))
 # start off displaying page 0
 tcurr, gcurr = NUM_GRAPHICS_PAGES, 0
 
@@ -248,11 +244,11 @@ while True:
         aa = pygame.surfarray.pixels2d(pages[gcurr])
         ba = pygame.surfarray.pixels2d(pages[tcurr])
         ca = pygame.surfarray.pixels2d(composite)
-        ca[:] = np.bitwise_xor(aa, ba)
+        np.bitwise_xor(aa, ba, out=ca)
         del aa, ba, ca
         pygame.transform.scale(composite, (3*240, 3*64), scomposite)
         screen.blit(scomposite, (16, 16))
         dirty = False
         pygame.display.flip()
 
-    frame_clock.tick(60)
+    frame_clock.tick(40)

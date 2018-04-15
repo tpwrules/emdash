@@ -28,7 +28,8 @@ void app_entry(void) {
     scr_draw_pic(SCR_BYTE_ADDR(0, 13, 16), 0, false);
 
     char text[50];
-    uint16_t old_rpm = 65535;
+    uint16_t old_rpm = 0;
+    uint8_t old_bar_val = 0;
     while (1) {
         if (rpm > 7800) {
             // start flashing gear as a warning
@@ -43,20 +44,28 @@ void app_entry(void) {
         }
 
         if (rpm != old_rpm) {
-            // erase RPM bar
-            scr_draw_rect(SCR_PIXEL_ADDR(0, 0, 0), 
-                240-56, 7, 0);
             // calculate new position and draw bar
             uint32_t bar_rpm = rpm;
             if (bar_rpm > 12000) {
                 bar_rpm = 12000;
             }
-            scr_draw_rect(SCR_PIXEL_ADDR(0, 0, 0),
-                bar_rpm*(240-56)/12000, 7, 1);
+            uint8_t bar_val = bar_rpm*(240-56)/12000;
+            if (bar_val > old_bar_val) {
+                // add more pixels to bar
+                // left and middle are black, right is white
+                scr_draw_rect(SCR_PIXEL_ADDR(0, old_bar_val, 0),
+                    bar_val-old_bar_val, 7, 3);
+            } else if (bar_val < old_bar_val) {
+                // take pixels away from the bar
+                // left is black, middle and right are white
+                scr_draw_rect(SCR_PIXEL_ADDR(0, bar_val, 0),
+                    old_bar_val-bar_val, 7, 2);
+            }
 
             sprintf(text, "%5d", rpm);
             scr_draw_text(SCR_TEXT_ADDR(0, 35, 0), text);
             old_rpm = rpm;
+            old_bar_val = bar_val;
         }
 
         interrupt_wait();
