@@ -36,7 +36,7 @@ fb.cdef(r"""
 
 # the source is just linking against the app linked library
 # we define the macro PLATFORM_PC to tell that this is the PC
-fb.set_source('_app',
+fb.set_source('_pc_app',
     r"""
     void app_entry(void);
     void app_timer_interrupt(void);

@@ -1,5 +1,5 @@
 .DS_Store
 *.so
 *.o
-dashboard/pc/_app.c
+dashboard/pc/_pc_app.c
 __pycache__/

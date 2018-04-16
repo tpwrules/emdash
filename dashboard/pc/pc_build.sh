@@ -8,4 +8,4 @@ AP='../src'
 clang -DPLATFORM_PC -dynamiclib -o libapp.so $AP/app.c $AP/platform_pc.c
 
 # build the python module with CFFI
-LIBRARY_PATH="." python3 app_build.py
+LIBRARY_PATH="." python3 pc_app_build.py

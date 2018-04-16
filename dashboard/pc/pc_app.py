@@ -10,7 +10,7 @@ sys.path.append("../pics/")
 from piclist import piclist
 
 # import the shared library made by CFFI
-from _app import lib, ffi
+from _pc_app import lib, ffi
 
 # exceptions are funky in callbacks
 # exceptions raised in callbacks aren't on the main thread,
