@@ -3,3 +3,4 @@
 *.o
 dashboard/pc/_pc_app.c
 __pycache__/
+~$*
