@@ -39,13 +39,21 @@ void app_entry(void) {
     scr_clear_page(true, 0);
 
     // draw RPM border
-    scr_draw_rect(SCR_PIXEL_ADDR(0, 0, 7), 240-56, 1, 1);
-    scr_draw_rect(SCR_PIXEL_ADDR(0, 240-56, 0), 1, 8, 1);
+    scr_draw_rect(SCR_PIXEL_ADDR(0, 0, 6), 240-56, 1, 1);
+    scr_draw_rect(SCR_PIXEL_ADDR(0, 240-56, 0), 1, 7, 1);
     // draw RPM text
     scr_draw_text(SCR_TEXT_ADDR(0, 31, 0), "RPM:");
 
     // and gear indicator
     scr_draw_pic(SCR_BYTE_ADDR(0, 13, 16), PIC_ID_DEMO_GEAR_FOUR, false);
+
+    // draw icon placeholders
+    scr_draw_rect(SCR_PIXEL_ADDR(0, 0, 8), 24*4, 16*2-1, 1);
+
+    // and important info placeholders
+    scr_draw_text(SCR_TEXT_ADDR(0, 0, 5), "Oil:  ??bar  ???C");
+    scr_draw_text(SCR_TEXT_ADDR(0, 0, 6), "En: W:???C B:???C");
+    scr_draw_text(SCR_TEXT_ADDR(0, 0, 7), "Fuel: ??bar  ???C");
 
     while (1) {
         interrupt_disable();
@@ -113,12 +121,12 @@ void drive_rpm_update(uint32_t val) {
             // add more pixels to bar
             // left and middle are black, right is white
             scr_draw_rect(SCR_PIXEL_ADDR(0, old_bar_val, 0),
-                bar_val-old_bar_val, 7, 3);
+                bar_val-old_bar_val, 6, 3);
         } else if (bar_val < old_bar_val) {
             // take pixels away from the bar
             // left is black, middle and right are white
             scr_draw_rect(SCR_PIXEL_ADDR(0, bar_val, 0),
-                old_bar_val-bar_val, 7, 2);
+                old_bar_val-bar_val, 6, 2);
         }
 
         sprintf(text, "%5d", rpm);
