@@ -49,16 +49,28 @@ void app_entry(void) {
 
     while (1) {
         interrupt_disable();
-        for (uint8_t vi=0; vi<CANVAR_NUM_VARS; vi++) {
-            volatile canvar_state_t *st = &canvar_states[vi];
-            // is this value new?
-            if (st->st == CV_ST_NEW) {
-                // it's no longer new
-                st->st = CV_ST_SAME;
-                // call callback
-                canvar_defs[vi].callback();
+
+        if (canvar_was_updated) {
+            canvar_was_updated = 0;
+            for (uint8_t vi=0; vi<CANVAR_NUM_VARS; vi++) {
+                // pull value and state while interrupts are disabled
+                uint32_t val = canvar_states[vi].val;
+                uint8_t st = canvar_states[vi].st;
+                // is this value new?
+                if (st == CV_ST_NEW) {
+                    // well now it's not
+                    canvar_states[vi].st = CV_ST_SAME;
+                    if (canvar_defs[vi].callback) {
+                        // call the callback without interrupts
+                        // so that work can get done in the background
+                        interrupt_enable();
+                        canvar_defs[vi].callback(val);
+                        interrupt_disable();
+                    }
+                }
             }
         }
+
         interrupt_wait();
     }
 }
@@ -67,7 +79,7 @@ void app_timer_interrupt(void) {
     timer_val++;
 }
 
-void gear_rpm_update(void) {
+void gear_rpm_update(uint32_t val) {
     static uint16_t old_rpm = 0;
     static uint8_t old_bar_val = 0;
 
@@ -116,6 +128,6 @@ void gear_rpm_update(void) {
     }
 }
 
-void gear_gear_update(void) {
+void gear_gear_update(uint32_t val) {
 
 }

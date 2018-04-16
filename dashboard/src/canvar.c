@@ -2,6 +2,8 @@
 #include "canvar.h"
 #include "../can/canvar_defs.h"
 
+volatile int canvar_was_updated = 0;
+
 void app_can_interrupt(uint32_t msgid, uint8_t dlc, uint8_t *data) {
     // where the magic happens
 
@@ -27,5 +29,6 @@ void app_can_interrupt(uint32_t msgid, uint8_t dlc, uint8_t *data) {
             st->val != val || st->st == CV_ST_INVALID) {
         st->val = val;
         st->st = CV_ST_NEW;
+        canvar_was_updated = 1;
     }
 }

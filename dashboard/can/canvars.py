@@ -96,7 +96,7 @@ f.write("volatile canvar_state_t canvar_states[{}];\n\n".format(len(variables)))
 # write out prototypes for the callbacks
 for var in variables:
     if var.callback is not None:
-        f.write("void {}(void);\n".format(var.callback))
+        f.write("void {}(uint32_t val);\n".format(var.callback))
 
 f.write("\nconst canvar_def_t canvar_defs[{}] = {{\n".format(len(variables)))
 for var in variables:

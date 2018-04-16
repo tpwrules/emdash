@@ -4,7 +4,7 @@
 #include <inttypes.h>
 
 // canvar system definitions
-typedef void (*canvar_callback_t)();
+typedef void (*canvar_callback_t)(uint32_t val);
 
 #define CV_ST_SAME (2) // value is not new
 #define CV_ST_NEW (1) // value is new since the last read
@@ -31,6 +31,10 @@ typedef struct {
 
 // the canvar engine handles the CAN interrupt
 void app_can_interrupt(uint32_t msgid, uint8_t dlc, uint8_t *data);
+
+// variable set to 1 when some canvar was updated to trigger
+// the main loop
+extern volatile int canvar_was_updated;
 
 #include "../can/canvar_defs.h"
 
