@@ -6,7 +6,6 @@
 #include <stdio.h>
 
 volatile int timer_val = 0;
-volatile uint16_t rpm = 0;
 
 void app_entry(void) {
     // show page 0 for text and graphics
@@ -48,48 +47,17 @@ void app_entry(void) {
     // and gear indicator
     scr_draw_pic(SCR_BYTE_ADDR(0, 13, 16), PIC_ID_DEMO_GEAR_FOUR, false);
 
-    char text[50];
-    uint16_t old_rpm = 0;
-    uint8_t old_bar_val = 0;
-
     while (1) {
         interrupt_disable();
-        if (rpm > 7800) {
-            // start flashing screen as a warning
-            if (timer_val % 20 == 0) {
-                uint8_t flash = timer_val % 40 < 20;
-                scr_show_page(false, flash);
-                scr_show_page(true, flash);
+        for (uint8_t vi=0; vi<CANVAR_NUM_VARS; vi++) {
+            volatile canvar_state_t *st = &canvar_states[vi];
+            // is this value new?
+            if (st->st == CV_ST_NEW) {
+                // it's no longer new
+                st->st = CV_ST_SAME;
+                // call callback
+                canvar_defs[vi].callback();
             }
-        } else if (old_rpm > 7800) {
-            // reset screen to regular display
-            scr_show_page(false, 0);
-            scr_show_page(true, 0);
-        }
-
-        if (rpm != old_rpm) {
-            // calculate new position and draw bar
-            uint32_t bar_rpm = rpm;
-            if (bar_rpm > 12000) {
-                bar_rpm = 12000;
-            }
-            uint8_t bar_val = bar_rpm*(240-56)/12000;
-            if (bar_val > old_bar_val) {
-                // add more pixels to bar
-                // left and middle are black, right is white
-                scr_draw_rect(SCR_PIXEL_ADDR(0, old_bar_val, 0),
-                    bar_val-old_bar_val, 7, 3);
-            } else if (bar_val < old_bar_val) {
-                // take pixels away from the bar
-                // left is black, middle and right are white
-                scr_draw_rect(SCR_PIXEL_ADDR(0, bar_val, 0),
-                    old_bar_val-bar_val, 7, 2);
-            }
-
-            sprintf(text, "%5d", rpm);
-            scr_draw_text(SCR_TEXT_ADDR(0, 35, 0), text);
-            old_rpm = rpm;
-            old_bar_val = bar_val;
         }
         interrupt_wait();
     }
@@ -100,7 +68,52 @@ void app_timer_interrupt(void) {
 }
 
 void gear_rpm_update(void) {
-    rpm = (uint16_t)cv_nmot.val;
+    static uint16_t old_rpm = 0;
+    static uint8_t old_bar_val = 0;
+
+    uint16_t rpm = (uint16_t)cv_nmot.val;
+
+    char text[10];
+
+    /*
+    if (rpm > 7800) {
+        // start flashing screen as a warning
+        if (timer_val % 20 == 0) {
+            uint8_t flash = timer_val % 40 < 20;
+            scr_show_page(false, flash);
+            scr_show_page(true, flash);
+        }
+    } else if (old_rpm > 7800) {
+        // reset screen to regular display
+        scr_show_page(false, 0);
+        scr_show_page(true, 0);
+    }
+    */
+
+    if (rpm != old_rpm) {
+        // calculate new position and draw bar
+        uint32_t bar_rpm = rpm;
+        if (bar_rpm > 12000) {
+            bar_rpm = 12000;
+        }
+        uint8_t bar_val = bar_rpm*(240-56)/12000;
+        if (bar_val > old_bar_val) {
+            // add more pixels to bar
+            // left and middle are black, right is white
+            scr_draw_rect(SCR_PIXEL_ADDR(0, old_bar_val, 0),
+                bar_val-old_bar_val, 7, 3);
+        } else if (bar_val < old_bar_val) {
+            // take pixels away from the bar
+            // left is black, middle and right are white
+            scr_draw_rect(SCR_PIXEL_ADDR(0, bar_val, 0),
+                old_bar_val-bar_val, 7, 2);
+        }
+
+        sprintf(text, "%5d", rpm);
+        scr_draw_text(SCR_TEXT_ADDR(0, 35, 0), text);
+        old_rpm = rpm;
+        old_bar_val = bar_val;
+    }
 }
 
 void gear_gear_update(void) {

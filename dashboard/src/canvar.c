@@ -28,9 +28,4 @@ void app_can_interrupt(uint32_t msgid, uint8_t dlc, uint8_t *data) {
         st->val = val;
         st->st = CV_ST_NEW;
     }
-
-    // step 4: call the callback (if necessary)
-    if (st->st == CV_ST_NEW) {
-        def->callback();
-    }
 }
