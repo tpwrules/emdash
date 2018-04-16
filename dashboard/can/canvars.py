@@ -31,14 +31,14 @@ variables = [
     Variable(
         name="nmot",
         msg_id=0x121, start=2, size=2, signed=False,
-        callback="gear_rpm_update", call_every_time=False
+        callback="drive_rpm_update", call_every_time=False
     ),
 
     # current gear (units ?????)
     Variable(
         name="gear",
         msg_id=0x119, start=7, size=1, signed=False,
-        callback="gear_gear_update", call_every_time=False
+        callback="drive_gear_update", call_every_time=False
     )
 ]
 

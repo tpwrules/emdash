@@ -79,7 +79,7 @@ void app_timer_interrupt(void) {
     timer_val++;
 }
 
-void gear_rpm_update(uint32_t val) {
+void drive_rpm_update(uint32_t val) {
     static uint16_t old_rpm = 0;
     static uint8_t old_bar_val = 0;
 
@@ -128,6 +128,6 @@ void gear_rpm_update(uint32_t val) {
     }
 }
 
-void gear_gear_update(uint32_t val) {
+void drive_gear_update(uint32_t val) {
 
 }
