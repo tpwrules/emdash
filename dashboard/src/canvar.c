@@ -24,8 +24,8 @@ void app_can_interrupt(uint32_t msgid, uint8_t dlc, uint8_t *data) {
     // step 3: update the canvar state
     volatile canvar_state_t *st = &canvar_states[var_def_idx];
     if (def->call_every_time ||
-            st->u != val || st->st == CV_ST_INVALID) {
-        st->u = val;
+            st->val != val || st->st == CV_ST_INVALID) {
+        st->val = val;
         st->st = CV_ST_NEW;
     }
 

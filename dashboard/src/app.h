@@ -6,8 +6,4 @@
 void app_entry(void);
 void app_timer_interrupt(void);
 
-// canvar callbacks
-void gear_rpm_update(void);
-void gear_gear_update(void);
-
 #endif

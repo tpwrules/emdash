@@ -12,10 +12,9 @@ typedef void (*canvar_callback_t)();
 
 typedef struct {
     // current value of the variable
-    union {
-        uint32_t u;
-        int32_t s;
-    };
+    // this may secretly be a signed value, but it will be
+    // sign-extended if canvar_def_t.is_signed is set
+    uint32_t val;
     // state of the value, see above
     uint8_t st;
 } canvar_state_t;

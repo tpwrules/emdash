@@ -78,6 +78,7 @@ f.write("\nextern volatile canvar_state_t canvar_states[{}];\n".format(len(varia
 f.write("extern const canvar_def_t canvar_defs[{}];\n\n".format(len(variables)))
 
 # and the can id stuff
+f.write("#define CANVAR_NUM_VARS ({})\n".format(len(variables)))
 f.write("#define CANVAR_ID_MAP_FIRST ({})\n".format(ci_first))
 f.write("#define CANVAR_ID_MAP_COUNT ({})\n".format(ci_count))
 f.write("extern const uint8_t canvar_id_map[{}];\n\n".format(ci_count))
@@ -89,11 +90,15 @@ f.close()
 f = open("canvar_defs.c", "w")
 f.write("#include \"../src/canvar.h\"\n")
 f.write("#include \"canvar_defs.h\"\n")
-f.write("#include \"../src/app.h\"\n\n")
 
 f.write("volatile canvar_state_t canvar_states[{}];\n\n".format(len(variables)))
 
-f.write("const canvar_def_t canvar_defs[{}] = {{\n".format(len(variables)))
+# write out prototypes for the callbacks
+for var in variables:
+    if var.callback is not None:
+        f.write("void {}(void);\n".format(var.callback))
+
+f.write("\nconst canvar_def_t canvar_defs[{}] = {{\n".format(len(variables)))
 for var in variables:
     f.write("{{{}, {}, {}, {}, {}, {}}},\n".format(
         var.callback if var.callback is not None else 0,

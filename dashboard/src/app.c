@@ -100,7 +100,7 @@ void app_timer_interrupt(void) {
 }
 
 void gear_rpm_update(void) {
-    rpm = (uint16_t)cv_nmot.u;
+    rpm = (uint16_t)cv_nmot.val;
 }
 
 void gear_gear_update(void) {
