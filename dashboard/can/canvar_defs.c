@@ -1,7 +1,8 @@
-#include "canvar.h"
+#include "../src/canvar.h"
 #include "canvar_defs.h"
+#include "../src/app.h"
 
-canvar_state_t canvar_states[2];
+volatile canvar_state_t canvar_states[2];
 
 const canvar_def_t canvar_defs[2] = {
 {gear_gear_update, 281, 7, 1, 0, 0},

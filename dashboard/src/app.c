@@ -1,6 +1,7 @@
 #include "platform.h"
 #include "app.h"
 #include "screen.h"
+#include "canvar.h"
 
 #include <stdio.h>
 
@@ -98,8 +99,10 @@ void app_timer_interrupt(void) {
     timer_val++;
 }
 
-void app_can_interrupt(uint32_t msgid, uint8_t dlc, uint8_t *data) {
-    if (msgid == 0x121) {
-        rpm = data[3] << 8 | data[2];
-    }
+void gear_rpm_update(void) {
+    rpm = (uint16_t)cv_nmot.u;
+}
+
+void gear_gear_update(void) {
+
 }

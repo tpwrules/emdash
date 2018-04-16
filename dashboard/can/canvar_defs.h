@@ -2,12 +2,12 @@
 #define CANVAR_DEFS_H
 
 #include <inttypes.h>
-#include "canvar.h"
+#include "../src/canvar.h"
 
 #define cv_gear (canvar_states[0])
 #define cv_nmot (canvar_states[1])
 
-extern canvar_state_t canvar_states[2];
+extern volatile canvar_state_t canvar_states[2];
 extern const canvar_def_t canvar_defs[2];
 
 #define CANVAR_ID_MAP_FIRST (281)

@@ -52,7 +52,7 @@ variables.sort(key=lambda v: (v.msg_id, v.start))
 f = open("canvar_defs.h", "w")
 f.write("#ifndef CANVAR_DEFS_H\n#define CANVAR_DEFS_H\n\n")
 f.write("#include <inttypes.h>\n")
-f.write("#include \"canvar.h\"\n\n")
+f.write("#include \"../src/canvar.h\"\n\n")
 
 # write out name definitions first while building the can id map
 # the map contains the index of the first message in that can ID
@@ -74,7 +74,7 @@ for ci, i in can_ids:
     ci_vals[ci-ci_first] = i
 
 # write out the extern defs
-f.write("\nextern canvar_state_t canvar_states[{}];\n".format(len(variables)))
+f.write("\nextern volatile canvar_state_t canvar_states[{}];\n".format(len(variables)))
 f.write("extern const canvar_def_t canvar_defs[{}];\n\n".format(len(variables)))
 
 # and the can id stuff
@@ -87,10 +87,11 @@ f.close()
 
 # now it's time to write out the actual definitions
 f = open("canvar_defs.c", "w")
-f.write("#include \"canvar.h\"\n")
-f.write("#include \"canvar_defs.h\"\n\n")
+f.write("#include \"../src/canvar.h\"\n")
+f.write("#include \"canvar_defs.h\"\n")
+f.write("#include \"../src/app.h\"\n\n")
 
-f.write("canvar_state_t canvar_states[{}];\n\n".format(len(variables)))
+f.write("volatile canvar_state_t canvar_states[{}];\n\n".format(len(variables)))
 
 f.write("const canvar_def_t canvar_defs[{}] = {{\n".format(len(variables)))
 for var in variables:
