@@ -39,6 +39,48 @@ variables = [
         name="gear",
         msg_id=0x119, start=7, size=1, signed=False,
         callback="drive_gear_update", call_every_time=False
+    ),
+
+    # oil pressure in bar (not decibar or something???)
+    Variable(
+        name="poil",
+        msg_id=0x121, start=5, size=1, signed=False,
+        callback="var_poil_update", call_every_time=False
+    ),
+
+    # fuel pressure in bar (not decibar or something???)
+    Variable(
+        name="pfuel",
+        msg_id=0x121, start=4, size=1, signed=False,
+        callback="var_pfuel_update", call_every_time=False
+    ),
+
+    # oil temperature in C (no offset???)
+    Variable(
+        name="toil",
+        msg_id=0x122, start=2, size=1, signed=False,
+        callback="var_toil_update", call_every_time=False
+    ),
+
+    # engine block temperature in C (no offset???)
+    Variable(
+        name="tmot",
+        msg_id=0x122, start=0, size=1, signed=False,
+        callback="var_tmot_update", call_every_time=False
+    ),
+
+    # engine water temperature in C (no offset???)
+    Variable(
+        name="tmot2",
+        msg_id=0x122, start=1, size=1, signed=False,
+        callback="var_tmot2_update", call_every_time=False
+    ),
+
+    # fuel temperature in C (no offset???)
+    Variable(
+        name="tfuel",
+        msg_id=0x114, start=6, size=1, signed=False,
+        callback="var_tfuel_update", call_every_time=False
     )
 ]
 

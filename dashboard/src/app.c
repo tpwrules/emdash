@@ -139,3 +139,39 @@ void drive_rpm_update(uint32_t val) {
 void drive_gear_update(uint32_t val) {
 
 }
+
+void var_poil_update(uint32_t val) {
+    char str[8];
+    sprintf(str, "%2d", val);
+    scr_draw_text(SCR_TEXT_ADDR(0, 6, 5), str);
+}
+
+void var_toil_update(uint32_t val) {
+    char str[8];
+    sprintf(str, "%3d", val);
+    scr_draw_text(SCR_TEXT_ADDR(0, 13, 5), str);
+}
+
+void var_tmot2_update(uint32_t val) {
+    char str[8];
+    sprintf(str, "%3d", val);
+    scr_draw_text(SCR_TEXT_ADDR(0, 6, 6), str);
+}
+
+void var_tmot_update(uint32_t val) {
+    char str[8];
+    sprintf(str, "%3d", val);
+    scr_draw_text(SCR_TEXT_ADDR(0, 13, 6), str);
+}
+
+void var_pfuel_update(uint32_t val) {
+    char str[8];
+    sprintf(str, "%2d", val);
+    scr_draw_text(SCR_TEXT_ADDR(0, 6, 7), str);
+}
+
+void var_tfuel_update(uint32_t val) {
+    char str[8];
+    sprintf(str, "%3d", val);
+    scr_draw_text(SCR_TEXT_ADDR(0, 13, 7), str);
+}
