@@ -30,7 +30,7 @@ typedef struct {
 } canvar_def_t;
 
 // the canvar engine handles the CAN interrupt
-void app_can_interrupt(uint32_t msgid, uint8_t dlc, uint8_t *data);
+void app_can_interrupt(uint32_t msg_id, uint8_t dlc, uint8_t *data);
 
 // variable set to 1 when some canvar was updated to trigger
 // the main loop

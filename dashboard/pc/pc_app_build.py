@@ -10,7 +10,7 @@ fb = FFI()
 fb.cdef(r"""
     void app_entry(void);
     void app_timer_interrupt(void);
-    void app_can_interrupt(uint32_t msgid, uint8_t dlc, uint8_t *data);
+    void app_can_interrupt(uint32_t msg_id, uint8_t dlc, uint8_t *data);
 
     extern "Python" void pc_interrupt_disable();
     extern "Python" void pc_interrupt_enable();
@@ -40,7 +40,7 @@ fb.set_source('_pc_app',
     r"""
     void app_entry(void);
     void app_timer_interrupt(void);
-    void app_can_interrupt(uint32_t msgid, uint8_t dlc, uint8_t *data);
+    void app_can_interrupt(uint32_t msg_id, uint8_t dlc, uint8_t *data);
 
     extern void (*interrupt_disable)(void);
     extern void (*interrupt_enable)(void);

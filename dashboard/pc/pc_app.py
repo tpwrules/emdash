@@ -162,14 +162,14 @@ lib.scr_draw_text = lib.pc_scr_draw_text
 
 # set up can emulator
 
-def can_send(msgid, data):
+def can_send(msg_id, data):
     # create array in C for the data
     d = ffi.new("uint8_t[]", len(data))
     # put the data into it
     ffi.memmove(d, data, len(data))
     # now call C with it
     with interrupt_lock:
-        lib.app_can_interrupt(msgid, len(data), d)
+        lib.app_can_interrupt(msg_id, len(data), d)
         # since this is an interrupt, alert that an interrupt happened
         with interrupt_happened:
             interrupt_happened.notify_all()

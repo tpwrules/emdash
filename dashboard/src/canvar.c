@@ -4,11 +4,11 @@
 
 volatile int canvar_was_updated = 0;
 
-void app_can_interrupt(uint32_t msgid, uint8_t dlc, uint8_t *data) {
+void app_can_interrupt(uint32_t msg_id, uint8_t dlc, uint8_t *data) {
     // where the magic happens
 
     // step 1: look up which var def this is
-    uint8_t var_def_idx = canvar_id_map[msgid - CANVAR_ID_MAP_FIRST];
+    uint8_t var_def_idx = canvar_id_map[msg_id - CANVAR_ID_MAP_FIRST];
     const canvar_def_t *def = &canvar_defs[var_def_idx];
 
     // step 2: extract the value
