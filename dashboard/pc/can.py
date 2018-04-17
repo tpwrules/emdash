@@ -5,20 +5,42 @@ import random
 import struct
 import math
 
+import sys
+sys.path.append("../can/")
+import canvars
+
+import random
+rr = random.randrange
+
 def do(fn):
     global can_send
     can_send = fn
 
-    time.sleep(3)
+    cv = canvars.CanvarInterface(fn)
+
+    cv.nmot = 0
+    cv.gear = 0
+
+    cv.poil = 1
+    cv.pfuel = 2
+    cv.toil = 3
+    cv.tmot = 4
+    cv.tmot2 = 5
+    cv.tfuel = 6
 
     a = 0
-    data = struct.pack("<BBBxxxxx", 0, 0, 0)
-    can_send(0x122, data)
-    data = struct.pack("<xxxxxxBx", 0)
-    can_send(0x114, data)
+    b = 0
     while True:
         v = max(int(math.sin(a)*6100+6000), 0)
-        data = struct.pack("<xxHBBxx", v, 0, 0)
-        can_send(0x121, data)
+        cv.nmot = v
+        if b % 20 == 0:
+            cv.poil = rr(0, 100)
+            cv.pfuel = rr(0, 100)
+            cv.toil = rr(0, 256)
+            cv.tmot = rr(0, 256)
+            cv.tmot2 = rr(0, 256)
+            cv.tfuel = rr(0, 256)
+        cv.flush()
         a += 0.05
+        b += 1
         time.sleep(0.05)
