@@ -2,6 +2,7 @@
 #include "app.h"
 #include "screen.h"
 #include "canvar.h"
+#include "warn.h"
 
 #include <stdio.h>
 
@@ -47,13 +48,8 @@ void app_entry(void) {
     // and gear indicator
     scr_draw_pic(SCR_BYTE_ADDR(0, 13, 16), PIC_ID_DEMO_GEAR_FOUR, false);
 
-    // draw icon placeholders
-    scr_draw_rect(SCR_PIXEL_ADDR(0, 0, 8), 24*4, 16*2-1, 1);
-
-    // and important info placeholders
-    scr_draw_text(SCR_TEXT_ADDR(0, 0, 5), "Oil:  ??bar  ???C");
-    scr_draw_text(SCR_TEXT_ADDR(0, 0, 6), "En: W:???C B:???C");
-    scr_draw_text(SCR_TEXT_ADDR(0, 0, 7), "Fuel: ??bar  ???C");
+    // initialize warning areas of screen
+    warn_init();
 
     while (1) {
         interrupt_disable();
@@ -138,40 +134,4 @@ void drive_rpm_update(uint32_t val) {
 
 void drive_gear_update(uint32_t val) {
 
-}
-
-void var_poil_update(uint32_t val) {
-    char str[8];
-    sprintf(str, "%2d", val);
-    scr_draw_text(SCR_TEXT_ADDR(0, 6, 5), str);
-}
-
-void var_toil_update(uint32_t val) {
-    char str[8];
-    sprintf(str, "%3d", val);
-    scr_draw_text(SCR_TEXT_ADDR(0, 13, 5), str);
-}
-
-void var_tmot2_update(uint32_t val) {
-    char str[8];
-    sprintf(str, "%3d", val);
-    scr_draw_text(SCR_TEXT_ADDR(0, 6, 6), str);
-}
-
-void var_tmot_update(uint32_t val) {
-    char str[8];
-    sprintf(str, "%3d", val);
-    scr_draw_text(SCR_TEXT_ADDR(0, 13, 6), str);
-}
-
-void var_pfuel_update(uint32_t val) {
-    char str[8];
-    sprintf(str, "%2d", val);
-    scr_draw_text(SCR_TEXT_ADDR(0, 6, 7), str);
-}
-
-void var_tfuel_update(uint32_t val) {
-    char str[8];
-    sprintf(str, "%3d", val);
-    scr_draw_text(SCR_TEXT_ADDR(0, 13, 7), str);
 }
