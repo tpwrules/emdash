@@ -87,73 +87,77 @@ variables = [
 if len(variables) > 256:
     raise Exception("too many variables")
 
-# sort variables by message ID then start byte
-variables.sort(key=lambda v: (v.msg_id, v.start))
+def build_defs():
+    # sort variables by message ID then start byte
+    variables.sort(key=lambda v: (v.msg_id, v.start))
 
-# write out header file first
-f = open("canvar_defs.h", "w")
-f.write("#ifndef CANVAR_DEFS_H\n#define CANVAR_DEFS_H\n\n")
-f.write("#include <inttypes.h>\n")
-f.write("#include \"../src/canvar.h\"\n\n")
+    # write out header file first
+    f = open("canvar_defs.h", "w")
+    f.write("#ifndef CANVAR_DEFS_H\n#define CANVAR_DEFS_H\n\n")
+    f.write("#include <inttypes.h>\n")
+    f.write("#include \"../src/canvar.h\"\n\n")
 
-# write out name definitions first while building the can id map
-# the map contains the index of the first message in that can ID
-can_id_dict = {}
-old_can_id = -1
-for i, var in enumerate(variables):
-    if var.msg_id not in can_id_dict:
-        can_id_dict[var.msg_id] = i
-    
-    f.write("#define cv_{} (canvar_states[{}])\n".format(var.name, i))
+    # write out name definitions first while building the can id map
+    # the map contains the index of the first message in that can ID
+    can_id_dict = {}
+    old_can_id = -1
+    for i, var in enumerate(variables):
+        if var.msg_id not in can_id_dict:
+            can_id_dict[var.msg_id] = i
+        
+        f.write("#define cv_{} (canvar_states[{}])\n".format(var.name, i))
 
-# build the can id map array
-can_ids = list(can_id_dict.items())
-can_ids.sort()
-ci_first = can_ids[0][0]
-ci_count = can_ids[-1][0] - ci_first + 1
-ci_vals = [0]*ci_count
-for ci, i in can_ids:
-    ci_vals[ci-ci_first] = i
+    # build the can id map array
+    can_ids = list(can_id_dict.items())
+    can_ids.sort()
+    ci_first = can_ids[0][0]
+    ci_count = can_ids[-1][0] - ci_first + 1
+    ci_vals = [0]*ci_count
+    for ci, i in can_ids:
+        ci_vals[ci-ci_first] = i
 
-# write out the extern defs
-f.write("\nextern volatile canvar_state_t canvar_states[{}];\n".format(len(variables)))
-f.write("extern const canvar_def_t canvar_defs[{}];\n\n".format(len(variables)))
+    # write out the extern defs
+    f.write("\nextern volatile canvar_state_t canvar_states[{}];\n".format(len(variables)))
+    f.write("extern const canvar_def_t canvar_defs[{}];\n\n".format(len(variables)))
 
-# and the can id stuff
-f.write("#define CANVAR_NUM_VARS ({})\n".format(len(variables)))
-f.write("#define CANVAR_ID_MAP_FIRST ({})\n".format(ci_first))
-f.write("#define CANVAR_ID_MAP_COUNT ({})\n".format(ci_count))
-f.write("extern const uint8_t canvar_id_map[{}];\n\n".format(ci_count))
+    # and the can id stuff
+    f.write("#define CANVAR_NUM_VARS ({})\n".format(len(variables)))
+    f.write("#define CANVAR_ID_MAP_FIRST ({})\n".format(ci_first))
+    f.write("#define CANVAR_ID_MAP_COUNT ({})\n".format(ci_count))
+    f.write("extern const uint8_t canvar_id_map[{}];\n\n".format(ci_count))
 
-f.write("#endif\n")
-f.close()
+    f.write("#endif\n")
+    f.close()
 
-# now it's time to write out the actual definitions
-f = open("canvar_defs.c", "w")
-f.write("#include \"../src/canvar.h\"\n")
-f.write("#include \"canvar_defs.h\"\n")
+    # now it's time to write out the actual definitions
+    f = open("canvar_defs.c", "w")
+    f.write("#include \"../src/canvar.h\"\n")
+    f.write("#include \"canvar_defs.h\"\n")
 
-f.write("volatile canvar_state_t canvar_states[{}];\n\n".format(len(variables)))
+    f.write("volatile canvar_state_t canvar_states[{}];\n\n".format(len(variables)))
 
-# write out prototypes for the callbacks
-for var in variables:
-    if var.callback is not None:
-        f.write("void {}(uint32_t val);\n".format(var.callback))
+    # write out prototypes for the callbacks
+    for var in variables:
+        if var.callback is not None:
+            f.write("void {}(uint32_t val);\n".format(var.callback))
 
-f.write("\nconst canvar_def_t canvar_defs[{}] = {{\n".format(len(variables)))
-for var in variables:
-    f.write("{{{}, {}, {}, {}, {}, {}}},\n".format(
-        var.callback if var.callback is not None else 0,
-        var.msg_id,
-        var.start,
-        var.size,
-        1 if var.signed else 0,
-        1 if var.call_every_time else 0
-    ))
+    f.write("\nconst canvar_def_t canvar_defs[{}] = {{\n".format(len(variables)))
+    for var in variables:
+        f.write("{{{}, {}, {}, {}, {}, {}}},\n".format(
+            var.callback if var.callback is not None else 0,
+            var.msg_id,
+            var.start,
+            var.size,
+            1 if var.signed else 0,
+            1 if var.call_every_time else 0
+        ))
 
-f.write("};\n\n")
+    f.write("};\n\n")
 
-f.write("const uint8_t canvar_id_map[{}] = {{\n".format(ci_count))
-for val in ci_vals:
-    f.write("{},\n".format(val))
-f.write("};\n")
+    f.write("const uint8_t canvar_id_map[{}] = {{\n".format(ci_count))
+    for val in ci_vals:
+        f.write("{},\n".format(val))
+    f.write("};\n")
+
+if __name__ == "__main__":
+    build_defs()
