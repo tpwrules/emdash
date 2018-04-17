@@ -8,6 +8,10 @@ pushd ../can
 python3 canvars.py
 popd
 
+pushd ../pics
+python3 piclist.py
+popd
+
 # build the application as a shared library
 clang -DPLATFORM_PC -dynamiclib -o libapp.so $AP/app.c $AP/platform_pc.c $AP/../can/canvar_defs.c $AP/canvar.c $AP/warn.c
 

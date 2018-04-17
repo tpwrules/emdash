@@ -14,8 +14,17 @@
 
 // initializer: draws default screen state
 void warn_init(void) {
-    // draw the icon area
-    scr_draw_rect(SCR_PIXEL_ADDR(0, 0, 8), 24*4, 16*2-1, 1);
+    // draw all the icons
+    scr_draw_pic(SCR_BYTE_ADDR(0, 0, 8), PIC_ID_OIL_PRESSURE, 0);
+    scr_draw_pic(SCR_BYTE_ADDR(0, 0, 24), PIC_ID_OIL_TEMP, 0);
+
+    scr_draw_pic(SCR_BYTE_ADDR(0, 3, 8), PIC_ID_WATER_TEMP, 0);
+    scr_draw_pic(SCR_BYTE_ADDR(0, 3, 24), PIC_ID_BLOCK_TEMP, 0);
+
+    scr_draw_pic(SCR_BYTE_ADDR(0, 6, 8), PIC_ID_FUEL_PRESSURE, 0);
+    scr_draw_pic(SCR_BYTE_ADDR(0, 6, 24), PIC_ID_FUEL_TEMP, 0);
+
+    scr_draw_pic(SCR_BYTE_ADDR(0, 9, 8), PIC_ID_BATTERY, 0);
 
     // draw the value placeholders
     scr_draw_text(SCR_TEXT_ADDR(0, 0, 5), "Oil:  ??bar  ???C");

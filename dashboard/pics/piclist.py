@@ -24,7 +24,22 @@ piclist = (
     # the bootsplash
     Picture("bootsplash/boot.png", "bootsplash"),
     # the lame number four
-    Picture("four.png", "demo_gear_four")
+    Picture("four.png", "demo_gear_four"),
+
+    # oil pressure warning
+    Picture("icons/icons.png", "oil_pressure", (0, 0, 23, 15)),
+    # oil temperature warning
+    Picture("icons/icons.png", "oil_temp", (0, 16, 23, 15)),
+    # water temperature warning
+    Picture("icons/icons.png", "water_temp", (24, 0, 23, 15)),
+    # block temperature warning
+    Picture("icons/icons.png", "block_temp", (24, 16, 23, 15)),
+    # fuel pressure warning
+    Picture("icons/icons.png", "fuel_pressure", (48, 0, 23, 15)),
+    # fuel temperature warning
+    Picture("icons/icons.png", "fuel_temp", (48, 16, 23, 15)),
+    # battery warning
+    Picture("icons/icons.png", "battery", (72, 0, 23, 15))
 )
 
 if __name__ == "__main__":

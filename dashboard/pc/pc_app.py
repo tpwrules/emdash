@@ -212,12 +212,12 @@ for pic in piclist:
     pic_in = pygame.image.load(os.path.join("../pics/", pic.path))
     # blit it onto its own surface
     size = pic_in.get_size()
-    dest = (0, 0)
+    source = (0, 0)
     if pic.area is not None:
-        dest = (pic.area[0], pic.area[1])
+        source = (pic.area[0], pic.area[1])
         size = (pic.area[2], pic.area[3])
     pic_surf = pygame.Surface(size)
-    pic_surf.blit(pic_in, dest)
+    pic_surf.blit(pic_in, (0, 0), area=(source, size))
     # generate the inverted version
     pic_surf_inv = pygame.Surface(size)
     pic_surf_inv.fill((255, 255, 255))
