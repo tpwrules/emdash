@@ -42,7 +42,7 @@ variables = [
     )
 ]
 
-if len(variables) > 255:
+if len(variables) > 256:
     raise Exception("too many variables")
 
 # sort variables by message ID then start byte
@@ -69,7 +69,7 @@ can_ids = list(can_id_dict.items())
 can_ids.sort()
 ci_first = can_ids[0][0]
 ci_count = can_ids[-1][0] - ci_first + 1
-ci_vals = [0xFF]*ci_count
+ci_vals = [0]*ci_count
 for ci, i in can_ids:
     ci_vals[ci-ci_first] = i
 

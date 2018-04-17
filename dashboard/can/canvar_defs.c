@@ -12,12 +12,12 @@ const canvar_def_t canvar_defs[2] = {
 
 const uint8_t canvar_id_map[9] = {
 0,
-255,
-255,
-255,
-255,
-255,
-255,
-255,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
 1,
 };
