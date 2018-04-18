@@ -47,6 +47,7 @@ void app_entry(void) {
 
     // and gear indicator
     scr_draw_pic(SCR_BYTE_ADDR(0, 13, 16), PIC_ID_DEMO_GEAR_FOUR, false);
+    //scr_draw_rect(SCR_PIXEL_ADDR(0, 13*8, 16), 32, 32, 1);
 
     // initialize warning areas of screen
     warn_init();

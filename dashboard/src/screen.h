@@ -30,6 +30,11 @@
 #define SCR_PIXEL_ADDR(page, x, y) \
     (((page)*0x4000)+((y)<<8)+(x))
 
+// sometimes we want to place graphics lined up with text
+// this returns the pixel addr for text at a specific location
+#define SCR_PIXEL_ADDR_AT_TEXT(page, x, y) \
+    SCR_PIXEL_ADDR(page, x*6, y*8)
+
 // Screen Operations
 
 // switch currently displayed page

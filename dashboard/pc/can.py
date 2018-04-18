@@ -33,7 +33,7 @@ def do(fn):
     while True:
         v = max(int(math.sin(a)*6100+6000), 0)
         cv.nmot = v
-        if b % 20 == 0:
+        if b % 40 == 0:
             cv.poil = rr(0, 100)
             cv.pfuel = rr(0, 100)
             cv.toil = rr(0, 256)
