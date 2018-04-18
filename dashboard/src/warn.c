@@ -59,12 +59,12 @@ static void warn_set(int blink_id, uint8_t should_warn) {
         // draw the icon
         scr_draw_pic(blinker->pic_loc, blinker->pic_id, 0);
         // invert the text
-        scr_draw_rect(blinker->text_loc, blinker->text_width, 7, 1);
+        scr_draw_rect(blinker->text_loc, blinker->text_width, 8, 1);
     } else {
         // clear the icon
         scr_draw_rect(blinker->pic_loc<<3, 23, 15, 0);
         // and un-invert the text
-        scr_draw_rect(blinker->text_loc, blinker->text_width, 7, 0);
+        scr_draw_rect(blinker->text_loc, blinker->text_width, 8, 0);
     }
 }
 
