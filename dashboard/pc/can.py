@@ -34,6 +34,7 @@ def do(fn):
     while True:
         v = max(int(math.sin(a)*6100+6000), 0)
         cv.nmot = v
+        cv.speed = int(max(min(v*255/12000, 255), 0))
         if b % 40 == 0:
             cv.poil = rr(0, 100)
             cv.pfuel = rr(0, 100)

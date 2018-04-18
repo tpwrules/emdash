@@ -85,6 +85,13 @@ variables = [
         name="tfuel",
         msg_id=0x114, start=6, size=1, signed=False,
         callback="warn_tfuel_update", call_every_time=False
+    ),
+
+    # vehicle speed in km/h (why 16 bit??)
+    Variable(
+        name="speed",
+        msg_id=0x121, start=6, size=2, signed=False,
+        callback="drive_speed_update", call_every_time=False
     )
 ]
 

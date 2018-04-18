@@ -2,6 +2,7 @@
 // this includes:
 //  * RPM
 //  * current gear
+//  * current speed
 
 #include <stdio.h>
 
@@ -15,7 +16,9 @@ void drive_init(void) {
     scr_draw_rect(SCR_PIXEL_ADDR(0, 0, 6), 240-56, 1, 1);
     scr_draw_rect(SCR_PIXEL_ADDR(0, 240-56, 0), 1, 7, 1);
     // draw RPM text
-    scr_draw_text(SCR_TEXT_ADDR(0, 31, 0), "RPM:");
+    scr_draw_text(SCR_TEXT_ADDR(0, 31, 0), "RPM:?????");
+
+    scr_draw_text(SCR_TEXT_ADDR(0, 34, 1), "???kph");
 
     // second page is used for flashing when to upshift
     // fill it with black
@@ -75,4 +78,10 @@ void drive_gear_update(uint32_t val) {
     if (val < 12) {
         scr_draw_pic(SCR_BYTE_ADDR(0, 13, 16), PIC_ID_GEAR_PARK+val, 0);
     }
+}
+
+void drive_speed_update(uint32_t val) {
+    char str[8];
+    sprintf(str, "%3d", val);
+    scr_draw_text(SCR_TEXT_ADDR(0, 34, 1), str);
 }
