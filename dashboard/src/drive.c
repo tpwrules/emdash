@@ -10,6 +10,7 @@
 #include "canvar.h"
 #include "drive.h"
 #include "screen.h"
+#include "limits.h"
 
 void drive_init(void) {
     // draw RPM border
@@ -25,28 +26,62 @@ void drive_init(void) {
     scr_draw_rect(SCR_PIXEL_ADDR(1, 0, 0), 240, 64, 1);
 }
 
+static uint16_t old_rpm = 0;
+
+void drive_blink(uint32_t timer_val) {
+    // manage blinking the screen
+
+    // countdown to reverse blink state
+    static uint32_t blink_ctr = 0;
+    // 1 if screen is inverted for blinking
+    static uint8_t inverted = 0;
+    // 1 if actively blinking
+    static uint8_t blinking = 0;
+
+    static uint32_t last_timer_val = 0;
+
+    // update if we should be blinking or not based on RPM
+    if (!blinking && old_rpm >= LIM_UPSHIFT_BLINK_RPM_START) {
+        blinking = 1;
+        inverted = 0;
+        blink_ctr = 0;
+    } else if (blinking && old_rpm <= LIM_UPSHIFT_BLINK_RPM_STOP) {
+        blinking = 0;
+    }
+
+    uint32_t dt = timer_val - last_timer_val;
+    last_timer_val = timer_val;
+
+    // subtract passed time from counter
+    // (this function might not be called for every timer_val change!)
+    if (dt > blink_ctr)
+        blink_ctr = 0;
+    else
+        blink_ctr -= dt;
+    
+    if (blink_ctr == 0) {
+        if (!inverted && !blinking)
+            return;
+        if (inverted) {
+            // switch to main pages
+            scr_show_page(false, 0);
+            scr_show_page(true, 0);
+        } else {
+            // switch to inverted pages
+            scr_show_page(false, 1);
+            scr_show_page(true, 1);
+        }
+        inverted = !inverted;
+        blink_ctr = LIM_UPSHIFT_BLINK_PERIOD/2;
+    }
+}
+
 void drive_rpm_update(uint32_t val) {
-    static uint16_t old_rpm = 0;
     static uint8_t old_bar_val = 0;
 
     uint16_t rpm = (uint16_t)val;
 
     char text[10];
-
-    /*
-    if (rpm > 7800) {
-        // start flashing screen as a warning
-        if (timer_val % 20 == 0) {
-            uint8_t flash = timer_val % 40 < 20;
-            scr_show_page(false, flash);
-            scr_show_page(true, flash);
-        }
-    } else if (old_rpm > 7800) {
-        // reset screen to regular display
-        scr_show_page(false, 0);
-        scr_show_page(true, 0);
-    }
-    */
 
     if (rpm != old_rpm) {
         // calculate new position and draw bar
@@ -76,7 +111,10 @@ void drive_rpm_update(uint32_t val) {
 
 void drive_gear_update(uint32_t val) {
     if (val < 12) {
+        // draw gear on main page
         scr_draw_pic(SCR_BYTE_ADDR(0, 13, 16), PIC_ID_GEAR_PARK+val, 0);
+        // and inverted on inverted page
+        scr_draw_pic(SCR_BYTE_ADDR(1, 13, 16), PIC_ID_GEAR_PARK+val, 1);
     }
 }
 

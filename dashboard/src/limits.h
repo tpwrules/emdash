@@ -28,4 +28,14 @@
 // minimum safe battery voltage, in V
 #define LIM_BATTERY_MIN (13)
 
+
+// drive.c limits
+
+// RPM at which to start blinking for upshift
+#define LIM_UPSHIFT_BLINK_RPM_START (7800)
+// RPM at which to stop blinking for upshift
+#define LIM_UPSHIFT_BLINK_RPM_STOP (7400)
+// period of blinks in 10ms increments
+#define LIM_UPSHIFT_BLINK_PERIOD (40)
+
 #endif

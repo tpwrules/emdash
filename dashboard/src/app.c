@@ -62,6 +62,12 @@ void app_entry(void) {
             }
         }
 
+        uint32_t timer_now = timer_val;
+        interrupt_enable();
+        // update the drive blink timers
+        drive_blink(timer_now);
+
+        interrupt_disable();
         interrupt_wait();
     }
 }
