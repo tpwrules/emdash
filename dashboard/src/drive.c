@@ -16,8 +16,9 @@ void drive_init(void) {
     // draw RPM border
     scr_draw_rect(SCR_PIXEL_ADDR(0, 0, 6), 240-56, 1, 1);
     scr_draw_rect(SCR_PIXEL_ADDR(0, 240-56, 0), 1, 7, 1);
-    // draw RPM text
+    // draw RPM text on normal and inverted screen
     scr_draw_text(SCR_TEXT_ADDR(0, 31, 0), "RPM:?????");
+    scr_draw_text(SCR_TEXT_ADDR(1, 31, 0), "RPM:?????");
 
     scr_draw_text(SCR_TEXT_ADDR(0, 34, 1), "???kph");
 
@@ -104,6 +105,8 @@ void drive_rpm_update(uint32_t val) {
 
         sprintf(text, "%5d", rpm);
         scr_draw_text(SCR_TEXT_ADDR(0, 35, 0), text);
+        // also put it on the inverted screen
+        scr_draw_text(SCR_TEXT_ADDR(1, 35, 0), text);
         old_rpm = rpm;
         old_bar_val = bar_val;
     }
