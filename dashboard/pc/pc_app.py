@@ -4,6 +4,18 @@ import time
 import numpy as np
 import os
 
+import sys
+
+# in reality, the active area of the display is
+# 127.15mm * 33.87mm
+SCALE_FACTOR_INT = 3
+SCALE_FACTOR_REAL = 2.715
+
+if len(sys.argv) >= 2 and sys.argv[1] == "realsize":
+    SCALE = SCALE_FACTOR_REAL
+else:
+    SCALE = SCALE_FACTOR_INT
+
 # import picture list
 import sys
 sys.path.append("../pics/")
@@ -186,7 +198,7 @@ import pygame
 pygame.init()
 
 # open display
-screen = pygame.display.set_mode((3*240+32, 3*64+32))
+screen = pygame.display.set_mode((int(SCALE*240)+32, int(SCALE*64)+32))
 screen.fill((90, 90, 90))
 
 # create surfaces for the screen pages
@@ -196,7 +208,8 @@ pages = tuple(map(lambda n: pygame.Surface((240, 64)),
 tcurr, gcurr = NUM_GRAPHICS_PAGES, 0
 
 composite = pygame.Surface((240, 64))
-scomposite = pygame.Surface((3*240, 3*64))
+scomposite = pygame.Surface((int(SCALE*240), int(SCALE*64)))
+scomposite_size = scomposite.get_size()
 
 # load font bitmap
 font_bitmap_inv = pygame.image.load("../pics/font/font.png").convert()
@@ -286,7 +299,7 @@ while True:
         ca = pygame.surfarray.pixels2d(composite)
         np.bitwise_xor(aa, ba, out=ca)
         del aa, ba, ca
-        pygame.transform.scale(composite, (3*240, 3*64), scomposite)
+        pygame.transform.scale(composite, scomposite_size, scomposite)
         screen.blit(scomposite, (16, 16))
         dirty = False
         pygame.display.flip()
