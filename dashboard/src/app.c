@@ -28,7 +28,7 @@ void app_entry(void) {
     // fill it with black
     scr_draw_rect(SCR_PIXEL_ADDR(1, 0, 0), 240, 64, 1);
     // draw the gear indicator inverted
-    scr_draw_pic(SCR_BYTE_ADDR(1, 13, 16), PIC_ID_DEMO_GEAR_FOUR, true);
+    //scr_draw_pic(SCR_BYTE_ADDR(1, 13, 16), PIC_ID_DEMO_GEAR_FOUR, true);
 
     // turn on interrupts
     interrupt_enable();
@@ -46,7 +46,7 @@ void app_entry(void) {
     scr_draw_text(SCR_TEXT_ADDR(0, 31, 0), "RPM:");
 
     // and gear indicator
-    scr_draw_pic(SCR_BYTE_ADDR(0, 13, 16), PIC_ID_DEMO_GEAR_FOUR, false);
+    //scr_draw_pic(SCR_BYTE_ADDR(0, 13, 16), PIC_ID_DEMO_GEAR_FOUR, false);
     //scr_draw_rect(SCR_PIXEL_ADDR(0, 13*8, 16), 32, 32, 1);
 
     // initialize warning areas of screen
@@ -134,5 +134,7 @@ void drive_rpm_update(uint32_t val) {
 }
 
 void drive_gear_update(uint32_t val) {
-
+    if (val < 12) {
+        scr_draw_pic(SCR_BYTE_ADDR(0, 13, 16), PIC_ID_GEAR_PARK+val, 0);
+    }
 }

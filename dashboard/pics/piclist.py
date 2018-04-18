@@ -20,11 +20,9 @@ class Picture:
         self.area = area
 
 # the list itself!
-piclist = (
+piclist = [
     # the bootsplash
     Picture("bootsplash/boot.png", "bootsplash"),
-    # the lame number four
-    Picture("four.png", "demo_gear_four"),
 
     # oil pressure warning
     Picture("icons/icons.png", "oil_pressure", (0, 0, 23, 15)),
@@ -40,7 +38,14 @@ piclist = (
     Picture("icons/icons.png", "fuel_temp", (48, 16, 23, 15)),
     # battery warning
     Picture("icons/icons.png", "battery", (72, 0, 23, 15))
-)
+]
+
+# add all the gear icons
+gears = ["park", "reverse", "neutral", "drive"]
+gears.extend(range(8)) # 0 to 7
+for i, g in enumerate(gears):
+    piclist.append(Picture("gears/gears.png", 
+        "GEAR_{}".format(g), (i*32, 0, 32, 31)))
 
 if __name__ == "__main__":
     # write out header with picture names

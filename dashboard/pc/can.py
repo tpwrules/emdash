@@ -30,6 +30,7 @@ def do(fn):
 
     a = 0
     b = 0
+    gear = 0
     while True:
         v = max(int(math.sin(a)*6100+6000), 0)
         cv.nmot = v
@@ -40,6 +41,9 @@ def do(fn):
             cv.tmot = rr(0, 256)
             cv.tmot2 = rr(0, 256)
             cv.tfuel = rr(0, 256)
+        if b % 10 == 0:
+            cv.gear = gear % 12
+            gear += 1
         cv.flush()
         a += 0.05
         b += 1
