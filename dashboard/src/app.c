@@ -38,6 +38,10 @@ void app_entry(void) {
     drive_init();
     warn_init();
 
+    // throw in radio button icons
+    scr_draw_pic(SCR_BYTE_ADDR(0, 13, 48), PIC_ID_SPEAKER, 0);
+    scr_draw_pic(SCR_BYTE_ADDR(0, 15, 48), PIC_ID_MICROPHONE, 0);
+
     while (1) {
         interrupt_disable();
 

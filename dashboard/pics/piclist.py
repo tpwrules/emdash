@@ -37,7 +37,16 @@ piclist = [
     # fuel temperature warning
     Picture("icons/warning.png", "fuel_temp", (48, 16, 23, 15)),
     # battery warning
-    Picture("icons/warning.png", "battery", (72, 0, 23, 15))
+    Picture("icons/warning.png", "battery", (72, 0, 23, 15)),
+
+    # speaker icon
+    Picture("icons/buttons.png", "speaker", (0, 0, 15, 16)),
+    # upshift button icon
+    Picture("icons/buttons.png", "upshift_btn", (16, 0, 15, 15)),
+    # downshift button icon
+    Picture("icons/buttons.png", "downshift_btn", (32, 0, 15, 15)),
+    # microphone button icon
+    Picture("icons/buttons.png", "microphone", (48, 0, 15, 16))
 ]
 
 # add all the gear icons

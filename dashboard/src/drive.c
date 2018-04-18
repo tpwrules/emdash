@@ -25,6 +25,10 @@ void drive_init(void) {
     // second page is used for flashing when to upshift
     // fill it with black
     scr_draw_rect(SCR_PIXEL_ADDR(1, 0, 0), 240, 64, 1);
+
+    // demo up/down button icons
+    scr_draw_pic(SCR_BYTE_ADDR(0, 17, 16), PIC_ID_UPSHIFT_BTN, 0);
+    scr_draw_pic(SCR_BYTE_ADDR(0, 17, 32), PIC_ID_DOWNSHIFT_BTN, 0);
 }
 
 static uint16_t old_rpm = 0;
