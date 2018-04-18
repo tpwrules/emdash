@@ -27,6 +27,7 @@ def do(fn):
     cv.tmot = 4
     cv.tmot2 = 5
     cv.tfuel = 6
+    cv.ub = 7
 
     a = 0
     b = 0
@@ -42,6 +43,7 @@ def do(fn):
             cv.tmot = rr(0, 256)
             cv.tmot2 = rr(0, 256)
             cv.tfuel = rr(0, 256)
+            cv.ub = rr(0, 21)
         if b % 10 == 0:
             cv.gear = gear % 12
             gear += 1

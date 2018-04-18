@@ -15,7 +15,7 @@
 
 // the first bit of this is the blinker stuff
 // this keeps track of the blink state of each icon
-#define NUM_BLINK_ICONS (6)
+#define NUM_BLINK_ICONS (7)
 static uint8_t blink_times[NUM_BLINK_ICONS];
 
 // this holds the information on a particular icon to be blinked
@@ -45,7 +45,10 @@ static const blink_icon_t blink_icons[NUM_BLINK_ICONS] = {
         PIC_ID_FUEL_PRESSURE, 5*6+1},
 #define BLINK_FUEL_TEMP (5)
     {SCR_BYTE_ADDR(0, 6, 24), SCR_PIXEL_ADDR_AT_TEXT(0, 13, 7),
-        PIC_ID_FUEL_TEMP, 4*6+1}
+        PIC_ID_FUEL_TEMP, 4*6+1},
+#define BLINK_BATTERY (6)
+    {SCR_BYTE_ADDR(0, 9, 8), SCR_PIXEL_ADDR_AT_TEXT(0, 35, 7),
+        PIC_ID_BATTERY, 5*6}
 };
 
 // call to set or clear a warning condition for a blinker
@@ -71,6 +74,7 @@ void warn_init(void) {
     scr_draw_text(SCR_TEXT_ADDR(0, 0, 5), "Oil:  ??bar  ???C");
     scr_draw_text(SCR_TEXT_ADDR(0, 0, 6), "En: W:???C B:???C");
     scr_draw_text(SCR_TEXT_ADDR(0, 0, 7), "Fuel: ??bar  ???C");
+    scr_draw_text(SCR_TEXT_ADDR(0, 29, 7), "Batt: ????V");
 }
 
 // update handlers
@@ -115,4 +119,12 @@ void warn_tfuel_update(uint32_t val) {
     sprintf(str, "%3d", val);
     scr_draw_text(SCR_TEXT_ADDR(0, 13, 7), str);
     warn_set(BLINK_FUEL_TEMP, val > LIM_FUEL_PRESSURE_MAX);
+}
+
+// battery voltage
+void warn_ub_update(uint32_t val) {
+    char str[8];
+    sprintf(str, "%4d", val);
+    scr_draw_text(SCR_TEXT_ADDR(0, 35, 7), str);
+    warn_set(BLINK_BATTERY, val < LIM_BATTERY_MIN);
 }

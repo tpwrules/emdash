@@ -25,4 +25,7 @@
 // maximum safe fuel temperature, in C
 #define LIM_FUEL_PRESSURE_MAX (128)
 
+// minimum safe battery voltage, in V
+#define LIM_BATTERY_MIN (13)
+
 #endif

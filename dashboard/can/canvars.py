@@ -92,6 +92,13 @@ variables = [
         name="speed",
         msg_id=0x121, start=6, size=2, signed=False,
         callback="drive_speed_update", call_every_time=False
+    ),
+
+    # battery voltage in volts (why 16 bit???)
+    Variable(
+        name="ub",
+        msg_id=0x122, start=3, size=2, signed=False,
+        callback="warn_ub_update", call_every_time=False
     )
 ]
 
