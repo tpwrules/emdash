@@ -137,7 +137,7 @@ class CanvarInterface:
         if clean:
             del self.dirty_ids[msg_id]
 
-        pstr = "" # struct definition for this message
+        pstr = "<" # struct definition for this message
         data = [] # data for this definition
         byte = 0 # byte we are at
         for var in self.cv_msg_ids[msg_id]:
