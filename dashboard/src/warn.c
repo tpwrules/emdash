@@ -11,6 +11,7 @@
 #include "warn.h"
 #include "canvar.h"
 #include "screen.h"
+#include "limits.h"
 
 // the first bit of this is the blinker stuff
 // this keeps track of the blink state of each icon
@@ -78,40 +79,40 @@ void warn_poil_update(uint32_t val) {
     char str[8];
     sprintf(str, "%2d", val);
     scr_draw_text(SCR_TEXT_ADDR(0, 6, 5), str);
-    warn_set(BLINK_OIL_PRESSURE, val < 50);
+    warn_set(BLINK_OIL_PRESSURE, val < LIM_OIL_PRESSURE_MIN);
 }
 
 void warn_toil_update(uint32_t val) {
     char str[8];
     sprintf(str, "%3d", val);
     scr_draw_text(SCR_TEXT_ADDR(0, 13, 5), str);
-    warn_set(BLINK_OIL_TEMP, val > 128);
+    warn_set(BLINK_OIL_TEMP, val > LIM_OIL_TEMP_MAX);
 }
 
 void warn_tmot2_update(uint32_t val) {
     char str[8];
     sprintf(str, "%3d", val);
     scr_draw_text(SCR_TEXT_ADDR(0, 6, 6), str);
-    warn_set(BLINK_WATER_TEMP, val > 128);
+    warn_set(BLINK_WATER_TEMP, val > LIM_WATER_TEMP_MAX);
 }
 
 void warn_tmot_update(uint32_t val) {
     char str[8];
     sprintf(str, "%3d", val);
     scr_draw_text(SCR_TEXT_ADDR(0, 13, 6), str);
-    warn_set(BLINK_BLOCK_TEMP, val > 128);
+    warn_set(BLINK_BLOCK_TEMP, val > LIM_BLOCK_TEMP_MAX);
 }
 
 void warn_pfuel_update(uint32_t val) {
     char str[8];
     sprintf(str, "%2d", val);
     scr_draw_text(SCR_TEXT_ADDR(0, 6, 7), str);
-    warn_set(BLINK_FUEL_PRESSURE, val < 50);
+    warn_set(BLINK_FUEL_PRESSURE, val < LIM_FUEL_PRESSURE_MIN);
 }
 
 void warn_tfuel_update(uint32_t val) {
     char str[8];
     sprintf(str, "%3d", val);
     scr_draw_text(SCR_TEXT_ADDR(0, 13, 7), str);
-    warn_set(BLINK_FUEL_TEMP, val > 128);
+    warn_set(BLINK_FUEL_TEMP, val > LIM_FUEL_PRESSURE_MAX);
 }
