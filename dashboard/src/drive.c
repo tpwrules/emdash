@@ -29,6 +29,9 @@ void drive_init(void) {
     // demo up/down button icons
     scr_draw_pic(SCR_BYTE_ADDR(0, 17, 16), PIC_ID_UPSHIFT_BTN, 0);
     scr_draw_pic(SCR_BYTE_ADDR(0, 17, 32), PIC_ID_DOWNSHIFT_BTN, 0);
+
+    // drive mode text placeholders
+    scr_draw_text(SCR_TEXT_ADDR(0, 18, 1), "AUTO LC  TC:??");
 }
 
 static uint16_t old_rpm = 0;
