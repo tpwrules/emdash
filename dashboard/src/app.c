@@ -23,7 +23,6 @@ void app_entry(void) {
 
     // draw splash onto first page
     scr_draw_pic(SCR_BYTE_ADDR(0, 0, 0), PIC_ID_BOOTSPLASH, false);
-    scr_draw_text(SCR_TEXT_ADDR(0, 24, 0), "by Thomas Watson");
 
     // turn on interrupts
     interrupt_enable();
