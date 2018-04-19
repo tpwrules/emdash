@@ -48,15 +48,15 @@ piclist = [
     # downshift button icon
     Picture("icons/buttons.png", "downshift_btn", (32, 0, 15, 15)),
     # microphone button icon
-    Picture("icons/buttons.png", "microphone", (48, 0, 15, 16))
-]
+    Picture("icons/buttons.png", "microphone", (48, 0, 15, 16)),
 
-# add all the gear icons
-gears = ["park", "reverse", "neutral", "drive"]
-gears.extend(range(8)) # 0 to 7
-for i, g in enumerate(gears):
-    piclist.append(Picture("gears/gears.png", 
-        "GEAR_{}".format(g), (i*32, 0, 32, 31)))
+    # gear icons
+    Picture("gears/gears.png", "gear_neutral", (32*2, 0, 32, 31)),
+    Picture("gears/gears.png", "gear_1", (32*5, 0, 32, 31)),
+    Picture("gears/gears.png", "gear_2", (32*6, 0, 32, 31)),
+    Picture("gears/gears.png", "gear_3", (32*7, 0, 32, 31)),
+    Picture("gears/gears.png", "gear_4", (32*8, 0, 32, 31))
+]
 
 if __name__ == "__main__":
     # write out header with picture names

@@ -45,7 +45,7 @@ def do(fn):
             cv.tfuel = rr(0, 256)
             cv.ub = rr(0, 21)
         if b % 10 == 0:
-            cv.gear = gear % 12
+            cv.gear = gear % 5
             gear += 1
         cv.flush()
         a += 0.05

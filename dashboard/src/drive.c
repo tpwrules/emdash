@@ -117,11 +117,11 @@ void drive_rpm_update(uint32_t val) {
 }
 
 void drive_gear_update(uint32_t val) {
-    if (val < 12) {
+    if (val < 5) {
         // draw gear on main page
-        scr_draw_pic(SCR_BYTE_ADDR(0, 13, 16), PIC_ID_GEAR_PARK+val, 0);
+        scr_draw_pic(SCR_BYTE_ADDR(0, 13, 16), PIC_ID_GEAR_NEUTRAL+val, 0);
         // and inverted on inverted page
-        scr_draw_pic(SCR_BYTE_ADDR(1, 13, 16), PIC_ID_GEAR_PARK+val, 1);
+        scr_draw_pic(SCR_BYTE_ADDR(1, 13, 16), PIC_ID_GEAR_NEUTRAL+val, 1);
     }
 }
 
