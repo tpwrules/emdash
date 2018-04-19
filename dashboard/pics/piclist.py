@@ -41,14 +41,12 @@ piclist = [
     # oil temperature low warning
     Picture("icons/warning.png", "oil_temp_low", (72, 16, 23, 15)),
 
-    # speaker icon
-    Picture("icons/buttons.png", "speaker", (0, 0, 15, 16)),
+    # headset icon for radio active
+    Picture("icons/buttons.png", "radio", (0, 0, 15, 16)),
     # upshift button icon
     Picture("icons/buttons.png", "upshift_btn", (16, 0, 15, 15)),
     # downshift button icon
     Picture("icons/buttons.png", "downshift_btn", (32, 0, 15, 15)),
-    # microphone button icon
-    Picture("icons/buttons.png", "microphone", (48, 0, 15, 16)),
 
     # gear icons
     Picture("gears/gears.png", "gear_neutral", (32*2, 0, 32, 31)),
