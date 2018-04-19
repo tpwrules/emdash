@@ -15,7 +15,7 @@
 
 // the first bit of this is the blinker stuff
 // this keeps track of the blink state of each icon
-#define NUM_BLINK_ICONS (7)
+#define NUM_BLINK_ICONS (8)
 static uint8_t blink_times[NUM_BLINK_ICONS];
 
 // this holds the information on a particular icon to be blinked
@@ -48,7 +48,10 @@ static const blink_icon_t blink_icons[NUM_BLINK_ICONS] = {
         PIC_ID_FUEL_TEMP, 4*6+1},
 #define BLINK_BATTERY (6)
     {SCR_BYTE_ADDR(0, 9, 8), SCR_PIXEL_ADDR_AT_TEXT(0, 35, 7),
-        PIC_ID_BATTERY, 5*6}
+        PIC_ID_BATTERY, 5*6},
+#define BLINK_OIL_TEMP_LOW (7)
+    {SCR_BYTE_ADDR(0, 9, 24), SCR_PIXEL_ADDR_AT_TEXT(0, 13, 5),
+        PIC_ID_OIL_TEMP_LOW, 0}
 };
 
 // call to set or clear a warning condition for a blinker
@@ -59,12 +62,14 @@ static void warn_set(int blink_id, uint8_t should_warn) {
         // draw the icon
         scr_draw_pic(blinker->pic_loc, blinker->pic_id, 0);
         // invert the text
-        scr_draw_rect(blinker->text_loc, blinker->text_width, 8, 1);
+        if (blinker->text_width > 0)
+            scr_draw_rect(blinker->text_loc, blinker->text_width, 8, 1);
     } else {
         // clear the icon
         scr_draw_rect(blinker->pic_loc<<3, 23, 15, 0);
         // and un-invert the text
-        scr_draw_rect(blinker->text_loc, blinker->text_width, 8, 0);
+        if (blinker->text_width > 0)
+            scr_draw_rect(blinker->text_loc, blinker->text_width, 8, 0);
     }
 }
 
@@ -91,6 +96,7 @@ void warn_toil_update(uint32_t val) {
     sprintf(str, "%3d", val);
     scr_draw_text(SCR_TEXT_ADDR(0, 13, 5), str);
     warn_set(BLINK_OIL_TEMP, val > LIM_OIL_TEMP_MAX);
+    warn_set(BLINK_OIL_TEMP_LOW, val < LIM_OIL_TEMP_MIN);
 }
 
 void warn_tmot2_update(uint32_t val) {

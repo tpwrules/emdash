@@ -8,25 +8,28 @@
 // the corresponding light will be turned on
 
 // minimum safe oil pressure, in bar
-#define LIM_OIL_PRESSURE_MIN (50)
+#define LIM_OIL_PRESSURE_MIN (50) // 0.5bar
 
 // maximum safe oil temperature, in C
-#define LIM_OIL_TEMP_MAX (128)
+#define LIM_OIL_TEMP_MAX (128) // 120C
+
+// minimum safe oil temperature, in C
+#define LIM_OIL_TEMP_MIN (64) // 60C
 
 // maximum safe water temperature, in C
-#define LIM_WATER_TEMP_MAX (128)
+#define LIM_WATER_TEMP_MAX (128) // 100C
 
 // maximum safe block temperature, in C
-#define LIM_BLOCK_TEMP_MAX (128)
+#define LIM_BLOCK_TEMP_MAX (128) // 110C
 
 // minimum safe fuel pressure, in bar
-#define LIM_FUEL_PRESSURE_MIN (50)
+#define LIM_FUEL_PRESSURE_MIN (50) // 4bar
 
 // maximum safe fuel temperature, in C
-#define LIM_FUEL_PRESSURE_MAX (128)
+#define LIM_FUEL_PRESSURE_MAX (128) // 50C
 
 // minimum safe battery voltage, in V
-#define LIM_BATTERY_MIN (13)
+#define LIM_BATTERY_MIN (13) // 12.8V
 
 
 // drive.c limits

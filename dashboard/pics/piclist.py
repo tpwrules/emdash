@@ -38,6 +38,8 @@ piclist = [
     Picture("icons/warning.png", "fuel_temp", (48, 16, 23, 15)),
     # battery warning
     Picture("icons/warning.png", "battery", (72, 0, 23, 15)),
+    # oil temperature low warning
+    Picture("icons/warning.png", "oil_temp_low", (72, 16, 23, 15)),
 
     # speaker icon
     Picture("icons/buttons.png", "speaker", (0, 0, 15, 16)),
