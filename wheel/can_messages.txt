@@ -1,0 +1,60 @@
+CAN Messages sent from Wheel
+
+V1.0
+
+All button messages are sent every 50ms, or immediately when a button is pressed. All button variables are 8 bits. 0 indicates button not pressed, 1 indicates button is pressed. The Version message is sent every second.
+
+Button Messages
+
+* wb_clutch
+    * ID: $131, start byte: 0
+    * Clutch button
+
+* wb_upshift
+    * ID: $131, start byte: 1
+    * transmission shift up
+
+* wb_downshift
+    * ID: $131, start byte: 2
+    * transmission shift down
+
+* wb_dash_mode
+    * ID: $131, start byte: 3
+    * switch dashboard display mode
+
+* wb_radio
+    * ID: $131, start byte: 4
+    * turn on headset radio
+
+* wb_autoshift
+    * ID: $131, start byte: 5
+    * enable/disable automatic shifting
+
+* wb_traction_knob
+    * ID: $131, start byte: 6
+    * traction control level
+    * NOTE: this value is a byte from 0 to 11 corresponding
+            to the 12 positions of the knob
+
+* wb_launch
+    * ID: $131, start byte: 7
+    * enable/disable launch control
+
+* wb_lap
+    * ID: $132, start byte: 0
+    * signal lap complete
+
+
+Version Message
+
+The wheel controller sends out a version message every second to indicate what software it is programmed with. Values are sent little endian.
+
+* wb_version_commit
+    * ID: $130, start byte: 0, size: uint32_t
+    * first four bytes of the git commit hash
+
+* wb_version_build
+    * ID: $130, start byte: 4, size: uint32_t
+    * number representing build date and time of firmware
+    * e.g. for build of 2018-04-20 at 17:55,
+        value is 1804201755
