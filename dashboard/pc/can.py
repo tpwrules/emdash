@@ -46,6 +46,8 @@ def do(fn):
             cv.ub = rr(0, 21)
         if b % 10 == 0:
             cv.gear = gear % 5
+            cv.B_autoshiften_ems = gear % 2
+            cv.B_launch = 1-(gear % 2)
             gear += 1
         cv.flush()
         a += 0.05

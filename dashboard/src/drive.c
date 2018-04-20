@@ -31,7 +31,7 @@ void drive_init(void) {
     scr_draw_pic(SCR_BYTE_ADDR(0, 17, 32), PIC_ID_DOWNSHIFT_BTN, 0);
 
     // drive mode text placeholders
-    scr_draw_text(SCR_TEXT_ADDR(0, 18, 1), "AUTO LC  TC:??");
+    scr_draw_text(SCR_TEXT_ADDR(0, 27, 1), "TC:??");
 }
 
 static uint16_t old_rpm = 0;
@@ -132,4 +132,20 @@ void drive_speed_update(uint32_t val) {
     char str[8];
     sprintf(str, "%3d", val);
     scr_draw_text(SCR_TEXT_ADDR(0, 34, 1), str);
+}
+
+void drive_B_autoshiften_ems_update(uint32_t val) {
+    if (val) {
+        scr_draw_text(SCR_TEXT_ADDR(0, 18, 1), "AUTO");
+    } else {
+        scr_draw_text(SCR_TEXT_ADDR(0, 18, 1), "    ");
+    }
+}
+
+void drive_B_launch_update(uint32_t val) {
+    if (val) {
+        scr_draw_text(SCR_TEXT_ADDR(0, 23, 1), "LC");
+    } else {
+        scr_draw_text(SCR_TEXT_ADDR(0, 23, 1), "  ");
+    }
 }

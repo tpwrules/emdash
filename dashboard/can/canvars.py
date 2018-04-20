@@ -99,6 +99,20 @@ variables = [
         name="ub",
         msg_id=0x122, start=3, size=2, signed=False,
         callback="warn_ub_update", call_every_time=False
+    ),
+
+    # nonzero if transmission is in automatic mode
+    Variable(
+        name="B_autoshiften_ems",
+        msg_id=0x101, start=2, size=1, signed=False,
+        callback="drive_B_autoshiften_ems_update", call_every_time=False
+    ),
+
+    # nonzero if launch control is active
+    Variable(
+        name="B_launch",
+        msg_id=0x119, start=2, size=1, signed=False,
+        callback="drive_B_launch_update", call_every_time=False
     )
 ]
 

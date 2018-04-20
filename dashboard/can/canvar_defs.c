@@ -1,8 +1,10 @@
 #include "../src/canvar.h"
 #include "canvar_defs.h"
-volatile canvar_state_t canvar_states[10];
+volatile canvar_state_t canvar_states[12];
 
+void drive_B_autoshiften_ems_update(uint32_t val);
 void warn_tfuel_update(uint32_t val);
+void drive_B_launch_update(uint32_t val);
 void drive_gear_update(uint32_t val);
 void drive_rpm_update(uint32_t val);
 void warn_pfuel_update(uint32_t val);
@@ -13,8 +15,10 @@ void warn_tmot2_update(uint32_t val);
 void warn_toil_update(uint32_t val);
 void warn_ub_update(uint32_t val);
 
-const canvar_def_t canvar_defs[10] = {
+const canvar_def_t canvar_defs[12] = {
+{drive_B_autoshiften_ems_update, 257, 2, 1, 0, 0},
 {warn_tfuel_update, 276, 6, 1, 0, 0},
+{drive_B_launch_update, 281, 2, 1, 0, 0},
 {drive_gear_update, 281, 7, 1, 0, 0},
 {drive_rpm_update, 289, 2, 2, 0, 0},
 {warn_pfuel_update, 289, 4, 1, 0, 0},
@@ -26,7 +30,21 @@ const canvar_def_t canvar_defs[10] = {
 {warn_ub_update, 290, 3, 2, 0, 0},
 };
 
-const uint8_t canvar_id_map[15] = {
+const uint8_t canvar_id_map[34] = {
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
 0,
 0,
 0,
@@ -37,9 +55,14 @@ const uint8_t canvar_id_map[15] = {
 0,
 0,
 0,
-0,
-0,
-0,
 2,
-6,
+0,
+0,
+0,
+0,
+0,
+0,
+0,
+4,
+8,
 };
