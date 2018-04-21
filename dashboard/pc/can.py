@@ -5,18 +5,12 @@ import random
 import struct
 import math
 
-import sys
-sys.path.append("../can/")
-import canvars
-
 import random
 rr = random.randrange
 
-def do(fn):
+def do(fn, cv):
     global can_send
     can_send = fn
-
-    cv = canvars.CanvarInterface(fn)
 
     cv.nmot = 0
     cv.gear = 0

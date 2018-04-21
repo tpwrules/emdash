@@ -188,8 +188,13 @@ def can_send(msg_id, data):
     # free the array we made (not strictly necessary)
     del d
 
+sys.path.append("../can/")
+# construct a canvar interface for it as we need one too
+import canvars
+cv = canvars.CanvarInterface(can_send)
+
 import can
-can_thread = threading.Thread(target=can.do, args=(can_send,), daemon=True)
+can_thread = threading.Thread(target=can.do, args=(can_send,cv), daemon=True)
 
 # now get pygame up and running to make the graphics go
 
