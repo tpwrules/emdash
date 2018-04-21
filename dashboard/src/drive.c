@@ -161,3 +161,11 @@ void drive_wb_downshift_update(uint32_t val) {
         scr_draw_rect(SCR_PIXEL_ADDR(0, 17*8, 32), 16, 15, 0);
     }
 }
+
+void drive_wb_radio_update(uint32_t val) {
+    if (val) {
+        scr_draw_pic(SCR_BYTE_ADDR(0, 15, 48), PIC_ID_RADIO, 0);
+    } else {
+        scr_draw_rect(SCR_PIXEL_ADDR(0, 15*8, 48), 16, 15, 0);
+    }
+}

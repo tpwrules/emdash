@@ -143,6 +143,12 @@ variables = [
         name="wb_downshift",
         msg_id=0x131, start=2, size=1, signed=False,
         callback="drive_wb_downshift_update", call_every_time=False
+    ),
+
+    Variable(
+        name="wb_radio",
+        msg_id=0x131, start=4, size=1, signed=False,
+        callback="drive_wb_radio_update", call_every_time=False
     )
 ]
 

@@ -39,9 +39,6 @@ void app_entry(void) {
     warn_init();
     version_init();
 
-    // throw in radio button icon
-    scr_draw_pic(SCR_BYTE_ADDR(0, 15, 48), PIC_ID_RADIO, 0);
-
     while (1) {
         interrupt_disable();
 

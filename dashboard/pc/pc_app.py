@@ -248,7 +248,8 @@ can_thread.start()
 
 buttons = {
     pygame.K_w: "wb_upshift",
-    pygame.K_s: "wb_downshift"
+    pygame.K_s: "wb_downshift",
+    pygame.K_r: "wb_radio"
 }
 
 # now enter pygame event loop
