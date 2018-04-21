@@ -4,6 +4,7 @@
 #include "canvar.h"
 #include "warn.h"
 #include "drive.h"
+#include "version.h"
 
 #include <stdio.h>
 
@@ -36,6 +37,7 @@ void app_entry(void) {
     // initialize the various display modules
     drive_init();
     warn_init();
+    version_init();
 
     // throw in radio button icon
     scr_draw_pic(SCR_BYTE_ADDR(0, 15, 48), PIC_ID_RADIO, 0);

@@ -16,13 +16,15 @@
 #define cv_tmot2 (canvar_states[9])
 #define cv_toil (canvar_states[10])
 #define cv_ub (canvar_states[11])
+#define cv_wb_version_commit (canvar_states[12])
+#define cv_wb_version_build (canvar_states[13])
 
-extern volatile canvar_state_t canvar_states[12];
-extern const canvar_def_t canvar_defs[12];
+extern volatile canvar_state_t canvar_states[14];
+extern const canvar_def_t canvar_defs[14];
 
-#define CANVAR_NUM_VARS (12)
+#define CANVAR_NUM_VARS (14)
 #define CANVAR_ID_MAP_FIRST (257)
-#define CANVAR_ID_MAP_COUNT (34)
-extern const uint8_t canvar_id_map[34];
+#define CANVAR_ID_MAP_COUNT (48)
+extern const uint8_t canvar_id_map[48];
 
 #endif

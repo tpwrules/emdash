@@ -113,6 +113,22 @@ variables = [
         name="B_launch",
         msg_id=0x119, start=2, size=1, signed=False,
         callback="drive_B_launch_update", call_every_time=False
+    ),
+
+    # first four bytes of git commit hash in wheel firmware
+    Variable(
+        name="wb_version_commit",
+        msg_id=0x130, start=0, size=4, signed=False,
+        callback="version_wb_commit_update", call_every_time=False
+    ),
+
+    # integer time value of wheel firmware build
+    # e.g. for build of 2018-04-20 at 17:55,
+    # value is 1804201755
+    Variable(
+        name = "wb_version_build",
+        msg_id=0x130, start=4, size=4, signed=False,
+        callback="version_wb_build_update", call_every_time=False
     )
 ]
 
