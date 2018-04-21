@@ -4,6 +4,10 @@ cd "$(dirname "$0")"
 
 AP='../src'
 
+pushd ../misc
+python3 write_build_version.py
+popd
+
 pushd ../can
 python3 canvars.py
 popd
