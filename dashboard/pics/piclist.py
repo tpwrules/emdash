@@ -76,6 +76,43 @@ def pic_encode_raw(pixels):
                 b = 0
     return data
 
+def pic_encode_c1(pixels):
+    # encode pixels with a control byte
+    # each byte has 0 if the corresponding image byte is 0,
+    # or 1 if it's not
+    # LSB in control is leftmost pixel
+
+    ctl = 0
+    ctlc = 0
+    data = bytearray()
+    cdata = bytearray()
+    for row in pixels:
+        bl = 0
+        b = 0
+        for pixel in row:
+            b <<= 1
+            b |= pixel
+            bl += 1
+            if bl == 8:
+                if b > 0:
+                    ctl |= (1 << ctlc)
+                    cdata.append(b)
+                bl = 0
+                b = 0
+                ctlc += 1
+                if ctlc == 8:
+                    data.append(ctl)
+                    data.extend(cdata)
+                    ctlc = 0
+                    ctl = 0
+                    cdata = bytearray()
+    if ctlc > 0:
+        data.append(ctl)
+        data.extend(cdata)
+
+    return data
+
+
 def write_pic_data():
     pic_bytes = bytearray()
     pic_records = []
@@ -109,10 +146,15 @@ def write_pic_data():
             new_img.append(new_row)
 
         # now that we have only the image pixels, encode them
-        d1 = pic_encode_raw(new_img)
+        d = pic_encode_raw(new_img)
+        d2 = pic_encode_c1(new_img)
+        ct = 0
+        if len(d2) < len(d):
+            d = d2
+            ct = 1
 
-        pic_records.append((len(new_img[0])>>3, len(new_img), len(pic_bytes)))
-        pic_bytes.extend(d1)
+        pic_records.append((len(new_img[0])>>3, len(new_img), len(pic_bytes), ct))
+        pic_bytes.extend(d)
 
     print("total picture bytes: {}".format(len(pic_bytes)))
 
@@ -131,8 +173,8 @@ def write_pic_data():
         len(pic_records)))
 
     for ri, r in enumerate(pic_records):
-        f.write("{{&pic_bytes[{}], {}, {}}},\n".format(
-            r[2], r[0], r[1]))
+        f.write("{{&pic_bytes[{}], {}, {}, {}}},\n".format(
+            r[2], r[0], r[1], r[3]))
 
     f.write("};\n")
 
