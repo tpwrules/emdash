@@ -250,7 +250,8 @@ buttons = {
     pygame.K_w: "wb_upshift",
     pygame.K_s: "wb_downshift",
     pygame.K_r: "wb_radio",
-    pygame.K_t: "wb_traction_knob"
+    pygame.K_t: "wb_traction_knob",
+    pygame.K_q: "wb_dash_mode"
 }
 
 traction = 0

@@ -20,13 +20,14 @@
 #define cv_wb_version_build (canvar_states[13])
 #define cv_wb_upshift (canvar_states[14])
 #define cv_wb_downshift (canvar_states[15])
-#define cv_wb_radio (canvar_states[16])
-#define cv_wb_traction_knob (canvar_states[17])
+#define cv_wb_dash_mode (canvar_states[16])
+#define cv_wb_radio (canvar_states[17])
+#define cv_wb_traction_knob (canvar_states[18])
 
-extern volatile canvar_state_t canvar_states[18];
-extern const canvar_def_t canvar_defs[18];
+extern volatile canvar_state_t canvar_states[19];
+extern const canvar_def_t canvar_defs[19];
 
-#define CANVAR_NUM_VARS (18)
+#define CANVAR_NUM_VARS (19)
 #define CANVAR_ID_MAP_FIRST (257)
 #define CANVAR_ID_MAP_COUNT (49)
 extern const uint8_t canvar_id_map[49];

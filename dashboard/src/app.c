@@ -76,3 +76,7 @@ void app_entry(void) {
 void app_timer_interrupt(void) {
     timer_val++;
 }
+
+void app_wb_dash_mode_update(uint32_t val) {
+    
+}

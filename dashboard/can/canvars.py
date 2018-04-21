@@ -155,6 +155,12 @@ variables = [
         name="wb_traction_knob",
         msg_id=0x131, start=6, size=1, signed=False,
         callback="drive_wb_traction_knob_update", call_every_time=False
+    ),
+
+    Variable(
+        name="wb_dash_mode",
+        msg_id=0x131, start=3, size=1, signed=False,
+        callback="app_wb_dash_mode_update", call_every_time=False
     )
 ]
 
