@@ -41,4 +41,12 @@
 // period of blinks in 10ms increments
 #define LIM_UPSHIFT_BLINK_PERIOD (40)
 
+// app.c limits
+
+// time to display splash screen, timed from boot, in 10ms units
+#define LIM_BOOT_SPLASH_TIME (200)
+
+// time to display version mode, timed from boot, in 10ms units
+#define LIM_VERSION_DISP_TIME (LIM_BOOT_SPLASH_TIME+300)
+
 #endif

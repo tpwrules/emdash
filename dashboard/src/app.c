@@ -5,10 +5,15 @@
 #include "warn.h"
 #include "drive.h"
 #include "version.h"
+#include "limits.h"
 
 #include <stdio.h>
 
 volatile int timer_val = 0;
+
+// set to 1 the first time the mode is switched
+// to disable the auto switch at beginning
+static int mode_was_ever_switched = 0;
 
 void app_entry(void) {
     // show page 0 for text and graphics
@@ -28,7 +33,7 @@ void app_entry(void) {
     // turn on interrupts
     interrupt_enable();
     // wait a bit of time for the splash to be shown
-    while (timer_val < 120);
+    while (timer_val < LIM_BOOT_SPLASH_TIME);
 
     // now clear and build the main screen
     scr_clear_page(false, 0);
@@ -42,9 +47,15 @@ void app_entry(void) {
     app_next_mode_func = version_init;
     // and now show it
     app_show_next_mode();
+    mode_was_ever_switched = 0;
 
     while (1) {
         interrupt_disable();
+
+        // switch away from version mode if a certain
+        // amount of time has elapsed and the user hasn't done anything
+        if (!mode_was_ever_switched && timer_val >= LIM_VERSION_DISP_TIME)
+            app_show_next_mode();
 
         if (canvar_was_updated) {
             canvar_was_updated = 0;
@@ -90,6 +101,7 @@ void app_wb_dash_mode_update(uint32_t val) {
 app_mode_t app_next_mode_func;
 
 void app_show_next_mode(void) {
+    mode_was_ever_switched = 1;
     // erase the modal area
     for (int r=2; r<7; r++)
         scr_draw_text(SCR_TEXT_ADDR(0, 26, r), "              ");
