@@ -1,6 +1,8 @@
 #ifndef PIC_IDS_H
 #define PIC_IDS_H
 
+#define PIC_NUMBER_OF_IDS (17)
+
 #define PIC_ID_BOOTSPLASH (0)
 #define PIC_ID_OIL_PRESSURE (1)
 #define PIC_ID_OIL_TEMP (2)
