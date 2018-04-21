@@ -138,8 +138,12 @@ variables.sort(key=lambda v: (v.msg_id, v.start))
 if len(variables) > 256:
     raise Exception("too many variables")
 
+import threading
+
 class CanvarInterface:
     def __init__(self, fn):
+        self.lock = threading.RLock()
+
         # the can_send function
         self.can_send = fn
 
@@ -161,60 +165,67 @@ class CanvarInterface:
         # self.flush() is called
         # if not buffered, they are sent every time
         # a variable is set
-        if self.buffered:
-            self.flush()
-        self.buffered = buffered
+        with self.lock:
+            if self.buffered:
+                self.flush()
+            self.buffered = buffered
 
     def flush(self):
-        for msg_id in self.dirty_ids:
-            self.flush_id(msg_id, clean=False)
-        self.dirty_ids = set()
+        with self.lock:
+            for msg_id in self.dirty_ids:
+                self.flush_id(msg_id, clean=False)
+            self.dirty_ids = set()
 
     def flush_id(self, msg_id, clean=True):
-        if clean:
-            del self.dirty_ids[msg_id]
+        with self.lock:
+            if clean:
+                del self.dirty_ids[msg_id]
 
-        pstr = "<" # struct definition for this message
-        data = [] # data for this definition
-        byte = 0 # byte we are at
-        for var in self.cv_msg_ids[msg_id]:
-            # pad message to this variable
-            while byte < var.start:
-                pstr += "x"
-                byte += 1
-            # generate appropriate type character
-            c = " bh i"[var.size]
-            if not var.signed:
-                c = c.upper()
-            pstr += c # and add it to the struct
-            # append the data for this var (or 0 if there's none yet)
-            try:
-                data.append(var.val)
-            except:
-                data.append(0)
-            byte += var.size
+            pstr = "<" # struct definition for this message
+            data = [] # data for this definition
+            byte = 0 # byte we are at
+            for var in self.cv_msg_ids[msg_id]:
+                # pad message to this variable
+                while byte < var.start:
+                    pstr += "x"
+                    byte += 1
+                # generate appropriate type character
+                c = " bh i"[var.size]
+                if not var.signed:
+                    c = c.upper()
+                pstr += c # and add it to the struct
+                # append the data for this var (or 0 if there's none yet)
+                try:
+                    data.append(var.val)
+                except:
+                    data.append(0)
+                byte += var.size
 
-        # pack up the message
-        pdata = struct.pack(pstr, *data)
-        # and send it!
-        self.can_send(msg_id, pdata)
+            # pack up the message
+            pdata = struct.pack(pstr, *data)
+            # and send it!
+            self.can_send(msg_id, pdata)
 
     def __setattr__(self, name, value):
-        try:
-            # is this setting a variable?
-            var = self.cv_names[name]
-        except:
-            # no, do the regular set thing
+        if name == "lock":
             super().__setattr__(name, value)
             return
-        # it is, set it
-        var.val = value
-        # and either mark id as dirty if in buffered mode
-        # or flush the id in nonbuffered mode
-        if self.buffered:
-            self.dirty_ids.add(var.msg_id)
-        else:
-            self.flush_id(var.msg_id)
+        with self.lock:
+            try:
+                # is this setting a variable?
+                var = self.cv_names[name]
+            except:
+                # no, do the regular set thing
+                super().__setattr__(name, value)
+                return
+            # it is, set it
+            var.val = value
+            # and either mark id as dirty if in buffered mode
+            # or flush the id in nonbuffered mode
+            if self.buffered:
+                self.dirty_ids.add(var.msg_id)
+            else:
+                self.flush_id(var.msg_id)
 
 def build_defs():
     # write out header file first
