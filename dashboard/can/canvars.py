@@ -149,6 +149,12 @@ variables = [
         name="wb_radio",
         msg_id=0x131, start=4, size=1, signed=False,
         callback="drive_wb_radio_update", call_every_time=False
+    ),
+
+    Variable(
+        name="wb_traction_knob",
+        msg_id=0x131, start=6, size=1, signed=False,
+        callback="drive_wb_traction_knob_update", call_every_time=False
     )
 ]
 

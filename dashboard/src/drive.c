@@ -169,3 +169,9 @@ void drive_wb_radio_update(uint32_t val) {
         scr_draw_rect(SCR_PIXEL_ADDR(0, 15*8, 48), 16, 15, 0);
     }
 }
+
+void drive_wb_traction_knob_update(uint32_t val) {
+    char str[10];
+    sprintf(str, "%02d", val);
+    scr_draw_text(SCR_TEXT_ADDR(0, 30, 1), str);
+}

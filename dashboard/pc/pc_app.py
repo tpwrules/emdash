@@ -249,8 +249,13 @@ can_thread.start()
 buttons = {
     pygame.K_w: "wb_upshift",
     pygame.K_s: "wb_downshift",
-    pygame.K_r: "wb_radio"
+    pygame.K_r: "wb_radio",
+    pygame.K_t: "wb_traction_knob"
 }
+
+traction = 0
+cv.wb_traction_knob = 0
+cv.flush()
 
 # now enter pygame event loop
 dirty = True
@@ -265,13 +270,18 @@ while True:
                 attr = buttons[event.key]
             except:
                 continue
-            setattr(cv, attr, 1)
+            if attr == "wb_traction_knob":
+                traction = (traction + 1) % 12
+                setattr(cv, attr, traction)
+            else:
+                setattr(cv, attr, 1)
             button_changed = True
         elif event.type == pygame.KEYUP:
             try:
                 attr = buttons[event.key]
             except:
                 continue
+            if attr == "wb_traction_knob": continue
             setattr(cv, attr, 0)
             button_changed = True
     if event.type == pygame.QUIT:
