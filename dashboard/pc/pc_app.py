@@ -212,11 +212,7 @@ scomposite = pygame.Surface((int(SCALE*240), int(SCALE*64)))
 scomposite_size = scomposite.get_size()
 
 # load font bitmap
-font_bitmap_inv = pygame.image.load("../pics/font/font.png").convert()
-font_bitmap = pygame.Surface(font_bitmap_inv.get_size())
-font_bitmap.fill((255, 255, 255))
-font_bitmap.blit(font_bitmap_inv, (0, 0), special_flags=pygame.BLEND_RGB_SUB)
-del font_bitmap_inv
+font_bitmap = pygame.image.load("../pics/font/font_sim.png").convert()
 
 # load pictures from piclist
 pics = []

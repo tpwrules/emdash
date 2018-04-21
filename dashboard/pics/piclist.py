@@ -24,6 +24,10 @@ piclist = [
     # the bootsplash
     Picture("bootsplash/boot.png", "bootsplash"),
 
+    # the font (stored as a picture so it can be programmed
+    #   into the screen)
+    Picture("font/font_pic.png", "font_6x8"),
+
     # oil pressure warning
     Picture("icons/warning.png", "oil_pressure", (0, 0, 23, 15)),
     # oil temperature warning
