@@ -94,9 +94,50 @@ def pic_encode_c1(pixels):
             b |= pixel
             bl += 1
             if bl == 8:
-                if b > 0:
+                if b > 0 :
                     ctl |= (1 << ctlc)
                     cdata.append(b)
+                bl = 0
+                b = 0
+                ctlc += 1
+                if ctlc == 8:
+                    data.append(ctl)
+                    data.extend(cdata)
+                    ctlc = 0
+                    ctl = 0
+                    cdata = bytearray()
+    if ctlc > 0:
+        data.append(ctl)
+        data.extend(cdata)
+
+    return data
+
+def pic_encode_c2(pixels):
+    # encode pixels with a control byte
+    # each byte has 0 if the corresponding image byte is 0,
+    # or 1 if it's not
+    # LSB in control is leftmost pixel
+    # same as above except XOR difference between bytes
+    # is encoded instead
+
+    ctl = 0
+    ctlc = 0
+    last = 0
+    data = bytearray()
+    cdata = bytearray()
+    for row in pixels:
+        bl = 0
+        b = 0
+        for pixel in row:
+            b <<= 1
+            b |= pixel
+            bl += 1
+            if bl == 8:
+                tb = b ^ last
+                last = b
+                if tb > 0 :
+                    ctl |= (1 << ctlc)
+                    cdata.append(tb)
                 bl = 0
                 b = 0
                 ctlc += 1
@@ -146,15 +187,17 @@ def write_pic_data():
             new_img.append(new_row)
 
         # now that we have only the image pixels, encode them
-        d = pic_encode_raw(new_img)
-        d2 = pic_encode_c1(new_img)
-        ct = 0
-        if len(d2) < len(d):
-            d = d2
-            ct = 1
+        pms = [
+            (pic_encode_raw(new_img), 0),
+            (pic_encode_c1(new_img), 1),
+            (pic_encode_c2(new_img), 2)
+        ]
 
-        pic_records.append((len(new_img[0])>>3, len(new_img), len(pic_bytes), ct))
-        pic_bytes.extend(d)
+        pms.sort(key=lambda m: (len(m[0]), m[1]))
+
+        pic_records.append((len(new_img[0])>>3, len(new_img),
+            len(pic_bytes), pms[0][1]))
+        pic_bytes.extend(pms[0][0])
 
     print("total picture bytes: {}".format(len(pic_bytes)))
 
