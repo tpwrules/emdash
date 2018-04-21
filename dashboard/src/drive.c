@@ -26,10 +26,6 @@ void drive_init(void) {
     // fill it with black
     scr_draw_rect(SCR_PIXEL_ADDR(1, 0, 0), 240, 64, 1);
 
-    // demo up/down button icons
-    scr_draw_pic(SCR_BYTE_ADDR(0, 17, 16), PIC_ID_UPSHIFT_BTN, 0);
-    scr_draw_pic(SCR_BYTE_ADDR(0, 17, 32), PIC_ID_DOWNSHIFT_BTN, 0);
-
     // drive mode text placeholders
     scr_draw_text(SCR_TEXT_ADDR(0, 27, 1), "TC:??");
 }
@@ -147,5 +143,21 @@ void drive_B_launch_update(uint32_t val) {
         scr_draw_text(SCR_TEXT_ADDR(0, 23, 1), "LC");
     } else {
         scr_draw_text(SCR_TEXT_ADDR(0, 23, 1), "  ");
+    }
+}
+
+void drive_wb_upshift_update(uint32_t val) {
+    if (val) {
+        scr_draw_pic(SCR_BYTE_ADDR(0, 17, 16), PIC_ID_UPSHIFT_BTN, 0);
+    } else {
+        scr_draw_rect(SCR_PIXEL_ADDR(0, 17*8, 16), 16, 15, 0);
+    }
+}
+
+void drive_wb_downshift_update(uint32_t val) {
+    if (val) {
+        scr_draw_pic(SCR_BYTE_ADDR(0, 17, 32), PIC_ID_DOWNSHIFT_BTN, 0);
+    } else {
+        scr_draw_rect(SCR_PIXEL_ADDR(0, 17*8, 32), 16, 15, 0);
     }
 }

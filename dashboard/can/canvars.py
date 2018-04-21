@@ -126,9 +126,23 @@ variables = [
     # e.g. for build of 2018-04-20 at 17:55,
     # value is 1804201755
     Variable(
-        name = "wb_version_build",
+        name="wb_version_build",
         msg_id=0x130, start=4, size=4, signed=False,
         callback="version_wb_build_update", call_every_time=False
+    ),
+
+    # relevant buttons from wheel
+
+    Variable(
+        name="wb_upshift",
+        msg_id=0x131, start=1, size=1, signed=False,
+        callback="drive_wb_upshift_update", call_every_time=False
+    ),
+
+    Variable(
+        name="wb_downshift",
+        msg_id=0x131, start=2, size=1, signed=False,
+        callback="drive_wb_downshift_update", call_every_time=False
     )
 ]
 

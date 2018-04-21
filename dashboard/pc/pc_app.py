@@ -246,15 +246,38 @@ app_thread.start()
 timer_thread.start()
 can_thread.start()
 
+buttons = {
+    pygame.K_w: "wb_upshift",
+    pygame.K_s: "wb_downshift"
+}
+
 # now enter pygame event loop
 dirty = True
 frame_clock = pygame.time.Clock()
 while True:
+    button_changed = False
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             break
+        elif event.type == pygame.KEYDOWN:
+            try:
+                attr = buttons[event.key]
+            except:
+                continue
+            setattr(cv, attr, 1)
+            button_changed = True
+        elif event.type == pygame.KEYUP:
+            try:
+                attr = buttons[event.key]
+            except:
+                continue
+            setattr(cv, attr, 0)
+            button_changed = True
     if event.type == pygame.QUIT:
         break
+
+    if button_changed:
+        cv.flush()
 
     # process pending graphics commands
     while True:
