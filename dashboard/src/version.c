@@ -5,6 +5,7 @@
 
 #include "platform.h"
 #include "version.h"
+#include "app.h"
 #include "canvar.h"
 #include "screen.h"
 #include "../misc/build_version.h"
@@ -22,6 +23,17 @@ void version_init(void) {
     // we can't draw it until it comes in over CAN
     scr_draw_text(SCR_TEXT_ADDR(0, 26, 5), "Wheel:????????");
     scr_draw_text(SCR_TEXT_ADDR(0, 28, 6), "20??????????");
+
+    // set the blank mode as the next one
+    app_next_mode_func = app_blank_mode;
+
+    // set can messages to new so that they will be redrawn
+    interrupt_disable();
+    if (cv_wb_version_commit.st != CV_ST_INVALID)
+        cv_wb_version_commit.st = CV_ST_NEW;
+    if (cv_wb_version_build.st != CV_ST_INVALID)
+        cv_wb_version_build.st = CV_ST_NEW;
+    interrupt_enable();
 }
 
 void version_wb_commit_update(uint32_t val) {
