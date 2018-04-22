@@ -283,4 +283,10 @@ Text Label 10000 5900 0    60   ~ 0
 SWDIO
 Text Label 10000 6000 0    60   ~ 0
 SWCLK
+Text Label 6800 2900 0    60   ~ 0
+LCD_D/~C
+Text Label 6800 3400 0    60   ~ 0
+LCD_~CE
+Text Label 6800 3300 0    60   ~ 0
+LCD_~RST
 $EndSCHEMATC
