@@ -11,6 +11,8 @@
 #include "modes.h"
 #include "../misc/build_version.h"
 
+#define NEXT_MODE (modes_m1_init)
+
 void version_init(void) {
     // draw the dashboard version
     char str[20];
@@ -25,8 +27,8 @@ void version_init(void) {
     scr_draw_text(SCR_TEXT_ADDR(0, 26, 5), "Wheel:????????");
     scr_draw_text(SCR_TEXT_ADDR(0, 28, 6), "20??????????");
 
-    // set the first modal page as the next one
-    app_next_mode_func = modes_m1_init;
+    // set the next mode
+    app_next_mode_func = NEXT_MODE;
 
     // set can messages to new so that they will be redrawn
     interrupt_disable();
@@ -39,12 +41,16 @@ void version_init(void) {
 
 void version_wb_commit_update(uint32_t val) {
     char str[20];
-    sprintf(str, "%08x", val);
-    scr_draw_text(SCR_TEXT_ADDR(0, 32, 5), str);
+    if (app_next_mode_func == NEXT_MODE) {
+        sprintf(str, "%08x", val);
+        scr_draw_text(SCR_TEXT_ADDR(0, 32, 5), str);
+    }
 }
 
 void version_wb_build_update(uint32_t val) {
     char str[20];
-    sprintf(str, "%010u", val);
-    scr_draw_text(SCR_TEXT_ADDR(0, 30, 6), str);
+    if (app_next_mode_func == NEXT_MODE) {
+        sprintf(str, "%010u", val);
+        scr_draw_text(SCR_TEXT_ADDR(0, 30, 6), str);
+    }
 }

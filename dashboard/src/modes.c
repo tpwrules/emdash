@@ -13,15 +13,17 @@
 
 #include <stdio.h>
 
- void modes_m1_init(void) {
+#define NEXT_MODE (app_blank_mode)
+
+void modes_m1_init(void) {
     // draw the placeholder values
     scr_draw_text(SCR_TEXT_ADDR(0, 25, 2), "Clutch: ????bar");
 
     scr_draw_text(SCR_TEXT_ADDR(0, 30, 4), "Plate:???%");
     scr_draw_text(SCR_TEXT_ADDR(0, 30, 5), "Pedal:???%");
 
-    // set the blank page as the next one
-    app_next_mode_func = app_blank_mode;
+    // set the next mode
+    app_next_mode_func = NEXT_MODE;
 
     // set can messages to new so that they will be redrawn
     interrupt_disable();
@@ -34,12 +36,16 @@
 
  void modes_m1_ath_update(uint32_t val) {
     char str[10];
-    sprintf(str, "%3d", val);
-    scr_draw_text(SCR_TEXT_ADDR(0, 36, 4), str);
+    if (app_next_mode_func == NEXT_MODE) {
+        sprintf(str, "%3d", val);
+        scr_draw_text(SCR_TEXT_ADDR(0, 36, 4), str);
+    }
  }
 
  void modes_m1_pclutch_update(uint32_t val) {
     char str[10];
-    sprintf(str, "%4d", val);
-    scr_draw_text(SCR_TEXT_ADDR(0, 32, 2), str);
+    if (app_next_mode_func == NEXT_MODE) {
+        sprintf(str, "%4d", val);
+        scr_draw_text(SCR_TEXT_ADDR(0, 33, 2), str);
+    }
  }
