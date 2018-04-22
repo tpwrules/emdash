@@ -16,7 +16,7 @@
 // the first bit of this is the blinker stuff
 // this keeps track of the blink state of each icon
 #define NUM_BLINK_ICONS (8)
-static uint8_t blink_times[NUM_BLINK_ICONS];
+static uint8_t blink_state[NUM_BLINK_ICONS];
 
 // this holds the information on a particular icon to be blinked
 typedef struct {
@@ -58,19 +58,21 @@ static const blink_icon_t blink_icons[NUM_BLINK_ICONS] = {
 static void warn_set(int blink_id, uint8_t should_warn) {
     const blink_icon_t *blinker = &blink_icons[blink_id];
 
-    if (should_warn) {
+    if (should_warn && !blink_state[blink_id]) {
         // draw the icon
         scr_draw_pic(blinker->pic_loc, blinker->pic_id, 0);
         // invert the text
         if (blinker->text_width > 0)
             scr_draw_rect(blinker->text_loc, blinker->text_width, 8, 1);
-    } else {
+    } else if (!should_warn && blink_state[blink_id]) {
         // clear the icon
         scr_draw_rect(blinker->pic_loc<<3, 23, 15, 0);
         // and un-invert the text
         if (blinker->text_width > 0)
             scr_draw_rect(blinker->text_loc, blinker->text_width, 8, 0);
     }
+
+    blink_state[blink_id] = should_warn;
 }
 
 // initializer: draws default screen state
