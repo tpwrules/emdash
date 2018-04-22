@@ -275,7 +275,7 @@ class CanvarInterface:
 
 def build_defs():
     # write out header file first
-    f = open("canvar_defs.h", "w")
+    f = open("../src_gen/canvar_defs.h", "w")
     f.write("#ifndef CANVAR_DEFS_H\n#define CANVAR_DEFS_H\n\n")
     f.write("#include <inttypes.h>\n")
     f.write("#include \"../src/canvar.h\"\n\n")
@@ -313,7 +313,7 @@ def build_defs():
     f.close()
 
     # now it's time to write out the actual definitions
-    f = open("canvar_defs.c", "w")
+    f = open("../src_gen/canvar_defs.c", "w")
     f.write("#include \"../src/canvar.h\"\n")
     f.write("#include \"canvar_defs.h\"\n")
 

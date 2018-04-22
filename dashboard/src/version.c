@@ -9,7 +9,7 @@
 #include "canvar.h"
 #include "screen.h"
 #include "modes.h"
-#include "../misc/build_version.h"
+#include "../src_gen/build_version.h"
 
 #define NEXT_MODE (modes_m1_init)
 

@@ -1,7 +1,7 @@
 #ifndef PIC_DATA_H
 #define PIC_DATA_H
 
-#include "pic_ids.h"
+#include "../src_gen/pic_ids.h"
 
 typedef struct {
     const uint8_t *data; // pointer to picture data

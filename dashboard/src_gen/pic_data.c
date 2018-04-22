@@ -1,5 +1,5 @@
 #include <inttypes.h>
-#include "pic_data.h"
+#include "../src/pic_data.h"
 
 static const uint8_t pic_bytes[3706] = {
 23,3,17,252,128,48,29,176,0,192,3,7,7,224,31,128,

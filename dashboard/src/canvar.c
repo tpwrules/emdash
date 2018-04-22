@@ -1,6 +1,6 @@
 #include "platform.h"
 #include "canvar.h"
-#include "../can/canvar_defs.h"
+#include "../src_gen/canvar_defs.h"
 
 volatile int canvar_was_updated = 0;
 

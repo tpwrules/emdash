@@ -36,6 +36,6 @@ void app_can_interrupt(uint32_t msg_id, uint8_t dlc, uint8_t *data);
 // the main loop
 extern volatile int canvar_was_updated;
 
-#include "../can/canvar_defs.h"
+#include "../src_gen/canvar_defs.h"
 
 #endif

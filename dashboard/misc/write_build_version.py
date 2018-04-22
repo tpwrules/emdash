@@ -17,7 +17,7 @@ time_num = int(ts)
 
 # write to file
 
-f = open("build_version.h", "w")
+f = open("../src_gen/build_version.h", "w")
 f.write("#ifndef BUILD_VERSION_H\n#define BUILD_VERSION_H\n\n")
 f.write("#define BUILD_VERSION_COMMIT (0x{:08x})\n".format(commit_num))
 f.write("#define BUILD_VERSION_TIME ({})\n\n".format(time_num))

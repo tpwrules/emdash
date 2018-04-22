@@ -4,4 +4,4 @@
 dashboard/pc/_pc_app.c
 __pycache__/
 ~$*
-dashboard/misc/build_version.h
+dashboard/src_gen/build_version.h

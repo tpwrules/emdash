@@ -202,8 +202,8 @@ def write_pic_data():
     print("total picture bytes: {}".format(len(pic_bytes)))
 
     # now write out the pictures
-    f = open("pic_data.c", "w")
-    f.write("#include <inttypes.h>\n#include \"pic_data.h\"\n\n")
+    f = open("../src_gen/pic_data.c", "w")
+    f.write("#include <inttypes.h>\n#include \"../src/pic_data.h\"\n\n")
     f.write("static const uint8_t pic_bytes[{}] = {{\n".format(len(pic_bytes)))
 
     for bi, b in enumerate(pic_bytes):
@@ -225,7 +225,7 @@ def write_pic_data():
 
 if __name__ == "__main__":
     # write out header with picture names
-    f = open("pic_ids.h", "w")
+    f = open("../src_gen/pic_ids.h", "w")
     f.write("#ifndef PIC_IDS_H\n#define PIC_IDS_H\n\n")
     f.write("#define PIC_NUMBER_OF_IDS ({})\n\n".format(len(piclist)))
     for picid, pic in enumerate(piclist):
