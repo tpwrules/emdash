@@ -289,4 +289,10 @@ Text Label 6800 3400 0    60   ~ 0
 LCD_~CE
 Text Label 6800 3300 0    60   ~ 0
 LCD_~RST
+Text Label 6800 4000 0    60   ~ 0
+LCD_FS
+Text Label 6800 3200 0    60   ~ 0
+LCD_~WR
+Text Label 6800 2800 0    60   ~ 0
+LCD_~RD
 $EndSCHEMATC
