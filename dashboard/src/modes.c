@@ -17,7 +17,7 @@
 
 void modes_m1_init(void) {
     // draw the placeholder values
-    scr_draw_text(SCR_TEXT_ADDR(0, 25, 2), "Clutch: ????bar");
+    scr_draw_text(SCR_TEXT_ADDR(0, 25, 2), "Clutch: ??,?bar");
 
     scr_draw_text(SCR_TEXT_ADDR(0, 30, 4), "Plate:???%");
     scr_draw_text(SCR_TEXT_ADDR(0, 30, 5), "Pedal:???%");
@@ -37,6 +37,7 @@ void modes_m1_init(void) {
  void modes_m1_ath_update(uint32_t val) {
     char str[10];
     if (app_next_mode_func == NEXT_MODE) {
+        val = (val + 50)/100;
         sprintf(str, "%3u", val);
         scr_draw_text(SCR_TEXT_ADDR(0, 36, 4), str);
     }
@@ -45,7 +46,8 @@ void modes_m1_init(void) {
  void modes_m1_pclutch_update(uint32_t val) {
     char str[10];
     if (app_next_mode_func == NEXT_MODE) {
-        sprintf(str, "%4u", val);
+        val /= 2;
+        sprintf(str, "%2u,%0.1u", val/10, val%10);
         scr_draw_text(SCR_TEXT_ADDR(0, 33, 2), str);
     }
  }

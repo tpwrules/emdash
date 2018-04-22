@@ -38,7 +38,9 @@ variables = [
         callback="drive_rpm_update", call_every_time=False
     ),
 
-    # current gear (units ?????)
+    # current gear
+    # 0 = neutral
+    # 1-4 = gears 1-4
     Variable(
         name="gear",
         msg_id=0x119, start=7, size=1, signed=False,
@@ -174,7 +176,7 @@ variables = [
         callback="modes_m1_ath_update", call_every_time=False
     ),
 
-    # clutch pressure in bar
+    # clutch pressure in units of 0.05 bar, max 25 bar
     Variable(
         name="pclutch",
         msg_id=0x112, start=4, size=2, signed=False,

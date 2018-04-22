@@ -126,6 +126,7 @@ void drive_gear_update(uint32_t val) {
 
 void drive_speed_update(uint32_t val) {
     char str[8];
+    val /= 100;
     sprintf(str, "%3d", val);
     scr_draw_text(SCR_TEXT_ADDR(0, 17, 1), str);
 }

@@ -29,17 +29,17 @@ def do(fn, cv):
     while True:
         v = max(int(math.sin(a)*6100+6000), 0)
         cv.nmot = 3300
-        cv.speed = int(max(min(v*255/12000, 255), 0))
+        cv.speed = int(max(min(v, 12000), 0))
         if b % 40 == 0:
-            cv.poil = rr(0, 100)
-            cv.pfuel = rr(0, 100)
-            cv.toil = rr(0, 256)
-            cv.tmot = rr(0, 256)
-            cv.tmot2 = rr(0, 256)
-            cv.tfuel = rr(0, 256)
-            cv.ub = rr(0, 21)
-            cv.ath = rr(0, 101)
-            cv.pclutch = rr(0, 10000)
+            cv.poil = rr(0, 201)
+            cv.pfuel = rr(0, 201)
+            cv.toil = rr(-40, 151)+40
+            cv.tmot = rr(-40, 151)+40
+            cv.tmot2 = rr(-40, 151)+40
+            cv.tfuel = rr(-40, 81)+40
+            cv.ub = rr(0, 25501)
+            cv.ath = rr(0, 11101)
+            cv.pclutch = rr(0, 501)
         if b % 10 == 0:
             cv.gear = gear % 5
             cv.B_autoshiften_ems = gear % 2
