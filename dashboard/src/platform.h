@@ -17,7 +17,7 @@
 
 // include the platform-specific interface file
 #ifdef PLATFORM_PC
-#include "platform_pc.h"
+#include "../pc/platform_pc.h"
 #endif
 
 #endif

@@ -1,4 +1,4 @@
-#include "platform.h"
+#include "../src/platform.h"
 
 // this file is mostly the definition of all the PC function pointers
 
