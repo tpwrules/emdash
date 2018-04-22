@@ -31,7 +31,7 @@ class Variable:
         self.call_every_time = call_every_time
 
 variables = [
-    # current engine speed in RPM
+    # current engine speed in units of 1 RPM, max 20000rpm
     Variable(
         name="nmot",
         msg_id=0x121, start=2, size=2, signed=False,
@@ -45,56 +45,60 @@ variables = [
         callback="drive_gear_update", call_every_time=False
     ),
 
-    # oil pressure in bar (not decibar or something???)
+    # oil pressure in units of 0.05 bar, max 10 bar
     Variable(
         name="poil",
         msg_id=0x121, start=5, size=1, signed=False,
         callback="warn_poil_update", call_every_time=False
     ),
 
-    # fuel pressure in bar (not decibar or something???)
+    # fuel pressure in units of 0.05 bar, max 10 bar
     Variable(
         name="pfuel",
         msg_id=0x121, start=4, size=1, signed=False,
         callback="warn_pfuel_update", call_every_time=False
     ),
 
-    # oil temperature in C (no offset???)
+    # oil temperature in units of 1 C, max 150C
+    # 0 = -40C
     Variable(
         name="toil",
         msg_id=0x122, start=2, size=1, signed=False,
         callback="warn_toil_update", call_every_time=False
     ),
 
-    # engine block temperature in C (no offset???)
+    # engine block temperature in units of 1 C, max 150C
+    # 0 = -40C
     Variable(
         name="tmot",
         msg_id=0x122, start=0, size=1, signed=False,
         callback="warn_tmot_update", call_every_time=False
     ),
 
-    # engine water temperature in C (no offset???)
+    # engine water temperature in units of 1 C, max 150C
+    # 0 = -40C
     Variable(
         name="tmot2",
         msg_id=0x122, start=1, size=1, signed=False,
         callback="warn_tmot2_update", call_every_time=False
     ),
 
-    # fuel temperature in C (no offset???)
+    # fuel temperature in units of 1 C, max 80C
+    # 0 = -40C
     Variable(
         name="tfuel",
         msg_id=0x114, start=6, size=1, signed=False,
         callback="warn_tfuel_update", call_every_time=False
     ),
 
-    # vehicle speed in km/h (why 16 bit??)
+    # vehicle speed in units of 0.01kph, max 120kph
     Variable(
         name="speed",
         msg_id=0x121, start=6, size=2, signed=False,
         callback="drive_speed_update", call_every_time=False
     ),
 
-    # battery voltage in volts (why 16 bit???)
+    # battery voltage in millivolts, max 25.5 volts
     Variable(
         name="ub",
         msg_id=0x122, start=3, size=2, signed=False,
@@ -163,7 +167,7 @@ variables = [
         callback="app_wb_dash_mode_update", call_every_time=False
     ),
 
-    # throttle plate percentage
+    # throttle plate percentage in units of 0.01%, max 110%
     Variable(
         name="ath",
         msg_id=0x101, start=0, size=2, signed=False,
