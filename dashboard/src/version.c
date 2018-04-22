@@ -8,6 +8,7 @@
 #include "app.h"
 #include "canvar.h"
 #include "screen.h"
+#include "modes.h"
 #include "../misc/build_version.h"
 
 void version_init(void) {
@@ -24,8 +25,8 @@ void version_init(void) {
     scr_draw_text(SCR_TEXT_ADDR(0, 26, 5), "Wheel:????????");
     scr_draw_text(SCR_TEXT_ADDR(0, 28, 6), "20??????????");
 
-    // set the blank mode as the next one
-    app_next_mode_func = app_blank_mode;
+    // set the first modal page as the next one
+    app_next_mode_func = modes_m1_init;
 
     // set can messages to new so that they will be redrawn
     interrupt_disable();

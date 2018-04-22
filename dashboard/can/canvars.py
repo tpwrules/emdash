@@ -161,6 +161,20 @@ variables = [
         name="wb_dash_mode",
         msg_id=0x131, start=3, size=1, signed=False,
         callback="app_wb_dash_mode_update", call_every_time=False
+    ),
+
+    # throttle plate percentage
+    Variable(
+        name="ath",
+        msg_id=0x101, start=0, size=2, signed=False,
+        callback="modes_m1_ath_update", call_every_time=False
+    ),
+
+    # clutch pressure in bar
+    Variable(
+        name="pclutch",
+        msg_id=0x112, start=4, size=2, signed=False,
+        callback="modes_m1_pclutch_update", call_every_time=False
     )
 ]
 
