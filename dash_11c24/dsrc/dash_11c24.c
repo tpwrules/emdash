@@ -20,6 +20,8 @@
 
 // TODO: insert other include files here
 
+#include "../src/app.h"
+
 // TODO: insert other definitions and declarations here
 
 int main(void) {
@@ -35,6 +37,8 @@ int main(void) {
     Board_LED_Set(0, true);
 #endif
 #endif
+
+    app_entry();
 
     // TODO: insert code here
 

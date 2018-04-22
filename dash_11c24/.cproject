@@ -43,6 +43,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lpc_chip_11cxx_lib/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dash_11c24/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dash_11c24/src_gen}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dash_11c24/src_11c24}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.gcc.fpu.1208850693" name="Floating point" superClass="com.crt.advproject.gcc.fpu" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.38143400" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.general" valueType="enumerated"/>
@@ -99,6 +100,7 @@
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="dsrc"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src_11c24"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src_gen"/>
 					</sourceEntries>
 				</configuration>
@@ -146,6 +148,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lpc_chip_11cxx_lib/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dash_11c24/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dash_11c24/src_gen}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dash_11c24/src_11c24}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.gcc.fpu.623844514" name="Floating point" superClass="com.crt.advproject.gcc.fpu"/>
 								<inputType id="com.crt.advproject.compiler.input.1671911237" superClass="com.crt.advproject.compiler.input"/>

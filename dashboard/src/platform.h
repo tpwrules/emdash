@@ -20,4 +20,8 @@
 #include "../pc/platform_pc.h"
 #endif
 
+#ifdef PLATFORM_11C24
+#include "../src_11c24/platform_11c24.h"
+#endif
+
 #endif

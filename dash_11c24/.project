@@ -32,6 +32,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/dashboard/src</locationURI>
 		</link>
 		<link>
+			<name>src_11c24</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/dashboard/src_11c24</locationURI>
+		</link>
+		<link>
 			<name>src_gen</name>
 			<type>2</type>
 			<locationURI>PARENT-1-PROJECT_LOC/dashboard/src_gen</locationURI>
