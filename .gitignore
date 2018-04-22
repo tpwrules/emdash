@@ -6,6 +6,6 @@ __pycache__/
 ~$*
 dashboard/src_gen/build_version.h
 
-*.back
+*.bak
 *.bck
 *.kicad_pcb-bak
