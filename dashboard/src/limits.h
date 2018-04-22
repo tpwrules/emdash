@@ -26,7 +26,7 @@
 #define LIM_FUEL_PRESSURE_MIN (40) // 4bar
 
 // maximum safe fuel temperature, in 1 C increments
-#define LIM_FUEL_PRESSURE_MAX (50) // 50C
+#define LIM_FUEL_TEMP_MAX (50) // 50C
 
 // minimum safe battery voltage, in 100 mV increments
 #define LIM_BATTERY_MIN (128) // 12.8V

@@ -132,7 +132,7 @@ void warn_tfuel_update(uint32_t val) {
     int num = val - 40;
     sprintf(str, "%3d", num);
     scr_draw_text(SCR_TEXT_ADDR(0, 13, 7), str);
-    warn_set(BLINK_FUEL_TEMP, num > LIM_FUEL_PRESSURE_MAX);
+    warn_set(BLINK_FUEL_TEMP, num > LIM_FUEL_TEMP_MAX);
 }
 
 // battery voltage
