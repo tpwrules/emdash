@@ -24,6 +24,11 @@
 
 // TODO: insert other definitions and declarations here
 
+void SysTick_Handler(void) {
+	// call the application 10ms timer interrupt
+	app_timer_interrupt();
+}
+
 int main(void) {
 
 #if defined (__USE_LPCOPEN)
@@ -37,6 +42,12 @@ int main(void) {
     Board_LED_Set(0, true);
 #endif
 #endif
+
+
+    __disable_irq();
+
+    // configure SysTick timer to fire every 10ms
+    SysTick_Config(SystemCoreClock/100);
 
     app_entry();
 
