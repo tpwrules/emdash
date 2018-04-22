@@ -20,14 +20,14 @@ void drive_init(void) {
     scr_draw_text(SCR_TEXT_ADDR(0, 31, 0), "RPM:?????");
     scr_draw_text(SCR_TEXT_ADDR(1, 31, 0), "RPM:?????");
 
-    scr_draw_text(SCR_TEXT_ADDR(0, 34, 1), "???kph");
+    scr_draw_text(SCR_TEXT_ADDR(0, 17, 1), "???kph");
 
     // second page is used for flashing when to upshift
     // fill it with black
     scr_draw_rect(SCR_PIXEL_ADDR(1, 0, 0), 240, 64, 1);
 
     // drive mode text placeholders
-    scr_draw_text(SCR_TEXT_ADDR(0, 27, 1), "TC:??");
+    scr_draw_text(SCR_TEXT_ADDR(0, 18, 7), "TC??");
 }
 
 static uint16_t old_rpm = 0;
@@ -127,22 +127,22 @@ void drive_gear_update(uint32_t val) {
 void drive_speed_update(uint32_t val) {
     char str[8];
     sprintf(str, "%3d", val);
-    scr_draw_text(SCR_TEXT_ADDR(0, 34, 1), str);
+    scr_draw_text(SCR_TEXT_ADDR(0, 17, 1), str);
 }
 
 void drive_B_autoshiften_ems_update(uint32_t val) {
     if (val) {
-        scr_draw_text(SCR_TEXT_ADDR(0, 18, 1), "AUTO");
+        scr_draw_text(SCR_TEXT_ADDR(0, 18, 6), "AUTO");
     } else {
-        scr_draw_text(SCR_TEXT_ADDR(0, 18, 1), "    ");
+        scr_draw_text(SCR_TEXT_ADDR(0, 18, 6), "    ");
     }
 }
 
 void drive_B_launch_update(uint32_t val) {
     if (val) {
-        scr_draw_text(SCR_TEXT_ADDR(0, 23, 1), "LC");
+        scr_draw_text(SCR_TEXT_ADDR(0, 24, 1), "LAUNCH");
     } else {
-        scr_draw_text(SCR_TEXT_ADDR(0, 23, 1), "  ");
+        scr_draw_text(SCR_TEXT_ADDR(0, 24, 1), "      ");
     }
 }
 
@@ -164,14 +164,14 @@ void drive_wb_downshift_update(uint32_t val) {
 
 void drive_wb_radio_update(uint32_t val) {
     if (val) {
-        scr_draw_pic(SCR_BYTE_ADDR(0, 15, 48), PIC_ID_RADIO, 0);
+        scr_draw_pic(SCR_BYTE_ADDR(0, 17, 48), PIC_ID_RADIO, 0);
     } else {
-        scr_draw_rect(SCR_PIXEL_ADDR(0, 15*8, 48), 16, 15, 0);
+        scr_draw_rect(SCR_PIXEL_ADDR(0, 17*8, 48), 16, 15, 0);
     }
 }
 
 void drive_wb_traction_knob_update(uint32_t val) {
     char str[10];
     sprintf(str, "%02d", val);
-    scr_draw_text(SCR_TEXT_ADDR(0, 30, 1), str);
+    scr_draw_text(SCR_TEXT_ADDR(0, 20, 7), str);
 }
