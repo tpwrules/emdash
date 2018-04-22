@@ -50,12 +50,12 @@ void app_entry(void) {
     mode_was_ever_switched = 0;
 
     while (1) {
-        interrupt_disable();
-
         // switch away from version mode if a certain
         // amount of time has elapsed and the user hasn't done anything
         if (!mode_was_ever_switched && timer_val >= LIM_VERSION_DISP_TIME)
             app_show_next_mode();
+
+        interrupt_disable();
 
         if (canvar_was_updated) {
             canvar_was_updated = 0;
