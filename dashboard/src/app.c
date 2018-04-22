@@ -10,6 +10,7 @@
 #include <stdio.h>
 
 volatile int timer_val = 0;
+volatile static int timer_was_updated = 0;
 
 // set to 1 the first time the mode is switched
 // to disable the auto switch at beginning
@@ -78,17 +79,27 @@ void app_entry(void) {
             }
         }
 
-        uint32_t timer_now = timer_val;
-        interrupt_enable();
-        // update the drive blink timers
-        drive_blink(timer_now);
+        if (timer_was_updated) {
+            timer_was_updated = 0;
 
-        interrupt_disable();
-        interrupt_wait();
+            uint32_t timer_now = timer_val;
+
+            interrupt_enable();
+            // update the drive blink timers
+            drive_blink(timer_now);
+            interrupt_disable();
+        }
+
+        if (!canvar_was_updated && !timer_was_updated) {
+            interrupt_wait();
+        } else {
+            interrupt_enable();
+        }
     }
 }
 
 void app_timer_interrupt(void) {
+    timer_was_updated = 1;
     timer_val++;
 }
 
