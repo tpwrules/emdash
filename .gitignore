@@ -5,3 +5,7 @@ dashboard/pc/_pc_app.c
 __pycache__/
 ~$*
 dashboard/src_gen/build_version.h
+
+*.back
+*.bck
+*.kicad_pcb-bak
