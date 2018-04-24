@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /Users/thomaswatson/projects/einstein/repo/dashboard/hw/dash_pcb.sch)
-    (date "Tuesday, April 24, 2018 'AMt' 09:19:58 AM")
+    (date "Tuesday, April 24, 2018 'AMt' 09:48:35 AM")
     (tool "Eeschema 4.0.7")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -192,7 +192,7 @@
     (net (code 9) (name /MCU_~RESET)
       (node (ref U1) (pin 3))
       (node (ref J2) (pin 10)))
-    (net (code 10) (name /LCD_D/~C)
+    (net (code 10) (name /LCD_C/~D)
       (node (ref J1) (pin 8))
       (node (ref U1) (pin 13)))
     (net (code 11) (name /LCD_DB4)
