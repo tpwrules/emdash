@@ -295,4 +295,17 @@ Text Label 6800 3200 0    60   ~ 0
 LCD_~WR
 Text Label 6800 2800 0    60   ~ 0
 LCD_~RD
+Wire Wire Line
+	6800 4400 6850 4400
+Wire Wire Line
+	6850 4400 6850 4800
+Connection ~ 6850 4800
+Text Label 6800 4950 0    60   ~ 0
+XTALIN
+Text Label 6800 5100 0    60   ~ 0
+XTALOUT
+Text Label 6800 4200 0    60   ~ 0
+CANH
+Text Label 6800 4300 0    60   ~ 0
+CANL
 $EndSCHEMATC
