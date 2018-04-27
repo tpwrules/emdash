@@ -33,7 +33,7 @@ static void wait_S0S1(void) {
     set_nRD(false); // assert read
     uint8_t status;
     do { 
-        busywait(100);
+        busywait(1);
         status = get_DB();
     } while ((status & 3) != 3);
     set_nRD(true); // deassert read
@@ -46,7 +46,7 @@ static void send_data(uint8_t data) {
     set_DB(data);
     // and write it
     set_nWR(false);
-    busywait(100);
+    busywait(1);
     set_nWR(true);
 }
 
@@ -57,7 +57,7 @@ static void send_command(uint8_t data) {
     set_DB(data);
     // and write it
     set_nWR(false);
-    busywait(100);
+    busywait(1);
     set_nWR(true);
 }
 
