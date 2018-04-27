@@ -11,10 +11,11 @@
 // The screen has two layers: graphics and text. Each layer
 // has two pages. One graphics page and one text page are shown.
 
-// The text layer has one byte per character and is 40x8.
+// The text layer has one byte per character and is 40x8 visible,
+// 64x8 in memory
 #ifndef PLATFORM_PC
 #define SCR_TEXT_ADDR(page, x, y) \
-    (0x8000+((page)*0x200)+((y)*40)+(x))
+    (0x4000+((page)*0x200)+((y)*40)+(x))
 #else
 #define SCR_TEXT_ADDR(page, x, y) \
     (((page)*0x200)+((y)<<6)+(x))
@@ -22,11 +23,11 @@
 
 // The graphics layer can be addressed in byte or pixel mode.
 // in byte mode, each address is an 8x1 block of pixels
-// the screen is thus 30x64 bytes
+// the screen is thus 30x64 bytes visible, 32x64 in memory
 #define SCR_BYTE_ADDR(page, x, y) \
     (((page)*0x800)+((y)<<5)+(x))
 
-// in pixel mode, the screen is 240x64 pixels
+// in pixel mode, the screen is 240x64 pixels visible, 256x64 in memory
 #define SCR_PIXEL_ADDR(page, x, y) \
     (((page)*0x4000)+((y)<<8)+(x))
 
