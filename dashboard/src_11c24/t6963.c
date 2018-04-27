@@ -98,10 +98,10 @@ static void send_1cmd(uint8_t cmd, uint8_t arg) {
     send_command(cmd);
 }
 
-// command with two arguments
-static void send_2cmd(uint8_t cmd, uint8_t arg1, uint8_t arg2) {
-    send_data(arg1);
-    send_data(arg2);
+// command that takes an address
+static inline void send_acmd(uint8_t cmd, uint16_t addr) {
+    send_data(addr & 0xFF);
+    send_data(addr >> 8);
     send_command(cmd);
 }
 
@@ -185,55 +185,33 @@ void t6963_init(void) {
     // okay now that that is over
     // we can do something with the rest of the screen
 
-    /*
-    // set text home address, i.e. start of text
-    send_2cmd(0x40, 0, 0);
-    // set text area, we want all 32 columns
-    send_2cmd(0x41, 30, 0);
-    // set internal character generator and text OR mode
+    // set text window
+    // this address defines the width of each line in bytes
+    send_acmd(0x41, 64);
+    // and same for graphics
+    send_acmd(0x43, 32);
+    // set text to be XORed with graphics
+    // and enable internal CG ROM
     send_0cmd(0x80);
-    // set 8 line cursor
-    send_0cmd(0xA7);
-    // set cursor to 0, 0
-    send_2cmd(0x21, 0, 0);
-    // set address to 0
-    send_2cmd(0x24, 0, 0);
-    // write a string
-    const char *hi = "Hello, world!";
-    for (int j = 0; j<10; j++)
-        send_1cmd(0xC0, hi[j]-0x20);
-    // turn on display with cursor, blink, and text only
+    // turn on text and graphics and turn off cursor
     send_0cmd(0x9C);
 
-    */
+    // LITTLE DEMO
+    // set text and graphics data position
+    send_acmd(0x40, 0);
+    send_acmd(0x42, 0x800);
+    // clear some display memory
+    send_acmd(0x24, 0);
 
-    send_2cmd(0x40, 0, 0);
-    send_2cmd(0x41, 30, 0);
-    send_2cmd(0x42, 0, 8);
-    send_2cmd(0x43, 30, 0);
-    send_0cmd(0xa7);
-    send_0cmd(0x80);
-    send_0cmd(0x97);
+    for (int j = 0; j<5000; j++)
+        send_1cmd(0xC0, 0);
 
-    send_2cmd(0x24, 0, 0);
+    send_acmd(0x24, 0);
 
-    const char *hi = "Hello, world!";
-    for (int j = 0; j<13; j++)
+    const char *hi = "Hello, world!ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    for (int j = 0; j<65; j++)
         send_1cmd(0xC0, hi[j]-0x20);
 
-    /*
-
-    // invert display
-    while (1) {
-        //send_0cmd(0x9C);
-        send_2cmd(0xD0, 1, 0);
-        //send_2cmd(0xD0, 1, 0);
-        for (i=0; i<200000; i++);
-        send_2cmd(0xD0, 0, 0);
-        for (i=0; i<1000000; i++);
-    }
-    */
-    
     wait_S0S1();
     // do nothing for now
     while(1);
