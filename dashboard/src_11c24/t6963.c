@@ -27,7 +27,7 @@
 
 // read the S0 and S1 status bits to determine if the
 // display is ready
-static void wait_S0S1(void) {
+void lcd_wait_S0S1(void) {
     set_CD(true); // command
     set_DB_output(false); // get ready to read status
     set_nRD(false); // assert read
@@ -39,8 +39,8 @@ static void wait_S0S1(void) {
     set_nRD(true); // deassert read
 }
 
-static void send_data(uint8_t data) {
-    wait_S0S1(); // wait for display to be ready
+void lcd_send_data(uint8_t data) {
+    lcd_wait_S0S1(); // wait for display to be ready
     set_CD(false); // data
     set_DB_output(true); // output the new data
     set_DB(data);
@@ -50,36 +50,18 @@ static void send_data(uint8_t data) {
     set_nWR(true);
 }
 
-static void send_command(uint8_t data) {
-    wait_S0S1(); // wait for display to be ready
+void lcd_send_command(uint8_t cmd) {
+    lcd_wait_S0S1(); // wait for display to be ready
     set_CD(true); // command
     set_DB_output(true); // put it on the bus
-    set_DB(data);
+    set_DB(cmd);
     // and write it
     set_nWR(false);
     busywait(1);
     set_nWR(true);
 }
 
-// command with no arguments
-static void send_0cmd(uint8_t cmd) {
-    send_command(cmd);
-}
-
-// command with one argument
-static void send_1cmd(uint8_t cmd, uint8_t arg) {
-    send_data(arg);
-    send_command(cmd);
-}
-
-// command that takes an address
-static inline void send_acmd(uint8_t cmd, uint16_t addr) {
-    send_data(addr & 0xFF);
-    send_data(addr >> 8);
-    send_command(cmd);
-}
-
-void t6963_init(void) {
+void lcd_init(void) {
     // start by initializing the pins
 
     // /WR
@@ -155,32 +137,28 @@ void t6963_init(void) {
 
     // set text window
     // this address defines the width of each line in bytes
-    send_acmd(0x41, 64);
+    lcd_send_acmd(0x41, 64);
     // and same for graphics
-    send_acmd(0x43, 32);
+    lcd_send_acmd(0x43, 32);
     // set text to be XORed with graphics
     // and enable internal CG ROM
-    send_0cmd(0x80);
+    lcd_send_0cmd(0x80);
     // turn on text and graphics and turn off cursor
-    send_0cmd(0x9C);
+    lcd_send_0cmd(0x9C);
 
     // LITTLE DEMO
     // set text and graphics data position
-    send_acmd(0x40, 0);
-    send_acmd(0x42, 0x800);
+    lcd_send_acmd(0x40, 0);
+    lcd_send_acmd(0x42, 0x800);
     // clear some display memory
-    send_acmd(0x24, 0);
+    lcd_send_acmd(0x24, 0);
 
     for (int j = 0; j<5000; j++)
-        send_1cmd(0xC0, 0);
+        lcd_send_1cmd(0xC0, 0);
 
-    send_acmd(0x24, 0);
+    lcd_send_acmd(0x24, 0);
 
     const char *hi = "Hello, world!ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     for (int j = 0; j<65; j++)
-        send_1cmd(0xC0, hi[j]-0x20);
-
-    wait_S0S1();
-    // do nothing for now
-    while(1);
+        lcd_send_1cmd(0xC0, hi[j]-0x20);
 }

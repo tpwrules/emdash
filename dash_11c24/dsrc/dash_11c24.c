@@ -43,8 +43,8 @@ int main(void) {
     // initialize GPIO
     Chip_GPIO_Init(LPC_GPIO);
 
-    // initialize the screen controller
-    t6963_init();
+    // initialize the lcd controller
+    lcd_init();
 
     // configure SysTick timer to fire every 10ms
     SysTick_Config(SystemCoreClock/100);
