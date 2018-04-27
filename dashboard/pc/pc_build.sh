@@ -4,17 +4,7 @@ cd "$(dirname "$0")"
 
 AP='../src'
 
-pushd ../misc
-python3 write_build_version.py
-popd
-
-pushd ../can
-python3 canvars.py
-popd
-
-pushd ../pics
-python3 piclist.py
-popd
+../src/pre_build.sh
 
 # build the application as a shared library
 clang -DPLATFORM_PC -Wall -dynamiclib -o libapp.so ../src/*.c ../src_gen/*.c platform_pc.c
