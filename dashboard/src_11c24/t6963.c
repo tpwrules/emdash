@@ -21,70 +21,44 @@
     else {LPC_GPIO[0].DIR &= ~(0x3FC); Chip_GPIO_SetPinDIRInput(LPC_GPIO, 1, 5);Chip_GPIO_SetPinDIRInput(LPC_GPIO, 1, 8);}} while(0)
 #define get_DB() (LPC_GPIO[0].DATA[0x3FC] >> 2)
 
+#define busywait(t) do {\
+    volatile int i;\
+    for (i=0; i<t; i++);} while(0)
+
 // read the S0 and S1 status bits to determine if the
 // display is ready
 static void wait_S0S1(void) {
-    set_CD(true);
-    set_DB_output(false);
-    //set_nCE(false);
-    set_nRD(false);
+    set_CD(true); // command
+    set_DB_output(false); // get ready to read status
+    set_nRD(false); // assert read
     uint8_t status;
-    do {
-        volatile int i;
-        for (i=0; i<100; i++);
+    do { 
+        busywait(100);
         status = get_DB();
     } while ((status & 3) != 3);
-    set_nRD(true);
-    set_DB_output(true);
-    set_DB(0);
-    //set_nCE(true);
-}
-
-static void wait_S3(void) {
-    set_CD(true);
-    set_DB_output(false);
-    //set_nCE(false);
-    set_nRD(false);
-    uint8_t status;
-    do {
-        volatile int i;
-        for (i=0; i<100; i++);
-        status = get_DB();
-    } while ((status & 8) != 8);
-    set_nRD(true);
-    set_DB_output(true);
-    set_DB(0);
-    //set_nCE(true);
+    set_nRD(true); // deassert read
 }
 
 static void send_data(uint8_t data) {
-    wait_S0S1();
-    set_CD(false);
-    set_DB_output(true);
+    wait_S0S1(); // wait for display to be ready
+    set_CD(false); // data
+    set_DB_output(true); // output the new data
     set_DB(data);
-    //set_nCE(false);
+    // and write it
     set_nWR(false);
-    volatile int i;
-    for (i=0; i<100; i++);
+    busywait(100);
     set_nWR(true);
-    //set_nCE(true);
-    //set_DB_output(false);
 }
 
 static void send_command(uint8_t data) {
-    wait_S0S1();
-    set_CD(true);
-    set_DB_output(true);
+    wait_S0S1(); // wait for display to be ready
+    set_CD(true); // command
+    set_DB_output(true); // put it on the bus
     set_DB(data);
-    //set_nCE(false);
+    // and write it
     set_nWR(false);
-    volatile int i;
-    for (i=0; i<100; i++);
+    busywait(100);
     set_nWR(true);
-    //set_nCE(true);
-    //set_DB_output(false);
-    wait_S0S1();
-    //for(i=0; i<10000; i++);
 }
 
 // command with no arguments
@@ -162,26 +136,20 @@ void t6963_init(void) {
     Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO0_9,
         IOCON_FUNC0 | IOCON_MODE_INACT);
 
-    set_DB_output(true);
-    set_DB(0xFF);
-
     // now we can begin actually initializing the chip
     set_nCE(true);
     set_nRESET(true);
-    // wait a while
-    volatile int i;
-    for (i=0; i<1000; i++);
     // assert reset
     set_nRESET(false);
-    // wait again
-    for (i=0; i<1000; i++);
+    // wait for it to happen
+    busywait(1000);
     // deassert RESET
     set_nRESET(true);
     // wait some more
-    for (i=0; i<1000; i++);
+    busywait(1000);
 
-    set_nCE(false);
-    for (i=0; i<1000; i++);
+    set_nCE(false); // left asserted forever
+    busywait(100);
     // okay now that that is over
     // we can do something with the rest of the screen
 
