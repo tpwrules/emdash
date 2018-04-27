@@ -27,14 +27,10 @@
 #define SCR_BYTE_ADDR(page, x, y) \
     (((page)*0x1000)+((y)<<6)+(x))
 
-// in pixel mode, the screen is 240x64 pixels visible, 384x64 in memory
-#define SCR_PIXEL_ADDR(page, x, y) \
-    (((page)*0x8000)+((y)<<8)+(x))
-
 // sometimes we want to place graphics lined up with text
-// this returns the pixel addr for text at a specific location
-#define SCR_PIXEL_ADDR_AT_TEXT(page, x, y) \
-    SCR_PIXEL_ADDR(page, x*6, y*8)
+// this returns the byte addr for text at a specific location
+#define SCR_BYTE_ADDR_AT_TEXT(page, x, y) \
+    SCR_BYTE_ADDR(page, x, y*8)
 
 // Screen Operations
 
@@ -51,14 +47,10 @@ PCFUNC(void, scr_show_page)(uint8_t text, uint8_t page);
 PCFUNC(void, scr_clear_page)(uint8_t text, uint8_t page);
 
 // draw a rectangle
-// the display can only update one 8x1 block at a time
-// let's say you wish to draw a w=4 wide rectangle at pixel x=2
-// the 'color' byte is as follows
-//  * 1 is black, 0 is white
-//  * bit 0 is color of the middle, i.e. pixels 2,3,4,5
-//  * bit 1 is the color of the left, i.e. pixels 0,1
-//  * bit 2 is the color of the right, i.e. pixels 6,7
-PCFUNC(void, scr_draw_rect)(uint32_t pixel_addr, uint8_t w, uint8_t h, uint8_t color);
+// it must start on a 6 pixel boundary, but can be any length
+// the color is 1 for a black rectangle and 0 for white
+// the remaining pixels in the byte are always white
+PCFUNC(void, scr_draw_rect)(uint32_t byte_addr, uint8_t w, uint8_t h, uint8_t color);
 
 // draw a picture
 PCFUNC(void, scr_draw_pic)(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted);

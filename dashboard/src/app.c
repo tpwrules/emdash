@@ -116,7 +116,7 @@ void app_show_next_mode(void) {
     // erase the modal area
     for (int r=2; r<7; r++)
         scr_draw_text(SCR_TEXT_ADDR(0, 25, r), "               ");
-    scr_draw_rect(SCR_PIXEL_ADDR(0, 19*8, 16), 11*8, 5*8, 0);
+    scr_draw_rect(SCR_BYTE_ADDR(0, 19*8/6, 16), 11*8, 5*8, 0);
 
     // call next mode function
     app_next_mode_func();

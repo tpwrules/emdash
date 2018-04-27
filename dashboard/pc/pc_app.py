@@ -119,37 +119,20 @@ def pc_scr_clear_page(text, page):
 lib.scr_clear_page = lib.pc_scr_clear_page
 
 @ffi.def_extern()
-def pc_scr_draw_rect(pixel_addr, w, h, color):
+def pc_scr_draw_rect(byte_addr, w, h, color):
     # here we do the hard work of selecting the rectangles
-    page = pixel_addr >> 15
-    x = pixel_addr & 0xFF
-    y = (pixel_addr >> 8) & 0x3F
+    page = byte_addr >> 12
+    x = (byte_addr & 0x3F) * 6
+    y = (byte_addr >> 6) & 0x3F
 
     # get RGB triplet for color bit
     gc = lambda b: (0, 0, 0) if b else (255, 255, 255)
 
-    # there are three regions:
-    #   * the start of the byte to the start of the rect
-    l = x & 0xF8
-    #   * the start of the rect to the end of the rect
-    m = x
-    #   * the end of the rect to the end of the byte
-    r = m + w
-    e = (m+w+7)&0xF8
-
-    # collapse regions if they have the same color
-    if bool(color & 2) == bool(color & 1):
-        l = m
-    if bool(color & 4) == bool(color & 1):
-        r = e
-
     rects = []
-    # draw regions if they are > 0
-    if m > l:
-        rects.append(((l, y), (m-l, h), gc(color & 2)))
-    rects.append(((m, y), (r-m, h), gc(color & 1)))
-    if e > r:
-        rects.append(((r, y), (e-r, h), gc(color & 4)))
+
+    rects.append(((x, y), (w, h), gc(color)))
+    if w % 6 != 0:
+        rects.append(((x+w, y), (6-(w%6), h), gc(False)))
 
     gfx_ops.put(("rect", page, tuple(rects)))
 lib.scr_draw_rect = lib.pc_scr_draw_rect
