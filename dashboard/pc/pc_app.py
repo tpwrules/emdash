@@ -158,7 +158,7 @@ lib.scr_draw_rect = lib.pc_scr_draw_rect
 def pc_scr_draw_pic(byte_addr, pic_id, inverted):
     gfx_ops.put(("pic",
         byte_addr >> 12, # page
-        ((byte_addr & 0x1F)*8, (byte_addr >> 5) & 0x3F), # x, y
+        ((byte_addr & 0x3F)*6, (byte_addr >> 6) & 0x3F), # x, y
         pic_id, bool(inverted)
     ))
 lib.scr_draw_pic = lib.pc_scr_draw_pic

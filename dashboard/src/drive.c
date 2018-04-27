@@ -118,9 +118,9 @@ void drive_rpm_update(uint32_t val) {
 void drive_gear_update(uint32_t val) {
     if (val < 5) {
         // draw gear on main page
-        scr_draw_pic(SCR_BYTE_ADDR(0, 13, 16), PIC_ID_GEAR_NEUTRAL+val, 0);
+        scr_draw_pic(SCR_BYTE_ADDR(0, 17, 16), PIC_ID_GEAR_NEUTRAL+val, 0);
         // and inverted on inverted page
-        scr_draw_pic(SCR_BYTE_ADDR(1, 13, 16), PIC_ID_GEAR_NEUTRAL+val, 1);
+        scr_draw_pic(SCR_BYTE_ADDR(1, 17, 16), PIC_ID_GEAR_NEUTRAL+val, 1);
     }
 }
 
@@ -149,25 +149,25 @@ void drive_B_launch_update(uint32_t val) {
 
 void drive_wb_upshift_update(uint32_t val) {
     if (val) {
-        scr_draw_pic(SCR_BYTE_ADDR(0, 17, 16), PIC_ID_UPSHIFT_BTN, 0);
+        scr_draw_pic(SCR_BYTE_ADDR(0, 23, 16), PIC_ID_UPSHIFT_BTN, 0);
     } else {
-        scr_draw_rect(SCR_PIXEL_ADDR(0, 17*8, 16), 16, 15, 0);
+        scr_draw_rect(SCR_PIXEL_ADDR(0, 23*6, 16), 16, 15, 0);
     }
 }
 
 void drive_wb_downshift_update(uint32_t val) {
     if (val) {
-        scr_draw_pic(SCR_BYTE_ADDR(0, 17, 32), PIC_ID_DOWNSHIFT_BTN, 0);
+        scr_draw_pic(SCR_BYTE_ADDR(0, 23, 32), PIC_ID_DOWNSHIFT_BTN, 0);
     } else {
-        scr_draw_rect(SCR_PIXEL_ADDR(0, 17*8, 32), 16, 15, 0);
+        scr_draw_rect(SCR_PIXEL_ADDR(0, 23*6, 32), 16, 15, 0);
     }
 }
 
 void drive_wb_radio_update(uint32_t val) {
     if (val) {
-        scr_draw_pic(SCR_BYTE_ADDR(0, 17, 48), PIC_ID_RADIO, 0);
+        scr_draw_pic(SCR_BYTE_ADDR(0, 23, 48), PIC_ID_RADIO, 0);
     } else {
-        scr_draw_rect(SCR_PIXEL_ADDR(0, 17*8, 48), 16, 15, 0);
+        scr_draw_rect(SCR_PIXEL_ADDR(0, 23*6, 48), 16, 15, 0);
     }
 }
 

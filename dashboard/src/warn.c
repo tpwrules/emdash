@@ -35,22 +35,22 @@ static const blink_icon_t blink_icons[NUM_BLINK_ICONS] = {
     {SCR_BYTE_ADDR(0, 0, 24), SCR_PIXEL_ADDR_AT_TEXT(0, 13, 5),
         PIC_ID_OIL_TEMP, 4*6+1},
 #define BLINK_WATER_TEMP (2)
-    {SCR_BYTE_ADDR(0, 3, 8), SCR_PIXEL_ADDR_AT_TEXT(0, 6, 6),
+    {SCR_BYTE_ADDR(0, 4, 8), SCR_PIXEL_ADDR_AT_TEXT(0, 6, 6),
         PIC_ID_WATER_TEMP, 4*6+1},
 #define BLINK_BLOCK_TEMP (3)
-    {SCR_BYTE_ADDR(0, 3, 24), SCR_PIXEL_ADDR_AT_TEXT(0, 13, 6),
+    {SCR_BYTE_ADDR(0, 4, 24), SCR_PIXEL_ADDR_AT_TEXT(0, 13, 6),
         PIC_ID_BLOCK_TEMP, 4*6+1},
 #define BLINK_FUEL_PRESSURE (4)
-    {SCR_BYTE_ADDR(0, 6, 8), SCR_PIXEL_ADDR_AT_TEXT(0, 4, 7),
+    {SCR_BYTE_ADDR(0, 8, 8), SCR_PIXEL_ADDR_AT_TEXT(0, 4, 7),
         PIC_ID_FUEL_PRESSURE, 7*6+1},
 #define BLINK_FUEL_TEMP (5)
-    {SCR_BYTE_ADDR(0, 6, 24), SCR_PIXEL_ADDR_AT_TEXT(0, 13, 7),
+    {SCR_BYTE_ADDR(0, 8, 24), SCR_PIXEL_ADDR_AT_TEXT(0, 13, 7),
         PIC_ID_FUEL_TEMP, 4*6+1},
 #define BLINK_BATTERY (6)
-    {SCR_BYTE_ADDR(0, 9, 8), SCR_PIXEL_ADDR_AT_TEXT(0, 35, 7),
+    {SCR_BYTE_ADDR(0, 12, 8), SCR_PIXEL_ADDR_AT_TEXT(0, 35, 7),
         PIC_ID_BATTERY, 5*6},
 #define BLINK_OIL_TEMP_LOW (7)
-    {SCR_BYTE_ADDR(0, 9, 24), SCR_PIXEL_ADDR_AT_TEXT(0, 13, 5),
+    {SCR_BYTE_ADDR(0, 12, 24), SCR_PIXEL_ADDR_AT_TEXT(0, 13, 5),
         PIC_ID_OIL_TEMP_LOW, 0}
 };
 
@@ -66,7 +66,8 @@ static void warn_set(int blink_id, uint8_t should_warn) {
             scr_draw_rect(blinker->text_loc, blinker->text_width, 8, 1);
     } else if (!should_warn && blink_state[blink_id]) {
         // clear the icon
-        scr_draw_rect(blinker->pic_loc<<3, 23, 15, 0);
+        //scr_draw_rect(SCR_PIXEL_ADDR(0, (blinker->pic_loc&0x3F)*24/4,
+            //(blinker->pic_loc>>6)&0x3F), 23, 15, 0);
         // and un-invert the text
         if (blinker->text_width > 0)
             scr_draw_rect(blinker->text_loc, blinker->text_width, 8, 0);
