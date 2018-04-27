@@ -14,8 +14,8 @@
 
 void drive_init(void) {
     // draw RPM border
-    scr_draw_rect(SCR_PIXEL_ADDR(0, 0, 6), 240-56, 1, 1);
-    scr_draw_rect(SCR_PIXEL_ADDR(0, 240-56, 0), 1, 7, 1);
+    scr_draw_rect(SCR_PIXEL_ADDR(0, 0, 6), 240-60+1, 1, 1);
+    scr_draw_rect(SCR_PIXEL_ADDR(0, 240-60, 0), 1, 6, 1);
     // draw RPM text on normal and inverted screen
     scr_draw_text(SCR_TEXT_ADDR(0, 31, 0), "RPM:?????");
     scr_draw_text(SCR_TEXT_ADDR(1, 31, 0), "RPM:?????");
@@ -87,32 +87,31 @@ void drive_rpm_update(uint32_t val) {
 
     char text[10];
 
-    if (rpm != old_rpm) {
-        // calculate new position and draw bar
-        uint32_t bar_rpm = rpm;
-        if (bar_rpm > 12000) {
-            bar_rpm = 12000;
-        }
-        uint8_t bar_val = bar_rpm*(240-56)/12000;
-        if (bar_val > old_bar_val) {
-            // add more pixels to bar
-            // left and middle are black, right is white
-            scr_draw_rect(SCR_PIXEL_ADDR(0, old_bar_val, 0),
-                bar_val-old_bar_val, 6, 3);
-        } else if (bar_val < old_bar_val) {
-            // take pixels away from the bar
-            // left is black, middle and right are white
-            scr_draw_rect(SCR_PIXEL_ADDR(0, bar_val, 0),
-                old_bar_val-bar_val, 6, 2);
-        }
-
-        sprintf(text, "%5d", rpm);
-        scr_draw_text(SCR_TEXT_ADDR(0, 35, 0), text);
-        // also put it on the inverted screen
-        scr_draw_text(SCR_TEXT_ADDR(1, 35, 0), text);
-        old_rpm = rpm;
-        old_bar_val = bar_val;
+    // calculate new position and draw bar
+    uint32_t bar_rpm = rpm;
+    if (bar_rpm > 12000) {
+        bar_rpm = 12000;
     }
+    uint8_t bar_val = bar_rpm*(240-60)/12000;
+    if (bar_val > old_bar_val) {
+        // add more pixels to bar
+        // left and middle are black, right is white
+        scr_draw_rect(SCR_PIXEL_ADDR(0, old_bar_val, 0),
+            bar_val-old_bar_val, 6, 3);
+    } else if (bar_val < old_bar_val) {
+        // take pixels away from the bar
+        // left is black, middle and right are white
+        scr_draw_rect(SCR_PIXEL_ADDR(0, bar_val, 0),
+            old_bar_val-bar_val, 6, 2);
+    }
+
+    sprintf(text, "%5d", rpm);
+    scr_draw_text(SCR_TEXT_ADDR(0, 35, 0), text);
+    // also put it on the inverted screen
+    scr_draw_text(SCR_TEXT_ADDR(1, 35, 0), text);
+    
+    old_rpm = rpm;
+    old_bar_val = bar_val;
 }
 
 void drive_gear_update(uint32_t val) {
