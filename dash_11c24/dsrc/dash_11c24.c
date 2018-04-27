@@ -21,6 +21,7 @@
 // TODO: insert other include files here
 
 #include "../src/app.h"
+#include "../src_11c24/t6963.h"
 
 // TODO: insert other definitions and declarations here
 
@@ -41,6 +42,9 @@ int main(void) {
 
     // initialize GPIO
     Chip_GPIO_Init(LPC_GPIO);
+
+    // initialize the screen controller
+    t6963_init();
 
     // configure SysTick timer to fire every 10ms
     SysTick_Config(SystemCoreClock/100);
