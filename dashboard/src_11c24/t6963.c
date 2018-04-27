@@ -146,6 +146,9 @@ void lcd_init(void) {
     // turn on text and graphics and turn off cursor
     lcd_send_0cmd(0x9C);
 
+    // commands >= 0x80 may require a status read to complete
+    lcd_wait_S0S1();
+
     // LITTLE DEMO
     // set text and graphics data position
     lcd_send_acmd(0x40, 0);
