@@ -70,7 +70,7 @@ def pic_encode_raw(pixels):
             b <<= 1
             b |= pixel
             bl += 1
-            if bl == 8:
+            if bl == 6:
                 data.append(b)
                 bl = 0
                 b = 0
@@ -93,7 +93,7 @@ def pic_encode_c1(pixels):
             b <<= 1
             b |= pixel
             bl += 1
-            if bl == 8:
+            if bl == 6:
                 if b > 0 :
                     ctl |= (1 << ctlc)
                     cdata.append(b)
@@ -132,7 +132,7 @@ def pic_encode_c2(pixels):
             b <<= 1
             b |= pixel
             bl += 1
-            if bl == 8:
+            if bl == 6:
                 tb = b ^ last
                 last = b
                 if tb > 0 :
@@ -182,7 +182,7 @@ def write_pic_data():
                 # else it's black
                 new_row.append(0 if pixel > 128 else 1)
             # pad out row to a byte boundary with white
-            while len(new_row) % 8 != 0:
+            while len(new_row) % 6 != 0:
                 new_row.append(0)
             new_img.append(new_row)
 
@@ -195,7 +195,7 @@ def write_pic_data():
 
         pms.sort(key=lambda m: (len(m[0]), m[1]))
 
-        pic_records.append((len(new_img[0])>>3, len(new_img),
+        pic_records.append((int(len(new_img[0])/6), len(new_img),
             len(pic_bytes), pms[0][1]))
         pic_bytes.extend(pms[0][0])
 
@@ -208,7 +208,7 @@ def write_pic_data():
 
     for bi, b in enumerate(pic_bytes):
         f.write("{},".format(b))
-        if bi % 16 == 15:
+        if bi % 20 == 19:
             f.write("\n")
     f.write("\n};\n\n")
 

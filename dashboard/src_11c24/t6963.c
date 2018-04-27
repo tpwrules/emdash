@@ -139,10 +139,10 @@ void lcd_init(void) {
     // this address defines the width of each line in bytes
     lcd_send_acmd(0x41, 64);
     // and same for graphics
-    lcd_send_acmd(0x43, 32);
+    lcd_send_acmd(0x43, 64);
     // set text to be XORed with graphics
     // and enable internal CG ROM
-    lcd_send_0cmd(0x80);
+    lcd_send_0cmd(0x81);
     // turn on text and graphics and turn off cursor
     lcd_send_0cmd(0x9C);
 

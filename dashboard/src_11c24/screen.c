@@ -24,7 +24,7 @@ void scr_clear_page(uint8_t text, uint8_t page) {
         size = 64*8;
         addr = SCR_TEXT_ADDR(page, 0, 0);
     } else {
-        size = 32*64;
+        size = 64*64;
         addr = SCR_BYTE_ADDR(page, 0, 0);
     }
 
@@ -54,7 +54,7 @@ void scr_draw_pic(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted) {
         // set LCD address to the start of this row
         lcd_send_acmd(0x24, byte_addr);
         // increment to next row
-        byte_addr += 32;
+        byte_addr += 64;
         for (int x=0; x<pic->width; x++) {
             // make sure there is a bit in the control byte
             if (ctlc == 0) {

@@ -22,14 +22,14 @@
 #endif
 
 // The graphics layer can be addressed in byte or pixel mode.
-// in byte mode, each address is an 8x1 block of pixels
-// the screen is thus 30x64 bytes visible, 32x64 in memory
+// in byte mode, each address is an 6x1 block of pixels
+// the screen is thus 40x64 bytes visible, 64x64 in memory
 #define SCR_BYTE_ADDR(page, x, y) \
-    (((page)*0x800)+((y)<<5)+(x))
+    (((page)*0x1000)+((y)<<5)+(x))
 
-// in pixel mode, the screen is 240x64 pixels visible, 256x64 in memory
+// in pixel mode, the screen is 240x64 pixels visible, 384x64 in memory
 #define SCR_PIXEL_ADDR(page, x, y) \
-    (((page)*0x4000)+((y)<<8)+(x))
+    (((page)*0x8000)+((y)<<8)+(x))
 
 // sometimes we want to place graphics lined up with text
 // this returns the pixel addr for text at a specific location
