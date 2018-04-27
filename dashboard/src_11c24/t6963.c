@@ -13,13 +13,13 @@
 #define set_nRESET(to) Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, to)
 #define set_FS(to) Chip_GPIO_WritePortBit(LPC_GPIO, 1, 10, to)
 
-#define set_DB(to) do { LPC_GPIO[0].DATA[0x3FC] = to << 2; \
+#define set_DB(to) do { LPC_GPIO[0].DATA[0x3CC] = to << 2; \
     Chip_GPIO_WritePortBit(LPC_GPIO, 1, 8, !!(to & 4)); \
     Chip_GPIO_WritePortBit(LPC_GPIO, 1, 5, !!(to & 8));} while(0)
 #define set_DB_output(to) do {\
-    if (to) {LPC_GPIO[0].DIR |= 0x3FC;Chip_GPIO_SetPinDIROutput(LPC_GPIO, 1, 5);Chip_GPIO_SetPinDIROutput(LPC_GPIO, 1, 8);} \
-    else {LPC_GPIO[0].DIR &= ~(0x3FC); Chip_GPIO_SetPinDIRInput(LPC_GPIO, 1, 5);Chip_GPIO_SetPinDIRInput(LPC_GPIO, 1, 8);}} while(0)
-#define get_DB() (LPC_GPIO[0].DATA[0x3FC] >> 2)
+    if (to) {LPC_GPIO[0].DIR |= 0x3CC;Chip_GPIO_SetPinDIROutput(LPC_GPIO, 1, 5);Chip_GPIO_SetPinDIROutput(LPC_GPIO, 1, 8);} \
+    else {LPC_GPIO[0].DIR &= ~(0x3CC); Chip_GPIO_SetPinDIRInput(LPC_GPIO, 1, 5);Chip_GPIO_SetPinDIRInput(LPC_GPIO, 1, 8);}} while(0)
+#define get_DB() (LPC_GPIO[0].DATA[0x3CC] >> 2)
 
 #define busywait(t) do {\
     volatile int i;\
