@@ -35,7 +35,25 @@ void scr_clear_page(uint8_t text, uint8_t page) {
 }
 
 void scr_draw_rect(uint32_t byte_addr, uint8_t w, uint8_t h, uint8_t color) {
+    uint8_t main = color ? 0x3f : 0; // build main rectangle color
+    // build the byte at the end by putting in 0s where the rectangle
+    // is not
+    uint8_t end = main << (6-(w%6));
 
+    for (int y=0; y<h; y++) {
+        // position at the start of the line
+        lcd_send_acmd(0x24, byte_addr);
+        byte_addr += 64; // go to next row
+        // loop pixels backwards
+        for (int x=w; x>0; x-=6) {
+            if (x < 6) // if less than a full byte's worth
+                // send end value
+                lcd_send_1cmd(0xC0, end);
+            else
+                // send main value
+                lcd_send_1cmd(0xC0, main);
+        }
+    }
 }
 
 void scr_draw_pic(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted) {
