@@ -15,7 +15,7 @@
 // 64x8 in memory
 #ifndef PLATFORM_PC
 #define SCR_TEXT_ADDR(page, x, y) \
-    (0x4000+((page)*0x200)+((y)*40)+(x))
+    (0x4000+((page)*0x200)+((y)<<6)+(x))
 #else
 #define SCR_TEXT_ADDR(page, x, y) \
     (((page)*0x200)+((y)<<6)+(x))
