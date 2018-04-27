@@ -121,7 +121,7 @@ lib.scr_clear_page = lib.pc_scr_clear_page
 @ffi.def_extern()
 def pc_scr_draw_rect(pixel_addr, w, h, color):
     # here we do the hard work of selecting the rectangles
-    page = pixel_addr >> 14
+    page = pixel_addr >> 15
     x = pixel_addr & 0xFF
     y = (pixel_addr >> 8) & 0x3F
 
@@ -157,7 +157,7 @@ lib.scr_draw_rect = lib.pc_scr_draw_rect
 @ffi.def_extern()
 def pc_scr_draw_pic(byte_addr, pic_id, inverted):
     gfx_ops.put(("pic",
-        byte_addr >> 11, # page
+        byte_addr >> 12, # page
         ((byte_addr & 0x1F)*8, (byte_addr >> 5) & 0x3F), # x, y
         pic_id, bool(inverted)
     ))
