@@ -86,6 +86,8 @@ void scr_draw_pic(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted) {
                 // otherwise, it's just 0
                 out = 0;
             }
+            // invert byte if asked
+            if (inverted) out ^= 0xFF;
             // output the byte
             lcd_send_1cmd(0xC0, out);
             // update contrl byte
