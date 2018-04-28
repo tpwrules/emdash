@@ -21,13 +21,41 @@
 // TODO: insert other include files here
 
 #include "../src/app.h"
+#include "../src/canvar.h"
 #include "../src_11c24/t6963.h"
+#include "../src_11c24/can_log.h"
 
 // TODO: insert other definitions and declarations here
 
+uint32_t systicks = 0;
+
+#ifdef CAN_LOG_DISPLAY_ENABLED
+static const can_log_entry_t *curr_log_entry = &can_log_entries[0];
+#endif
+
 void SysTick_Handler(void) {
+    systicks++;
 	// call the application 10ms timer interrupt
 	app_timer_interrupt();
+
+    // play back can log if allowed
+#ifdef CAN_LOG_DISPLAY_ENABLED
+    while (1) {
+        // if dlc is 0xFF, the log is at the end
+        if (curr_log_entry->dlc == 0xFF) break;
+
+        // check if it's time for this message yet
+        if (curr_log_entry->time > systicks) break;
+
+        // awesome, send it on
+        app_can_interrupt(curr_log_entry->id,
+            curr_log_entry->dlc,
+            curr_log_entry->data);
+
+        // and process next entry
+        curr_log_entry++;
+    }
+#endif
 }
 
 int main(void) {
