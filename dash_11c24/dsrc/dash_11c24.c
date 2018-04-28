@@ -42,7 +42,10 @@ void SysTick_Handler(void) {
 #ifdef CAN_LOG_DISPLAY_ENABLED
     while (1) {
         // if dlc is 0xFF, the log is at the end
-        if (curr_log_entry->dlc == 0xFF) break;
+        if (curr_log_entry->dlc == 0xFF) {
+            systicks = 0;
+            curr_log_entry = &can_log_entries[0];
+        }
 
         // check if it's time for this message yet
         if (curr_log_entry->time > systicks) break;
