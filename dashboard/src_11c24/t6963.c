@@ -6,6 +6,8 @@
 
 #include "t6963.h"
 
+#include <stdbool.h>
+
 #define set_nWR(to) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 8, to)
 #define set_nRD(to) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 7, to)
 #define set_nCE(to) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 6, to)
@@ -27,7 +29,7 @@
 
 // read the S0 and S1 status bits to determine if the
 // display is ready
-void lcd_wait_S0S1(void) {
+static inline void lcd_wait_S0S1(void) {
     set_CD(true); // command
     set_DB_output(false); // get ready to read status
     set_nRD(false); // assert read
@@ -39,22 +41,11 @@ void lcd_wait_S0S1(void) {
     set_nRD(true); // deassert read
 }
 
-void lcd_send_data(uint8_t data) {
+void lcd_send(uint8_t data, bool command) {
     lcd_wait_S0S1(); // wait for display to be ready
-    set_CD(false); // data
+    set_CD(command); // send as command or data depending on input
     set_DB_output(true); // output the new data
     set_DB(data);
-    // and write it
-    set_nWR(false);
-    busywait(1);
-    set_nWR(true);
-}
-
-void lcd_send_command(uint8_t cmd) {
-    lcd_wait_S0S1(); // wait for display to be ready
-    set_CD(true); // command
-    set_DB_output(true); // put it on the bus
-    set_DB(cmd);
     // and write it
     set_nWR(false);
     busywait(1);
@@ -143,11 +134,8 @@ void lcd_init(void) {
     // set text to be XORed with graphics
     // and enable external CG RAM
     lcd_send_0cmd(0x89);
-    // set CG RAM to start at 0x7800, the end of RAM
-    lcd_send_acmd(0x22, 0x7800>>11);
     // turn on text and graphics and turn off cursor
     lcd_send_0cmd(0x9C);
-
-    // commands >= 0x80 may require a status read to complete
-    lcd_wait_S0S1();
+    // set CG RAM to start at 0x7800, the end of RAM
+    lcd_send_acmd(0x22, 0x7800>>11);
 }
