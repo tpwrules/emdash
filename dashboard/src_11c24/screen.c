@@ -103,6 +103,6 @@ void scr_draw_text(uint32_t text_addr, char *text) {
     while (1) {
         char c = *text++;
         if (!c) break;
-        lcd_send_1cmd(0xC0, c-0x20);
+        lcd_send_1cmd(0xC0, c);
     }
 }

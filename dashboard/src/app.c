@@ -31,6 +31,12 @@ void app_entry(void) {
     // draw splash onto first page
     scr_draw_pic(SCR_BYTE_ADDR(0, 0, 0), PIC_ID_BOOTSPLASH, false);
 
+#ifndef PLATFORM_PC
+    // if we are on real hardware, we need to decompress the font
+    // into display RAM
+    scr_draw_pic(0x7800, PIC_ID_FONT_6X8, false);
+#endif
+
     // turn on interrupts
     interrupt_enable();
     // wait a bit of time for the splash to be shown

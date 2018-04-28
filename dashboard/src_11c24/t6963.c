@@ -141,8 +141,10 @@ void lcd_init(void) {
     // and same for graphics
     lcd_send_acmd(0x43, 64);
     // set text to be XORed with graphics
-    // and enable internal CG ROM
-    lcd_send_0cmd(0x81);
+    // and enable external CG RAM
+    lcd_send_0cmd(0x89);
+    // set CG RAM to start at 0x7800, the end of RAM
+    lcd_send_acmd(0x22, 0x7800>>11);
     // turn on text and graphics and turn off cursor
     lcd_send_0cmd(0x9C);
 
