@@ -46,18 +46,18 @@ piclist = [
     Picture("icons/warning.png", "oil_temp_low", (72, 16, 23, 15)),
 
     # headset icon for radio active
-    Picture("icons/buttons.png", "radio", (0, 0, 15, 16)),
+    Picture("icons/buttons.png", "radio", (0, 0, 16, 16)),
     # upshift button icon
-    Picture("icons/buttons.png", "upshift_btn", (16, 0, 15, 15)),
+    Picture("icons/buttons.png", "upshift_btn", (16, 0, 16, 15)),
     # downshift button icon
-    Picture("icons/buttons.png", "downshift_btn", (32, 0, 15, 15)),
+    Picture("icons/buttons.png", "downshift_btn", (32, 0, 16, 15)),
 
     # gear icons
-    Picture("gears/gears.png", "gear_neutral", (32*2, 0, 32, 31)),
-    Picture("gears/gears.png", "gear_1", (32*5, 0, 32, 31)),
-    Picture("gears/gears.png", "gear_2", (32*6, 0, 32, 31)),
-    Picture("gears/gears.png", "gear_3", (32*7, 0, 32, 31)),
-    Picture("gears/gears.png", "gear_4", (32*8, 0, 32, 31))
+    Picture("gears/gears.png", "gear_neutral", (32*2, 0, 30, 31)),
+    Picture("gears/gears.png", "gear_1", (32*5, 0, 30, 31)),
+    Picture("gears/gears.png", "gear_2", (32*6, 0, 30, 31)),
+    Picture("gears/gears.png", "gear_3", (32*7, 0, 30, 31)),
+    Picture("gears/gears.png", "gear_4", (32*8, 0, 30, 31))
 ]
 
 def pic_encode_raw(pixels):

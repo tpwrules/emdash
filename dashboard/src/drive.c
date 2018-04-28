@@ -150,25 +150,25 @@ void drive_B_launch_update(uint32_t val) {
 
 void drive_wb_upshift_update(uint32_t val) {
     if (val) {
-        scr_draw_pic(SCR_BYTE_ADDR(0, 23, 16), PIC_ID_UPSHIFT_BTN, 0);
+        scr_draw_pic(SCR_BYTE_ADDR(0, 22, 16), PIC_ID_UPSHIFT_BTN, 0);
     } else {
-        scr_draw_rect(SCR_BYTE_ADDR(0, 23, 16), 16, 15, 0);
+        scr_draw_rect(SCR_BYTE_ADDR(0, 22, 16), 16, 15, 0);
     }
 }
 
 void drive_wb_downshift_update(uint32_t val) {
     if (val) {
-        scr_draw_pic(SCR_BYTE_ADDR(0, 23, 32), PIC_ID_DOWNSHIFT_BTN, 0);
+        scr_draw_pic(SCR_BYTE_ADDR(0, 22, 32), PIC_ID_DOWNSHIFT_BTN, 0);
     } else {
-        scr_draw_rect(SCR_BYTE_ADDR(0, 23, 32), 16, 15, 0);
+        scr_draw_rect(SCR_BYTE_ADDR(0, 22, 32), 16, 15, 0);
     }
 }
 
 void drive_wb_radio_update(uint32_t val) {
     if (val) {
-        scr_draw_pic(SCR_BYTE_ADDR(0, 23, 48), PIC_ID_RADIO, 0);
+        scr_draw_pic(SCR_BYTE_ADDR(0, 22, 48), PIC_ID_RADIO, 0);
     } else {
-        scr_draw_rect(SCR_BYTE_ADDR(0, 23, 48), 16, 15, 0);
+        scr_draw_rect(SCR_BYTE_ADDR(0, 22, 48), 16, 15, 0);
     }
 }
 
