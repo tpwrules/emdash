@@ -34,6 +34,9 @@
 
 // drive.c limits
 
+// maximum RPM of the RPM bar
+// greater RPMs are still displayed as text
+#define LIM_RPM_BAR_MAX (12000)
 // RPM at which to start blinking for upshift
 #define LIM_UPSHIFT_BLINK_RPM_START (7800)
 // RPM at which to stop blinking for upshift

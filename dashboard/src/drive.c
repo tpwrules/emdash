@@ -31,7 +31,7 @@ void drive_init(void) {
 
     // draw upshift marker on RPM bar
     scr_draw_text(SCR_TEXT_ADDR(0, 
-        LIM_UPSHIFT_BLINK_RPM_START*((240-60)/6)/12000, 0),
+        LIM_UPSHIFT_BLINK_RPM_START*((240-60)/6)/LIM_RPM_BAR_MAX, 0),
         "\xB3"); // vertical bar
 }
 
@@ -94,10 +94,10 @@ void drive_rpm_update(uint32_t val) {
 
     // calculate new position and draw bar
     uint32_t bar_rpm = rpm;
-    if (bar_rpm > 12000) {
-        bar_rpm = 12000;
+    if (bar_rpm > LIM_RPM_BAR_MAX) {
+        bar_rpm = LIM_RPM_BAR_MAX;
     }
-    uint8_t bar_val = bar_rpm*(240-60)/12000;
+    uint8_t bar_val = bar_rpm*(240-60)/LIM_RPM_BAR_MAX;
 
     if (bar_val < old_bar_val) {
         uint8_t col = bar_val/6;
