@@ -7,6 +7,7 @@
 void lcd_init(void);
 
 void lcd_send(uint8_t data, bool command);
+void lcd_send_auto(uint8_t data, bool command);
 
 // command with no arguments
 static inline void lcd_send_0cmd(uint8_t cmd) {

@@ -52,6 +52,30 @@ void lcd_send(uint8_t data, bool command) {
     set_nWR(true);
 }
 
+// read the S3 status bit to determine if the
+// display is ready
+static inline void lcd_wait_S3(void) {
+    set_CD(true); // command
+    set_DB_output(false); // get ready to read status
+    set_nRD(false); // assert read
+    uint8_t status;
+    do {
+        busywait(1);
+    } while (!Chip_GPIO_GetPinState(LPC_GPIO, 1, 5));
+    set_nRD(true); // deassert read
+}
+
+void lcd_send_auto(uint8_t data, bool command) {
+    lcd_wait_S3(); // wait for display to be ready
+    set_CD(command); // send as command or data depending on input
+    set_DB_output(true); // output the new data
+    set_DB(data);
+    // and write it
+    set_nWR(false);
+    busywait(1);
+    set_nWR(true);
+}
+
 void lcd_init(void) {
     // start by initializing the pins
 

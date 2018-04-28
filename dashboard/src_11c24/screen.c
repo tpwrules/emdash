@@ -30,8 +30,12 @@ void scr_clear_page(uint8_t text, uint8_t page) {
 
     // set LCD address to clear region start
     lcd_send_acmd(0x24, addr);
+    // start auto send mode
+    lcd_send_0cmd(0xB0);
     for (int i=0; i<size; i++)
-        lcd_send_1cmd(0xC0, 0);
+        lcd_send_auto(0, false);
+    // end auto mode
+    lcd_send_auto(0xB2, true);
 }
 
 void scr_draw_rect(uint32_t byte_addr, uint8_t w, uint8_t h, uint8_t color) {
@@ -44,15 +48,19 @@ void scr_draw_rect(uint32_t byte_addr, uint8_t w, uint8_t h, uint8_t color) {
         // position at the start of the line
         lcd_send_acmd(0x24, byte_addr);
         byte_addr += 64; // go to next row
+        // start auto send mode
+        lcd_send_0cmd(0xB0);
         // loop pixels backwards
         for (int x=w; x>0; x-=6) {
             if (x < 6) // if less than a full byte's worth
                 // send end value
-                lcd_send_1cmd(0xC0, end);
+                lcd_send_auto(end, false);
             else
                 // send main value
-                lcd_send_1cmd(0xC0, main);
+                lcd_send_auto(main, false);
         }
+        // end auto mode
+        lcd_send_auto(0xB2, true);
     }
 }
 
@@ -61,7 +69,6 @@ void scr_draw_pic(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted) {
     const pic_data_t *pic = &picture_data_records[pic_id];
 
     // set up decompression context
-    uint8_t last = 0; // last output byte
     uint8_t out = 0; // this output byte
     uint8_t ctl = 0; // control byte
     uint8_t ctlc = 0; // bits remaining in control byte
@@ -73,6 +80,8 @@ void scr_draw_pic(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted) {
         lcd_send_acmd(0x24, byte_addr);
         // increment to next row
         byte_addr += 64;
+        // start auto send mode
+        lcd_send_0cmd(0xB0);
         for (int x=0; x<pic->width; x++) {
             // make sure there is a bit in the control byte
             if (ctlc == 0) {
@@ -89,22 +98,27 @@ void scr_draw_pic(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted) {
             // invert byte if asked
             if (inverted) out ^= 0xFF;
             // output the byte
-            lcd_send_1cmd(0xC0, out);
+            lcd_send_auto(out, false);
             // update contrl byte
             ctlc--;
             ctl >>= 1;
         }
+        // end auto mode
+        lcd_send_auto(0xB2, true);
     }
 }
 
 void scr_draw_text(uint32_t text_addr, char *text) {
     // go to the requested address
     lcd_send_acmd(0x24, text_addr);
-
+    // start auto mode
+    lcd_send_0cmd(0xB0);
     // and output text
     while (1) {
         char c = *text++;
         if (!c) break;
-        lcd_send_1cmd(0xC0, c);
+        lcd_send_auto(c, false);
     }
+    // end auto mode
+    lcd_send_auto(0xB2, true);
 }
