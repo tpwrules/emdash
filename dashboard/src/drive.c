@@ -28,6 +28,11 @@ void drive_init(void) {
 
     // drive mode text placeholders
     scr_draw_text(SCR_TEXT_ADDR(0, 18, 7), "TC??");
+
+    // draw upshift marker on RPM bar
+    scr_draw_text(SCR_TEXT_ADDR(0, 
+        LIM_UPSHIFT_BLINK_RPM_START*((240-60)/6)/12000, 0),
+        "\xB3"); // vertical bar
 }
 
 static uint16_t old_rpm = 0;
