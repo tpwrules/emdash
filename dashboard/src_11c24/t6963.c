@@ -148,20 +148,4 @@ void lcd_init(void) {
 
     // commands >= 0x80 may require a status read to complete
     lcd_wait_S0S1();
-
-    // LITTLE DEMO
-    // set text and graphics data position
-    lcd_send_acmd(0x40, 0);
-    lcd_send_acmd(0x42, 0x800);
-    // clear some display memory
-    lcd_send_acmd(0x24, 0);
-
-    for (int j = 0; j<5000; j++)
-        lcd_send_1cmd(0xC0, 0);
-
-    lcd_send_acmd(0x24, 0);
-
-    const char *hi = "Hello, world!ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    for (int j = 0; j<65; j++)
-        lcd_send_1cmd(0xC0, hi[j]-0x20);
 }
