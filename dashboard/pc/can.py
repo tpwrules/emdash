@@ -28,7 +28,7 @@ def do(fn, cv):
     gear = 0
     while True:
         v = max(int(math.sin(a)*6100+6000), 0)
-        cv.nmot = 3300
+        cv.nmot = v
         cv.speed = int(max(min(v, 12000), 0))
         if b % 40 == 0:
             cv.poil = rr(0, 201)

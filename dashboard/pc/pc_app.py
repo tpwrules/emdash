@@ -11,10 +11,14 @@ import sys
 SCALE_FACTOR_INT = 3
 SCALE_FACTOR_REAL = 2.715
 
-if len(sys.argv) >= 2 and sys.argv[1] == "realsize":
+if "realsize" in sys.argv[1:]:
     SCALE = SCALE_FACTOR_REAL
 else:
     SCALE = SCALE_FACTOR_INT
+
+do_can_logging = False
+if "log" in sys.argv[1:]:
+    do_can_logging = True
 
 # import picture list
 import sys
@@ -157,7 +161,15 @@ lib.scr_draw_text = lib.pc_scr_draw_text
 
 # set up can emulator
 
+# set up can output logging
+if do_can_logging:
+    log_start_time = time.monotonic()
+    flog = open("can_log.log", "w")
+
 def can_send(msg_id, data):
+    if do_can_logging:
+        # mark time the message was sent
+        send_time = time.monotonic() - log_start_time
     # create array in C for the data
     d = ffi.new("uint8_t[]", len(data))
     # put the data into it
@@ -170,6 +182,14 @@ def can_send(msg_id, data):
             interrupt_happened.notify_all()
     # free the array we made (not strictly necessary)
     del d
+    if do_can_logging:
+        # write message to log file
+        flog.write("{},${:x}".format(send_time, msg_id))
+        if len(data) > 0:
+            flog.write(","+",".join(
+                ["${:x}".format(datum) for datum in data]))
+        flog.write("\n")
+        flog.flush()
 
 sys.path.append("../can/")
 # construct a canvar interface for it as we need one too
