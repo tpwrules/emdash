@@ -5,7 +5,7 @@
 
 #include "t6963.h"
 
-//#define USE_AUTO_MODE
+#define USE_AUTO_MODE
 
 void scr_show_page(uint8_t text, uint8_t page) {
     if (text) {
