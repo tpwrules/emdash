@@ -95,7 +95,7 @@ void lcd_init(void) {
     Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO2_6,
         IOCON_FUNC0 | IOCON_MODE_INACT);
     Chip_GPIO_SetPinDIROutput(LPC_GPIO, 2, 6);
-    set_nCE(true);
+    set_nCE(false);
 
     // C/D
     Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO2_3,
@@ -134,7 +134,6 @@ void lcd_init(void) {
         IOCON_FUNC0 | IOCON_MODE_INACT);
 
     // now we can begin actually initializing the chip
-    set_nCE(true);
     set_nRESET(true);
     // assert reset
     set_nRESET(false);
@@ -144,9 +143,7 @@ void lcd_init(void) {
     set_nRESET(true);
     // wait some more
     busywait(1000);
-
-    set_nCE(false); // left asserted forever
-    busywait(100);
+    
     // okay now that that is over
     // we can do something with the rest of the screen
 
