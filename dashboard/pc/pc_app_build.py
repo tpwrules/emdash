@@ -1,4 +1,5 @@
 from cffi import FFI
+from glob import glob
 
 fb = FFI()
 
@@ -34,6 +35,10 @@ fb.cdef(r"""
 
 """)
 
+sources = ['platform_pc.c']
+sources.extend(glob('../src/*.c'))
+sources.extend(glob('../src_gen/*.c'))
+
 # the source is just linking against the app linked library
 # we define the macro PLATFORM_PC to tell that this is the PC
 fb.set_source('_pc_app',
@@ -54,7 +59,7 @@ fb.set_source('_pc_app',
     PCFUNC(void, scr_draw_text)(uint32_t text_addr, char *text);
 
     """,
-    libraries=['app'],
+    sources=sources,
     define_macros=[('PLATFORM_PC', 'yes')])
 
 # finally, compile the code into a Python library
