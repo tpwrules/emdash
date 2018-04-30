@@ -32,13 +32,16 @@
 static inline void lcd_wait_S0S1(void) {
     set_CD(true); // command
     set_DB_output(false); // get ready to read status
-    set_nRD(false); // assert read
     uint8_t status;
-    do { 
-        busywait(1);
-        status = get_DB();
+    do {
+        // assert read
+        set_nRD(false);
+        busywait(2); // wait for access time
+        status = get_DB(); // save data
+        // and deassert
+        set_nRD(true);
+        busywait(2);
     } while ((status & 3) != 3);
-    set_nRD(true); // deassert read
 }
 
 void lcd_send(uint8_t data, bool command) {
@@ -48,8 +51,9 @@ void lcd_send(uint8_t data, bool command) {
     set_DB(data);
     // and write it
     set_nWR(false);
-    busywait(1);
+    busywait(2);
     set_nWR(true);
+    busywait(2);
 }
 
 // read the S3 status bit to determine if the
@@ -57,12 +61,16 @@ void lcd_send(uint8_t data, bool command) {
 static inline void lcd_wait_S3(void) {
     set_CD(true); // command
     set_DB_output(false); // get ready to read status
-    set_nRD(false); // assert read
     uint8_t status;
     do {
-        busywait(1);
-    } while (!Chip_GPIO_GetPinState(LPC_GPIO, 1, 5));
-    set_nRD(true); // deassert read
+        // assert read
+        set_nRD(false);
+        busywait(2); // wait for access time
+        status = Chip_GPIO_GetPinState(LPC_GPIO, 1, 5); // save data
+        // and deassert
+        set_nRD(true);
+        busywait(2);
+    } while (!status);
 }
 
 void lcd_send_auto(uint8_t data, bool command) {
@@ -72,8 +80,9 @@ void lcd_send_auto(uint8_t data, bool command) {
     set_DB(data);
     // and write it
     set_nWR(false);
-    busywait(1);
+    busywait(2);
     set_nWR(true);
+    busywait(2);
 }
 
 void lcd_init(void) {
@@ -143,7 +152,7 @@ void lcd_init(void) {
     set_nRESET(true);
     // wait some more
     busywait(1000);
-    
+
     // okay now that that is over
     // we can do something with the rest of the screen
 
