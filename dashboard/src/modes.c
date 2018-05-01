@@ -38,7 +38,7 @@ void modes_m1_init(void) {
     char str[10];
     if (app_next_mode_func == NEXT_MODE) {
         val = (val + 50)/100;
-        sprintf(str, "%3u", val);
+        sprintf(str, "%3u", (unsigned int)val);
         scr_draw_text(SCR_TEXT_ADDR(0, 36, 4), str);
     }
  }
@@ -47,7 +47,8 @@ void modes_m1_init(void) {
     char str[10];
     if (app_next_mode_func == NEXT_MODE) {
         val /= 2;
-        sprintf(str, "%2u,%0.1u", val/10, val%10);
+        sprintf(str, "%2u,%u",
+            (unsigned int)(val/10), (unsigned int)(val%10));
         scr_draw_text(SCR_TEXT_ADDR(0, 33, 2), str);
     }
  }

@@ -42,7 +42,7 @@ void version_init(void) {
 void version_wb_commit_update(uint32_t val) {
     char str[20];
     if (app_next_mode_func == NEXT_MODE) {
-        sprintf(str, "%08x", val);
+        sprintf(str, "%08x", (unsigned int)val);
         scr_draw_text(SCR_TEXT_ADDR(0, 32, 5), str);
     }
 }
@@ -50,7 +50,7 @@ void version_wb_commit_update(uint32_t val) {
 void version_wb_build_update(uint32_t val) {
     char str[20];
     if (app_next_mode_func == NEXT_MODE) {
-        sprintf(str, "%010u", val);
+        sprintf(str, "%010u", (unsigned int)val);
         scr_draw_text(SCR_TEXT_ADDR(0, 30, 6), str);
     }
 }

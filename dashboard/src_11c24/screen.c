@@ -47,10 +47,10 @@ void scr_clear_page(uint8_t text, uint8_t page) {
 }
 
 void scr_draw_rect(uint32_t byte_addr, uint8_t w, uint8_t h, uint8_t color) {
-    uint8_t main = color ? 0x3f : 0; // build main rectangle color
+    uint8_t main_color = color ? 0x3f : 0; // build main rectangle color
     // build the byte at the end by putting in 0s where the rectangle
     // is not
-    uint8_t end = main << (6-(w%6));
+    uint8_t end_color = main_color << (6-(w%6));
 
     for (int y=0; y<h; y++) {
         // position at the start of the line
@@ -65,15 +65,15 @@ void scr_draw_rect(uint32_t byte_addr, uint8_t w, uint8_t h, uint8_t color) {
 #ifdef USE_AUTO_MODE
             if (x < 6) // if less than a full byte's worth
                 // send end value
-                lcd_send_auto(end, false);
+                lcd_send_auto(end_color, false);
             else
                 // send main value
-                lcd_send_auto(main, false);
+                lcd_send_auto(main_color, false);
 #else
             if (x < 6)
-                lcd_send_1cmd(0xC0, end);
+                lcd_send_1cmd(0xC0, end_color);
             else
-                lcd_send_1cmd(0xC0, main);
+                lcd_send_1cmd(0xC0, main_color);
 #endif
         }
 #ifdef USE_AUTO_MODE

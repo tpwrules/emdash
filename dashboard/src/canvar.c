@@ -4,7 +4,7 @@
 
 volatile int canvar_was_updated = 0;
 
-void app_can_interrupt(uint32_t msg_id, uint8_t dlc, uint8_t *data) {
+void app_can_interrupt(uint32_t msg_id, uint8_t dlc, const uint8_t *data) {
     // step 1: find the first variable in this message
     int msg_idx = msg_id - CANVAR_ID_MAP_FIRST;
     if (msg_idx < 0 || msg_idx >= CANVAR_ID_MAP_COUNT)

@@ -89,7 +89,8 @@ void warn_init(void) {
 void warn_poil_update(uint32_t val) {
     char str[8];
     val /= 2;
-    sprintf(str, "%2d,%01d", val/10, val%10);
+    sprintf(str, "%2u,%u",
+        (unsigned int)(val/10), (unsigned int)(val%10));
     scr_draw_text(SCR_TEXT_ADDR(0, 4, 5), str);
     warn_set(BLINK_OIL_PRESSURE, val < LIM_OIL_PRESSURE_MIN);
 }
@@ -122,7 +123,8 @@ void warn_tmot_update(uint32_t val) {
 void warn_pfuel_update(uint32_t val) {
     char str[8];
     val /= 2;
-    sprintf(str, "%2d,%01d", val/10, val%10);
+    sprintf(str, "%2u,%u",
+        (unsigned int)(val/10), (unsigned int)(val%10));
     scr_draw_text(SCR_TEXT_ADDR(0, 4, 7), str);
     warn_set(BLINK_FUEL_PRESSURE, val < LIM_FUEL_PRESSURE_MIN);
 }
@@ -139,7 +141,8 @@ void warn_tfuel_update(uint32_t val) {
 void warn_ub_update(uint32_t val) {
     char str[8];
     val = (val + 50) / 100;
-    sprintf(str, "%2d,%01d", val/10, val%10);
+    sprintf(str, "%2u,%u",
+        (unsigned int)(val/10), (unsigned int)(val%10));
     scr_draw_text(SCR_TEXT_ADDR(0, 35, 7), str);
     warn_set(BLINK_BATTERY, val < LIM_BATTERY_MIN);
 }
