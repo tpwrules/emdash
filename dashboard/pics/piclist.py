@@ -3,6 +3,7 @@
 # it must be run to generate the pic data headers
 
 import png
+import os
 
 class Picture:
     def __init__(self,
@@ -153,8 +154,20 @@ def pic_encode_c2(pixels):
 
     return data
 
-
 def write_pic_data():
+    # change directory to where this file is located
+    # so all the generated stuff ends up in the right place
+    os.chdir(os.path.join(".", os.path.dirname(__file__)))
+
+    # write out header with picture names
+    f = open("../src_gen/pic_ids.h", "w")
+    f.write("#ifndef PIC_IDS_H\n#define PIC_IDS_H\n\n")
+    f.write("#define PIC_NUMBER_OF_IDS ({})\n\n".format(len(piclist)))
+    for picid, pic in enumerate(piclist):
+        f.write("#define PIC_ID_{} ({})\n".format(pic.name, picid))
+    f.write("\n#endif\n")
+    f.close()
+
     pic_bytes = bytearray()
     pic_records = []
     for picid, picture in enumerate(piclist):
@@ -224,13 +237,4 @@ def write_pic_data():
     f.close()
 
 if __name__ == "__main__":
-    # write out header with picture names
-    f = open("../src_gen/pic_ids.h", "w")
-    f.write("#ifndef PIC_IDS_H\n#define PIC_IDS_H\n\n")
-    f.write("#define PIC_NUMBER_OF_IDS ({})\n\n".format(len(piclist)))
-    for picid, pic in enumerate(piclist):
-        f.write("#define PIC_ID_{} ({})\n".format(pic.name, picid))
-    f.write("\n#endif\n")
-    f.close()
-
     write_pic_data()

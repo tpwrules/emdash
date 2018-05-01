@@ -2,9 +2,7 @@
 
 cd "$(dirname "$0")"
 
-AP='../src'
-
-../src/pre_build.sh
+python3 ../build_src_gen.py
 
 # build the python module with CFFI
 python3 pc_app_build.py

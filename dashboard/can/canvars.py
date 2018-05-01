@@ -279,7 +279,13 @@ class CanvarInterface:
             else:
                 self.flush_id(var.msg_id)
 
+import os
+
 def build_defs():
+    # change directory to where this file is located
+    # so all the generated stuff ends up in the right place
+    os.chdir(os.path.join(".", os.path.dirname(__file__)))
+
     # write out header file first
     f = open("../src_gen/canvar_defs.h", "w")
     f.write("#ifndef CANVAR_DEFS_H\n#define CANVAR_DEFS_H\n\n")
@@ -347,6 +353,8 @@ def build_defs():
     for val in ci_vals:
         f.write("{},\n".format(val))
     f.write("};\n")
+    
+    f.close()
 
 if __name__ == "__main__":
     build_defs()
