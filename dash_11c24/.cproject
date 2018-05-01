@@ -26,6 +26,7 @@
 								<option id="com.crt.advproject.gcc.arch.233577147" name="Architecture" superClass="com.crt.advproject.gcc.arch" useByScannerDiscovery="false" value="com.crt.advproject.gcc.target.cm0" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1581334703" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="DEBUG"/>
+									<listOptionValue builtIn="false" value="NO_BOARD_LIB"/>
 									<listOptionValue builtIn="false" value="PLATFORM_11C24"/>
 									<listOptionValue builtIn="false" value="__CODE_RED"/>
 									<listOptionValue builtIn="false" value="CORE_M0"/>
@@ -39,7 +40,6 @@
 								<option id="com.crt.advproject.gcc.hdrlib.1008076001" name="Library headers" superClass="com.crt.advproject.gcc.hdrlib" useByScannerDiscovery="false" value="com.crt.advproject.gcc.hdrlib.newlibnano" valueType="enumerated"/>
 								<option id="com.crt.advproject.gcc.specs.167471103" name="Specs" superClass="com.crt.advproject.gcc.specs" useByScannerDiscovery="false" value="com.crt.advproject.gcc.specs.newlibnano" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.396047088" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/nxp_lpcxpresso_11c24_board_lib/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lpc_chip_11cxx_lib/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dash_11c24/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dash_11c24/src_gen}&quot;"/>
@@ -56,7 +56,6 @@
 								<option id="com.crt.advproject.gas.hdrlib.1936121279" name="Library headers" superClass="com.crt.advproject.gas.hdrlib" useByScannerDiscovery="false" value="com.crt.advproject.gas.hdrlib.newlibnano" valueType="enumerated"/>
 								<option id="com.crt.advproject.gas.specs.164384102" name="Specs" superClass="com.crt.advproject.gas.specs" useByScannerDiscovery="false" value="com.crt.advproject.gas.specs.newlibnano" valueType="enumerated"/>
 								<option id="gnu.both.asm.option.include.paths.1761670106" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/nxp_lpcxpresso_11c24_board_lib/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lpc_chip_11cxx_lib/inc}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.gas.fpu.139157353" name="Floating point" superClass="com.crt.advproject.gas.fpu" useByScannerDiscovery="false"/>
@@ -79,11 +78,9 @@
 								</option>
 								<option id="com.crt.advproject.link.gcc.hdrlib.984311175" name="Library" superClass="com.crt.advproject.link.gcc.hdrlib" useByScannerDiscovery="false" value="com.crt.advproject.gcc.link.hdrlib.newlibnano.none" valueType="enumerated"/>
 								<option id="gnu.c.link.option.libs.1023319839" name="Libraries (-l)" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false" valueType="libs">
-									<listOptionValue builtIn="false" value="nxp_lpcxpresso_11c24_board_lib"/>
 									<listOptionValue builtIn="false" value="lpc_chip_11cxx_lib"/>
 								</option>
 								<option id="gnu.c.link.option.paths.354732927" name="Library search path (-L)" superClass="gnu.c.link.option.paths" useByScannerDiscovery="false" valueType="libPaths">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/nxp_lpcxpresso_11c24_board_lib/Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lpc_chip_11cxx_lib/Debug}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.link.crpenable.378719481" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable" useByScannerDiscovery="false" value="true" valueType="boolean"/>
