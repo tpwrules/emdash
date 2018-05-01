@@ -1,3 +1,3 @@
 allwithpre: 
-	../../dashboard/build_src_gen.py
+	../run_build_src_gen_py.sh
 	$(MAKE) --no-print-directory all
