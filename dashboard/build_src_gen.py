@@ -26,5 +26,7 @@ def build():
     write_build_version.do_write()
     piclist.write_pic_data()
 
+    print("SOURCE GENERATED SUCCESSFULLY")
+
 if __name__ == "__main__":
     build()

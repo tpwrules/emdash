@@ -82,3 +82,5 @@ fb.set_source('_pc_app',
 
 # finally, compile the code into a Python library
 fb.compile(verbose=True)
+
+print("PC APP BUILT SUCCESSFULLY")
