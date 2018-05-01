@@ -17,6 +17,12 @@ build_src_gen.build()
 # re change directory cause the above changed it
 os.chdir(fpath)
 
+# build list of source files for the PC version
+sources = [
+    "../src_gen/canvar_defs.c"
+]
+sources.extend(glob("../src/*.c"))
+
 fb = FFI()
 
 # define the functions we will call from Python
@@ -51,10 +57,6 @@ fb.cdef(r"""
 
 """)
 
-sources = ['platform_pc.c']
-sources.extend(glob('../src/*.c'))
-sources.extend(glob('../src_gen/*.c'))
-
 # the source is just linking against the app linked library
 # we define the macro PLATFORM_PC to tell that this is the PC
 fb.set_source('_pc_app',
@@ -63,11 +65,11 @@ fb.set_source('_pc_app',
     void app_timer_interrupt(void);
     void app_can_interrupt(uint32_t msg_id, uint8_t dlc, uint8_t *data);
 
-    extern void (*interrupt_disable)(void);
-    extern void (*interrupt_enable)(void);
-    extern void (*interrupt_wait)(void);
+    void (*interrupt_disable)(void);
+    void (*interrupt_enable)(void);
+    void (*interrupt_wait)(void);
 
-    #define PCFUNC(type, name) extern type (*name)
+    #define PCFUNC(type, name) type (*name)
     PCFUNC(void, scr_show_page)(uint8_t text, uint8_t page);
     PCFUNC(void, scr_clear_page)(uint8_t text, uint8_t page);
     PCFUNC(void, scr_draw_rect)(uint32_t byte_addr, uint8_t w, uint8_t h, uint8_t color);

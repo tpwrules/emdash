@@ -1,6 +1,6 @@
 #include "platform.h"
 #include "screen.h"
-#include "pic_data.h"
+#include "../src/pic_data.h"
 #include "../src_gen/pic_ids.h"
 
 #include "t6963.h"
