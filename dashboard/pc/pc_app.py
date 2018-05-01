@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import threading
 import queue
 import time
@@ -20,13 +22,23 @@ do_can_logging = False
 if "log" in sys.argv[1:]:
     do_can_logging = True
 
-# import picture list
-import sys
-sys.path.append("../pics/")
-from piclist import piclist
-
 # import the shared library made by CFFI
 from _pc_app import lib, ffi
+
+# import the generator libraries we use
+import sys
+import os
+# change directory to where this file is located
+# so we can find the generator libraries
+os.chdir(os.path.join(".", os.path.dirname(__file__)))
+# add their directories to path
+sys.path.append(os.path.join(os.path.abspath(".."), "pics"))
+sys.path.append(os.path.join(os.path.abspath(".."), "can"))
+
+# import the picture list
+from piclist import piclist
+# and canvar interface
+import canvars
 
 # exceptions are funky in callbacks
 # exceptions raised in callbacks aren't on the main thread,
@@ -191,9 +203,7 @@ def can_send(msg_id, data):
         flog.write("\n")
         flog.flush()
 
-sys.path.append("../can/")
 # construct a canvar interface for it as we need one too
-import canvars
 cv = canvars.CanvarInterface(can_send)
 
 import can
