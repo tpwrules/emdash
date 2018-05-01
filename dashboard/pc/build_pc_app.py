@@ -1,6 +1,20 @@
 from cffi import FFI
 from glob import glob
 
+# call build_src_gen.py to make sure that is up to date
+import sys
+import os
+# change directory to where this file is located
+# so we can find everything
+fpath = os.path.abspath(os.path.join(".", os.path.dirname(__file__)))
+os.chdir(fpath)
+sys.path.append(os.path.abspath(".."))
+import build_src_gen
+build_src_gen.build()
+
+# re change directory cause the above changed it
+os.chdir(fpath)
+
 fb = FFI()
 
 # define the functions we will call from Python
