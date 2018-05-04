@@ -1,10 +1,14 @@
 .DS_Store
 *.so
 *.o
+*.pyd
 dashboard/pc/_pc_app.c
 __pycache__/
 ~$*
 dashboard/src_gen/build_version.h
+dashboard/pc/src
+dashboard/pc/src_gen
+dashboard/pc/Release
 
 *.bak
 *.bck
