@@ -154,6 +154,44 @@ def pic_encode_c2(pixels):
 
     return data
 
+def pic_encode_c3(pixels, diff):
+    # raw encoding just stuffs the pixels into bytes
+    last = 0
+    zeros = 0
+    data = bytearray()
+    for row in pixels:
+        bl = 0
+        b = 0
+        for pixel in row:
+            b <<= 1
+            b |= pixel
+            bl += 1
+            if bl == 6:
+                if diff:
+                    b, last = b ^ last, b
+                if b == 0:
+                    zeros += 1
+                else:
+                    if zeros == 0:
+                        data.append(b)
+                    elif zeros == 1:
+                        data.append(b | 0x40)
+                    elif zeros == 2:
+                        data.append(b | 0x80)
+                    else:
+                        if zeros-1 > 63:
+                            raise Exception("oops")
+                        data.append((zeros-1) | 0xC0)
+                        data.append(b)
+                    zeros = 0
+                bl = 0
+                b = 0
+    if zeros > 0:
+        if zeros - 1 > 63:
+            raise Exception("oops")
+        data.append((zeros-1) | 0xC0)
+    return data
+
 def write_pic_data():
     # change directory to where this file is located
     # so all the generated stuff ends up in the right place
