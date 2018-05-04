@@ -22,6 +22,10 @@ do_can_logging = False
 if "log" in sys.argv[1:]:
     do_can_logging = True
 
+output_can = False
+if "canout" in sys.argv[1:]:
+    output_can = True
+
 # import the shared library made by CFFI
 from _pc_app import lib, ffi
 
@@ -178,10 +182,26 @@ if do_can_logging:
     log_start_time = time.monotonic()
     flog = open("can_log.log", "w")
 
+# set up can output if asked
+canbus = None
+can = None
+if output_can:
+    import can as can_import
+    can = can_import
+    canbus = can.interface.Bus(
+        bustype='vector',
+        app_name='emdash',
+        channel=0,
+        bitrate=1000000)
+
 def can_send(msg_id, data):
     if do_can_logging:
         # mark time the message was sent
         send_time = time.monotonic() - log_start_time
+    if output_can:
+        msg = can.Message(arbitration_id=msg_id,
+            data=data)
+        canbus.send(msg)
     # create array in C for the data
     d = ffi.new("uint8_t[]", len(data))
     # put the data into it
@@ -202,6 +222,7 @@ def can_send(msg_id, data):
                 ["${:x}".format(datum) for datum in data]))
         flog.write("\n")
         flog.flush()
+
 
 # construct a canvar interface for it as we need one too
 cv = canvars.CanvarInterface(can_send)
