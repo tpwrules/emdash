@@ -77,7 +77,7 @@ void can_hw_init(void) {
     baudrateCalculate(1000000, timing_data);
     // now inititalize the CAN driver with that data
     // (and tell it to enable interrupts)
-    LPC_CCAN_API->init_can(timing_data, true);
+    LPC_CCAN_API->init_can(&timing_data[0], true);
 
     // now configure the CAN callback functions
     CCAN_CALLBACKS_T callbacks = {
@@ -95,14 +95,14 @@ void can_hw_init(void) {
     // tell the driver the above list
     LPC_CCAN_API->config_calb(&callbacks);
 
+    // now enable CAN interrupts
+    NVIC_EnableIRQ(CAN_IRQn);
+
     // configure message object 1 to receive all
     // 11 bit ID messages
     CCAN_MSG_OBJ_T msg_obj;
-    msg_obj.msgobj = 1;
-    msg_obj.mode_id = 0;
-    msg_obj.mask = 0;
-    LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-
-    // now enable CAN interrupts
-    NVIC_EnableIRQ(CAN_IRQn);
+	msg_obj.msgobj = 1;
+	msg_obj.mode_id = 0;
+	msg_obj.mask = 0;
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 }

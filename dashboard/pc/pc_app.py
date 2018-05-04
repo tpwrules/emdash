@@ -200,8 +200,10 @@ def can_send(msg_id, data):
         send_time = time.monotonic() - log_start_time
     if output_can:
         msg = can.Message(arbitration_id=msg_id,
-            data=data)
+            data=list(data),
+            extended_id=False)
         canbus.send(msg)
+        canbus.flush_tx_buffer()
     # create array in C for the data
     d = ffi.new("uint8_t[]", len(data))
     # put the data into it

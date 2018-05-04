@@ -24,6 +24,7 @@
 #include "../src/canvar.h"
 #include "../src_11c24/t6963.h"
 #include "../src_11c24/can_log.h"
+#include "../src_11c24/can_hw.h"
 
 // TODO: insert other definitions and declarations here
 
