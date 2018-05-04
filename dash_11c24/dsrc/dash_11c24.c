@@ -80,6 +80,11 @@ int main(void) {
     // configure SysTick timer to fire every 10ms
     SysTick_Config(SystemCoreClock/100);
 
+    // initialize CAN hardware
+#ifndef CAN_LOG_DISPLAY_ENABLED
+    can_hw_init();
+#endif
+
     app_entry();
 
     // TODO: insert code here

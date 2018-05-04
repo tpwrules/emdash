@@ -4,7 +4,7 @@
 #include "../src/platform.h"
 
 #ifndef PLATFORM_PC
-#define CAN_LOG_DISPLAY_ENABLED
+//#define CAN_LOG_DISPLAY_ENABLED
 #endif
 
 typedef struct {
