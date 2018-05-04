@@ -227,8 +227,8 @@ def can_send(msg_id, data):
 # construct a canvar interface for it as we need one too
 cv = canvars.CanvarInterface(can_send)
 
-import can
-can_thread = threading.Thread(target=can.do, args=(can_send,cv), daemon=True)
+import cangen
+can_thread = threading.Thread(target=cangen.do, args=(can_send,cv), daemon=True)
 
 # now get pygame up and running to make the graphics go
 
