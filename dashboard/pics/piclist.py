@@ -47,7 +47,7 @@ piclist = [
     Picture("icons/warning.png", "oil_temp_low", (72, 16, 23, 15)),
 
     # headset icon for radio active
-    Picture("icons/buttons.png", "radio", (0, 0, 16, 16)),
+    Picture("icons/buttons.png", "radio", (0, 0, 16, 15)),
     # upshift button icon
     Picture("icons/buttons.png", "upshift_btn", (16, 0, 16, 15)),
     # downshift button icon
@@ -240,8 +240,9 @@ def write_pic_data():
         # now that we have only the image pixels, encode them
         pms = [
             #(pic_encode_raw(new_img), 0),
-            (pic_encode_c1(new_img), 1),
-            #(pic_encode_c2(new_img), 2)
+            #(pic_encode_c1(new_img), 1),
+            #(pic_encode_c2(new_img), 2),
+            (pic_encode_c3(new_img, False), 3),
         ]
 
         pms.sort(key=lambda m: (len(m[0]), m[1]))

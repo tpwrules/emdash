@@ -88,9 +88,10 @@ void scr_draw_pic(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted) {
     const pic_data_t *pic = &picture_data_records[pic_id];
 
     // set up decompression context
-    uint8_t out = 0; // this output byte
-    uint8_t ctl = 0; // control byte
-    uint8_t ctlc = 0; // bits remaining in control byte
+    uint8_t din = 0xC0; // input compressed byte
+    uint8_t out = 0; // byte to output
+    int zeros = 0; // number of zeros remaining before output
+
     const uint8_t *data = pic->data;
 
     // loop over rows in picture
@@ -104,29 +105,38 @@ void scr_draw_pic(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted) {
         lcd_send_0cmd(0xB0);
 #endif
         for (int x=0; x<pic->width; x++) {
-            // make sure there is a bit in the control byte
-            if (ctlc == 0) {
-                ctl = *data++;
-                ctlc = 8;
-            }
-            if (ctl & 1) {
-                // if the LSB is 1, the next output byte is the next input byte
-                out = *data++;
-            } else {
-                // otherwise, it's just 0
-                out = 0;
-            }
+            out = 0xFF; // we need to output a byte
+            do {
+                if (zeros > 0) {
+                    // output another zero
+                    out = 0;
+                    zeros--;
+                } else {
+                    // no zeros remaining, output the data byte
+                    if ((din & 0xC0) != 0xC0) {
+                        // if it's not just a zero count!
+                        out = din & 0x3F;
+                    }
+                    // now read and process the next byte
+                    din = *data++;
+                    if ((din & 0xC0) == 0xC0) {
+                        // just a zero run
+                        zeros = (din & 0x3F) + 1;
+                    } else {
+                        zeros = (din & 0xC0) >> 6;
+                    }
+                }
+            } while (out == 0xFF);
+
             // invert byte if asked
             if (inverted) out ^= 0xFF;
+
             // output the byte
 #ifdef USE_AUTO_MODE
             lcd_send_auto(out, false);
 #else
             lcd_send_1cmd(0xC0, out);
 #endif
-            // update contrl byte
-            ctlc--;
-            ctl >>= 1;
         }
         // end auto mode
 #ifdef USE_AUTO_MODE
