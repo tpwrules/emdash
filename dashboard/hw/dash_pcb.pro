@@ -1,4 +1,4 @@
-update=Monday, May 07, 2018 'AMt' 08:20:38 AM
+update=Monday, May 07, 2018 'AMt' 09:56:07 AM
 version=1
 last_client=kicad
 [pcbnew]
@@ -60,3 +60,4 @@ LibName28=contrib
 LibName29=valves
 LibName30=nxp_can
 LibName31=lmz21700
+LibName32=tps6217x
