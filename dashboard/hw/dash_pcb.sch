@@ -159,9 +159,9 @@ Text Label 4400 3000 2    60   ~ 0
 LCD_DB0
 Text Label 4400 3100 2    60   ~ 0
 LCD_DB1
-Text Label 4400 4800 2    60   ~ 0
+Text Label 6800 3300 0    60   ~ 0
 LCD_DB2
-Text Label 4400 4500 2    60   ~ 0
+Text Label 6800 3400 0    60   ~ 0
 LCD_DB3
 Text Label 4400 3400 2    60   ~ 0
 LCD_DB4
@@ -218,7 +218,7 @@ Text Label 10650 6000 0    60   ~ 0
 SWCLK
 Text Label 6800 2900 0    60   ~ 0
 LCD_C/~D
-Text Label 6800 3300 0    60   ~ 0
+Text Label 4400 4800 2    60   ~ 0
 LCD_~RST
 Text Label 6800 3200 0    60   ~ 0
 LCD_~WR

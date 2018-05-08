@@ -8,19 +8,16 @@
 
 #include <stdbool.h>
 
-#define set_nWR(to) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 8, to)
-#define set_nRD(to) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 7, to)
-#define set_nCE(to) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 6, to)
-#define set_CD(to) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 3, to)
-#define set_nRESET(to) Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, to)
-#define set_FS(to) Chip_GPIO_WritePortBit(LPC_GPIO, 1, 10, to)
+#define set_nWR(to) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 6, to)
+#define set_nRD(to) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, to)
+#define set_CD(to) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 1, to)
+#define set_nRESET(to) Chip_GPIO_WritePortBit(LPC_GPIO, 1, 8, to)
 
 #define set_DB(to) do { LPC_GPIO[0].DATA[0x3CC] = to << 2; \
-    Chip_GPIO_WritePortBit(LPC_GPIO, 1, 8, !!(to & 4)); \
-    Chip_GPIO_WritePortBit(LPC_GPIO, 1, 5, !!(to & 8));} while(0)
+    LPC_GPIO[2].DATA[0x180] = to << 5;} while(0)
 #define set_DB_output(to) do {\
-    if (to) {LPC_GPIO[0].DIR |= 0x3CC;Chip_GPIO_SetPinDIROutput(LPC_GPIO, 1, 5);Chip_GPIO_SetPinDIROutput(LPC_GPIO, 1, 8);} \
-    else {LPC_GPIO[0].DIR &= ~(0x3CC); Chip_GPIO_SetPinDIRInput(LPC_GPIO, 1, 5);Chip_GPIO_SetPinDIRInput(LPC_GPIO, 1, 8);}} while(0)
+    if (to) {LPC_GPIO[0].DIR |= 0x3CC; LPC_GPIO[2].DIR |= 0x180;} \
+    else {LPC_GPIO[0].DIR &= ~(0x3CC); LPC_GPIO[2].DIR &= ~(0x180);}} while(0)
 #define get_DB() (LPC_GPIO[0].DATA[0x3CC] >> 2)
 
 #define busywait(t) do {\
@@ -66,7 +63,7 @@ static inline void lcd_wait_S3(void) {
         // assert read
         set_nRD(false);
         busywait(2); // wait for access time
-        status = Chip_GPIO_GetPinState(LPC_GPIO, 1, 5); // save data
+        status = Chip_GPIO_GetPinState(LPC_GPIO, 2, 8); // save data
         // and deassert
         set_nRD(true);
         busywait(2);
@@ -89,49 +86,37 @@ void lcd_init(void) {
     // start by initializing the pins
 
     // /WR
-    Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO2_8,
-        IOCON_FUNC0 | IOCON_MODE_INACT);
-    Chip_GPIO_SetPinDIROutput(LPC_GPIO, 2, 8);
-    set_nWR(true);
-
-    // /RD
-    Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO2_7,
-        IOCON_FUNC0 | IOCON_MODE_INACT);
-    Chip_GPIO_SetPinDIROutput(LPC_GPIO, 2, 7);
-    set_nRD(true);
-
-    // /CE
     Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO2_6,
         IOCON_FUNC0 | IOCON_MODE_INACT);
     Chip_GPIO_SetPinDIROutput(LPC_GPIO, 2, 6);
-    set_nCE(false);
+    set_nWR(true);
+
+    // /RD
+    Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO2_0,
+        IOCON_FUNC0 | IOCON_MODE_INACT);
+    Chip_GPIO_SetPinDIROutput(LPC_GPIO, 2, 0);
+    set_nRD(true);
 
     // C/D
-    Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO2_3,
+    Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO2_1,
         IOCON_FUNC0 | IOCON_MODE_INACT);
-    Chip_GPIO_SetPinDIROutput(LPC_GPIO, 2, 3);
+    Chip_GPIO_SetPinDIROutput(LPC_GPIO, 2, 1);
     set_CD(true);
 
     // /RESET
-    Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO3_3,
+    Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO1_8,
         IOCON_FUNC0 | IOCON_MODE_INACT);
-    Chip_GPIO_SetPinDIROutput(LPC_GPIO, 3, 3);
+    Chip_GPIO_SetPinDIROutput(LPC_GPIO, 1, 8);
     set_nRESET(true);
-
-    // FS
-    Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO1_10,
-        IOCON_FUNC0 | IOCON_MODE_INACT | IOCON_DIGMODE_EN);
-    Chip_GPIO_SetPinDIROutput(LPC_GPIO, 1, 10);
-    set_FS(true); // 6x8 fonts
 
     // DB0-DB7
     Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO0_2,
         IOCON_FUNC0 | IOCON_MODE_INACT);
     Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO0_3,
         IOCON_FUNC0 | IOCON_MODE_INACT);
-    Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO1_8,
+    Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO2_7,
         IOCON_FUNC0 | IOCON_MODE_INACT);
-    Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO1_5,
+    Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO2_8,
         IOCON_FUNC0 | IOCON_MODE_INACT);
     Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO0_6,
         IOCON_FUNC0 | IOCON_MODE_INACT);
