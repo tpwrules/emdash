@@ -274,7 +274,7 @@ U 1 1 5AE5C369
 P 10550 3600
 F 0 "RV1" V 10375 3600 50  0000 C CNN
 F 1 "10k" V 10450 3600 50  0000 C CNN
-F 2 "Potentiometers:Potentiometer_Trimmer_ACP_CA6h_Vertical" H 10550 3600 50  0001 C CNN
+F 2 "custom_footprints:Bourns_3362X" H 10550 3600 50  0001 C CNN
 F 3 "https://www.mouser.de/ProductDetail/Bourns/3362X-1-103LF?qs=sGAEpiMZZMtC25l1F4XBUxECHfqDmxl1ITAi%252bn07c9o%3d" H 10550 3600 50  0001 C CNN
 	1    10550 3600
 	0    -1   -1   0   
