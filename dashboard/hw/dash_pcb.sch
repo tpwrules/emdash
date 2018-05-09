@@ -513,7 +513,7 @@ U 1 1 5AF00B83
 P 2150 1150
 F 0 "U2" H 1900 650 60  0000 C CNN
 F 1 "TPS62175" H 2150 1100 60  0000 C CNN
-F 2 "" H 2150 1200 60  0001 C CNN
+F 2 "custom_footprints:DQC" H 2150 1200 60  0001 C CNN
 F 3 "https://www.mouser.de/ProductDetail/Texas-Instruments/TPS62175DQCR?qs=sGAEpiMZZMtD8yQon44BRtpT62hWKGFK" H 2150 1200 60  0001 C CNN
 	1    2150 1150
 	1    0    0    -1  
