@@ -557,7 +557,7 @@ U 1 1 5AF01A06
 P 2850 750
 F 0 "L1" V 2800 750 50  0000 C CNN
 F 1 "10u" V 2925 750 50  0000 C CNN
-F 2 "" H 2850 750 50  0001 C CNN
+F 2 "custom_footprints:Coilcraft_LPS4018" H 2850 750 50  0001 C CNN
 F 3 "https://www.mouser.de/ProductDetail/Coilcraft/LPS4018-103MRB?qs=sGAEpiMZZMsg%252by3WlYCkU2oPBW0WnPwqnL16yXxQPg0%3d" H 2850 750 50  0001 C CNN
 	1    2850 750 
 	0    -1   -1   0   
