@@ -957,7 +957,7 @@ Wire Wire Line
 Connection ~ 1550 1350
 Connection ~ 1550 1500
 Wire Wire Line
-	2650 1500 2700 1500
+	2650 1500 2950 1500
 Wire Wire Line
 	2700 1500 2700 1550
 Wire Wire Line
@@ -1096,4 +1096,11 @@ Connection ~ 10500 2350
 Wire Wire Line
 	10400 2650 10600 2650
 Connection ~ 10500 2650
+Wire Wire Line
+	2950 1500 2950 1900
+Wire Wire Line
+	2950 1900 3200 1900
+Connection ~ 2700 1500
+Text Label 3200 1900 0    60   ~ 0
+MCU_~RESET
 $EndSCHEMATC
