@@ -192,7 +192,7 @@ if output_can:
         bustype='vector',
         app_name='emdash',
         channel=0,
-        bitrate=1000000)
+        bitrate=500000)
 
 def can_send(msg_id, data):
     if do_can_logging:

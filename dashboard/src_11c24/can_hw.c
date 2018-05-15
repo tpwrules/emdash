@@ -74,7 +74,7 @@ void CAN_IRQHandler(void) {
 void can_hw_init(void) {
     // calculate timing data from baudrate
     uint32_t timing_data[2];
-    baudrateCalculate(1000000, timing_data);
+    baudrateCalculate(500000, timing_data);
     // now inititalize the CAN driver with that data
     // (and tell it to enable interrupts)
     LPC_CCAN_API->init_can(&timing_data[0], true);
