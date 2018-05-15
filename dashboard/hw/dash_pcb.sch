@@ -183,7 +183,7 @@ U 1 1 5ADCAA88
 P 9700 6100
 F 0 "J2" H 9750 6400 50  0000 C CNN
 F 1 "DEBUG" H 9750 5800 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Angled_2x05_Pitch1.27mm" H 9700 6100 50  0001 C CNN
+F 2 "custom_footprints:Pin_Header_Angled_2x05_Pitch1.27mm_AMPHENOL_SHROUDED" H 9700 6100 50  0001 C CNN
 F 3 "https://www.mouser.de/ProductDetail/Amphenol-FCI/20021512-00010T4LF?qs=sGAEpiMZZMs%252bGHln7q6pmwodwKqstCemugheqdGIyCk%3d" H 9700 6100 50  0001 C CNN
 	1    9700 6100
 	1    0    0    -1  
