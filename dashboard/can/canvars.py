@@ -208,8 +208,10 @@ class CanvarInterface:
         self.cv_msg_ids = {}
         for var in variables:
             self.cv_names[var.name] = var
-            vars_in_id = self.cv_msg_ids.get(var.msg_id, [])
-            vars_in_id.append(var)
+            vars_in_id = self.cv_msg_ids.get(var.msg_id, {})
+            vars_for_mpx = vars_in_id.get(var.multiplex, [])
+            vars_for_mpx.append(var)
+            vars_in_id[var.multiplex]= vars_for_mpx
             self.cv_msg_ids[var.msg_id] = vars_in_id
 
         self.dirty_ids = set()
@@ -236,30 +238,38 @@ class CanvarInterface:
             if clean:
                 del self.dirty_ids[msg_id]
 
-            pstr = "<" # struct definition for this message
-            data = [] # data for this definition
-            byte = 0 # byte we are at
-            for var in self.cv_msg_ids[msg_id]:
-                # pad message to this variable
-                while byte < var.start:
-                    pstr += "x"
-                    byte += 1
-                # generate appropriate type character
-                c = " bh i"[var.size]
-                if not var.signed:
-                    c = c.upper()
-                pstr += c # and add it to the struct
-                # append the data for this var (or 0 if there's none yet)
-                try:
-                    data.append(var.val)
-                except:
-                    data.append(0)
-                byte += var.size
+            for mpx, mpx_vars in self.cv_msg_ids[msg_id].items():
+                if mpx is None:
+                    pstr = "<" # struct definition for this message
+                    data = [] # data for this definition
+                    byte = 0 # byte we are at
+                else:
+                    # multiplex ID is first byte
+                    pstr = "<b"
+                    data = [mpx]
+                    byte = 1
 
-            # pack up the message
-            pdata = struct.pack(pstr, *data)
-            # and send it!
-            self.can_send(msg_id, pdata)
+                for var in mpx_vars:
+                    # pad message to this variable
+                    while byte < var.start:
+                        pstr += "x"
+                        byte += 1
+                    # generate appropriate type character
+                    c = " bh i"[var.size]
+                    if not var.signed:
+                        c = c.upper()
+                    pstr += c # and add it to the struct
+                    # append the data for this var (or 0 if there's none yet)
+                    try:
+                        data.append(var.val)
+                    except:
+                        data.append(0)
+                    byte += var.size
+
+                # pack up the message
+                pdata = struct.pack(pstr, *data)
+                # and send it!
+                self.can_send(msg_id, pdata)
 
     def __setattr__(self, name, value):
         if name == "lock":
