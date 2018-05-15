@@ -27,6 +27,7 @@ typedef struct {
     uint8_t size;
     uint8_t is_signed;
     uint8_t call_every_time;
+    uint8_t multiplex;
 } canvar_def_t;
 
 // the canvar engine handles the CAN interrupt

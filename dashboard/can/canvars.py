@@ -13,6 +13,8 @@ class Variable:
             start, # first byte of the variable
             size, # size of variable in bytes. multibyte values are little endian
             signed, # True if variable is a signed type
+            multiplex=None, # Multiplexer Value. if None, entire msg is not
+                            # multiplexed
 
             # information on acting on the variable
             callback=None, # name of the C function to call when this
@@ -27,6 +29,7 @@ class Variable:
         self.start = start
         self.size = size
         self.signed = signed
+        self.multiplex = multiplex
         self.callback = callback
         self.call_every_time = call_every_time
 
@@ -50,14 +53,14 @@ variables = [
     # oil pressure in units of 0.05 bar, max 10 bar
     Variable(
         name="poil",
-        msg_id=0x77A, start=5, size=1, signed=False,
+        msg_id=0x77A, start=5, size=1, signed=False, multiplex=1,
         callback="warn_poil_update", call_every_time=False
     ),
 
     # fuel pressure in units of 0.05 bar, max 10 bar
     Variable(
         name="pfuel",
-        msg_id=0x121, start=4, size=1, signed=False,
+        msg_id=0x77A, start=7, size=1, signed=False, multiplex=1,
         callback="warn_pfuel_update", call_every_time=False
     ),
 
@@ -65,7 +68,7 @@ variables = [
     # 0 = -40C
     Variable(
         name="toil",
-        msg_id=0x122, start=2, size=1, signed=False,
+        msg_id=0x77A, start=5, size=1, signed=False, multiplex=4,
         callback="warn_toil_update", call_every_time=False
     ),
 
@@ -73,7 +76,7 @@ variables = [
     # 0 = -40C
     Variable(
         name="tmot",
-        msg_id=0x77A, start=4, size=1, signed=False,
+        msg_id=0x77A, start=4, size=1, signed=False, multiplex=5,
         callback="warn_tmot_update", call_every_time=False
     ),
 
@@ -81,7 +84,7 @@ variables = [
     # 0 = -40C
     Variable(
         name="tmot2",
-        msg_id=0x77A, start=7, size=1, signed=False,
+        msg_id=0x77A, start=7, size=1, signed=False, multiplex=2,
         callback="warn_tmot2_update", call_every_time=False
     ),
 
@@ -89,7 +92,7 @@ variables = [
     # 0 = -40C
     Variable(
         name="tfuel",
-        msg_id=0x114, start=6, size=1, signed=False,
+        msg_id=0x77A, start=4, size=1, signed=False, multiplex=4,
         callback="warn_tfuel_update", call_every_time=False
     ),
 
@@ -176,10 +179,10 @@ variables = [
         callback="modes_m1_ath_update", call_every_time=False
     ),
 
-    # clutch pressure in units of 0.05 bar, max 25 bar
+    # clutch pressure in units of 0.005 bar, max 25 bar
     Variable(
         name="pclutch",
-        msg_id=0x112, start=4, size=2, signed=False,
+        msg_id=0x37C, start=0, size=2, signed=False,
         callback="modes_m1_pclutch_update", call_every_time=False
     )
 ]
@@ -338,13 +341,14 @@ def build_defs():
 
     f.write("\nconst canvar_def_t canvar_defs[{}] = {{\n".format(len(variables)))
     for var in variables:
-        f.write("{{{}, {}, {}, {}, {}, {}}},\n".format(
+        f.write("{{{}, {}, {}, {}, {}, {}, {}}},\n".format(
             var.callback if var.callback is not None else 0,
             var.msg_id,
             var.start,
             var.size,
             1 if var.signed else 0,
-            1 if var.call_every_time else 0
+            1 if var.call_every_time else 0,
+            0xFF if var.multiplex is None else var.multiplex
         ))
 
     f.write("};\n\n")

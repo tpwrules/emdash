@@ -16,7 +16,14 @@ void app_can_interrupt(uint32_t msg_id, uint8_t dlc, const uint8_t *data) {
 
     // step 2: loop over all the vars with this message ID
     while (def->msg_id == msg_id) {
-        // step 3: extract the value for this variable
+        // step 3: make sure this can message has this variable
+        if (def->multiplex != 0xFF && def->multiplex != data[0]) {
+            def++;
+            st++;
+            continue;
+        }
+        
+        // step 4: extract the value for this variable
         uint32_t val = 0;
         int bi;
         for (bi = 0; bi<def->size; bi++)
@@ -28,7 +35,7 @@ void app_can_interrupt(uint32_t msg_id, uint8_t dlc, const uint8_t *data) {
             val |= sign << (8*bi);
         }
 
-        // step 4: update canvar state
+        // step 5: update canvar state
         if (def->call_every_time ||
                 st->val != val || st->st == CV_ST_INVALID) {
             st->val = val;
