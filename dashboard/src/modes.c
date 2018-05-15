@@ -46,7 +46,7 @@ void modes_m1_init(void) {
  void modes_m1_pclutch_update(uint32_t val) {
     char str[10];
     if (app_next_mode_func == NEXT_MODE) {
-        val /= 2;
+        val /= 200;
         sprintf(str, "%2u,%u",
             (unsigned int)(val/10), (unsigned int)(val%10));
         scr_draw_text(SCR_TEXT_ADDR(0, 33, 2), str);
