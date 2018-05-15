@@ -34,7 +34,7 @@ variables = [
     # current engine speed in units of 1 RPM, max 20000rpm
     Variable(
         name="nmot",
-        msg_id=0x121, start=2, size=2, signed=False,
+        msg_id=0x773, start=2, size=2, signed=False,
         callback="drive_rpm_update", call_every_time=False
     ),
 
@@ -50,7 +50,7 @@ variables = [
     # oil pressure in units of 0.05 bar, max 10 bar
     Variable(
         name="poil",
-        msg_id=0x121, start=5, size=1, signed=False,
+        msg_id=0x77A, start=5, size=1, signed=False,
         callback="warn_poil_update", call_every_time=False
     ),
 
@@ -73,7 +73,7 @@ variables = [
     # 0 = -40C
     Variable(
         name="tmot",
-        msg_id=0x122, start=0, size=1, signed=False,
+        msg_id=0x77A, start=4, size=1, signed=False,
         callback="warn_tmot_update", call_every_time=False
     ),
 
@@ -81,7 +81,7 @@ variables = [
     # 0 = -40C
     Variable(
         name="tmot2",
-        msg_id=0x122, start=1, size=1, signed=False,
+        msg_id=0x77A, start=7, size=1, signed=False,
         callback="warn_tmot2_update", call_every_time=False
     ),
 
@@ -103,7 +103,7 @@ variables = [
     # battery voltage in millivolts, max 25.5 volts
     Variable(
         name="ub",
-        msg_id=0x122, start=3, size=2, signed=False,
+        msg_id=0x779, start=0, size=2, signed=False,
         callback="warn_ub_update", call_every_time=False
     ),
 
