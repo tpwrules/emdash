@@ -37,9 +37,9 @@ def do(fn, cv):
             cv.tmot = rr(-40, 151)+40
             cv.tmot2 = rr(-40, 151)+40
             cv.tfuel = rr(-40, 81)+40
-            cv.ub = rr(0, 25501)
+            cv.ub = rr(0, 65535)
             cv.ath = rr(0, 11101)
-            cv.pclutch = rr(0, 501)
+            cv.pclutch = rr(0, 5001)
         if b % 10 == 0:
             cv.gear = gear % 5
             cv.B_autoshiften_ems = gear % 2
