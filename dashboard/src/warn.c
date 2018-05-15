@@ -141,6 +141,7 @@ void warn_tfuel_update(uint32_t val) {
 void warn_ub_update(uint32_t val) {
     char str[8];
     val = (val + 50) / 100;
+    val /= 5;
     sprintf(str, "%2u,%u",
         (unsigned int)(val/10), (unsigned int)(val%10));
     scr_draw_text(SCR_TEXT_ADDR(0, 35, 7), str);
