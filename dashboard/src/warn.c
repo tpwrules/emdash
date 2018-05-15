@@ -79,7 +79,7 @@ static void warn_set(int blink_id, uint8_t should_warn) {
 void warn_init(void) {
     // draw the value placeholders
     scr_draw_text(SCR_TEXT_ADDR(0, 0, 5), "Oil:??.?bar  ???C");
-    scr_draw_text(SCR_TEXT_ADDR(0, 0, 6), "En: W:???C B:???C");
+    scr_draw_text(SCR_TEXT_ADDR(0, 0, 6), "Tmot1:???C 2:???C");
     scr_draw_text(SCR_TEXT_ADDR(0, 0, 7), "F\x81l:??.?bar  ???C");
     scr_draw_text(SCR_TEXT_ADDR(0, 29, 7), "Batt: ??.?V");
 }
@@ -108,7 +108,7 @@ void warn_tmot2_update(uint32_t val) {
     char str[8];
     int num = val - 40;
     sprintf(str, "%3d", num);
-    scr_draw_text(SCR_TEXT_ADDR(0, 6, 6), str);
+    scr_draw_text(SCR_TEXT_ADDR(0, 13, 6), str);
     warn_set(BLINK_WATER_TEMP, num > LIM_WATER_TEMP_MAX);
 }
 
@@ -116,7 +116,7 @@ void warn_tmot_update(uint32_t val) {
     char str[8];
     int num = val - 40;
     sprintf(str, "%3d", num);
-    scr_draw_text(SCR_TEXT_ADDR(0, 13, 6), str);
+    scr_draw_text(SCR_TEXT_ADDR(0, 6, 6), str);
     warn_set(BLINK_BLOCK_TEMP, num > LIM_BLOCK_TEMP_MAX);
 }
 
