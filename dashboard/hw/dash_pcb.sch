@@ -791,29 +791,29 @@ F 3 "" H 1150 750 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Conn_01x06 J4
+L Conn_01x04 J4
 U 1 1 5AF30641
-P 10700 1100
+P 10700 1200
 F 0 "J4" H 10700 1400 50  0000 C CNN
-F 1 "CAR" H 10700 700 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Angled_1x06_Pitch2.54mm" H 10700 1100 50  0001 C CNN
-F 3 "https://www.mouser.de/ProductDetail/TE-Connectivity-AMP/281698-6?qs=%2fha2pyFadug9FJ64psl8O%252bSt%252bkgg8uzrxHXiR9bfhg2jsHpVs7%252bIVg%3d%3d" H 10700 1100 50  0001 C CNN
-	1    10700 1100
+F 1 "CAR" H 10700 900 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Angled_1x04_Pitch2.54mm" H 10700 1200 50  0001 C CNN
+F 3 "https://www.mouser.de/ProductDetail/TE-Connectivity-AMP/281698-4?qs=%2fha2pyFadugOWSnGxX0tdzch1lu8VUuW2SzrxAWts0w%3d" H 10700 1200 50  0001 C CNN
+	1    10700 1200
 	1    0    0    1   
 $EndComp
-Text Label 10500 800  2    60   ~ 0
+Text Label 10500 1100 2    60   ~ 0
 CANH
-Text Label 10500 900  2    60   ~ 0
+Text Label 10500 1000 2    60   ~ 0
 CANL
 $Comp
 L +BATT #PWR028
 U 1 1 5AF308D1
-P 10250 1250
-F 0 "#PWR028" H 10250 1100 50  0001 C CNN
-F 1 "+BATT" H 10250 1390 50  0000 C CNN
-F 2 "" H 10250 1250 50  0001 C CNN
-F 3 "" H 10250 1250 50  0001 C CNN
-	1    10250 1250
+P 10100 1250
+F 0 "#PWR028" H 10100 1100 50  0001 C CNN
+F 1 "+BATT" H 10100 1390 50  0000 C CNN
+F 2 "" H 10100 1250 50  0001 C CNN
+F 3 "" H 10100 1250 50  0001 C CNN
+	1    10100 1250
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -974,7 +974,7 @@ Wire Wire Line
 Wire Wire Line
 	1650 900  1550 900 
 Wire Wire Line
-	1550 900  1550 750 
+	1550 750  1550 900 
 Connection ~ 1550 750 
 Wire Wire Line
 	1550 1050 1650 1050
@@ -1070,12 +1070,9 @@ Wire Wire Line
 Wire Wire Line
 	1150 750  1650 750 
 Wire Wire Line
-	10250 1250 10250 1300
+	10100 1250 10100 1300
 Wire Wire Line
-	10250 1300 10500 1300
-Wire Wire Line
-	10500 1000 10500 1200
-Connection ~ 10500 1100
+	10100 1300 10500 1300
 Wire Wire Line
 	10500 1200 10400 1200
 Wire Wire Line
