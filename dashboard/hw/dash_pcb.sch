@@ -300,9 +300,9 @@ L R R2
 U 1 1 5AED7DC7
 P 7750 4500
 F 0 "R2" V 7830 4500 50  0000 C CNN
-F 1 "60" V 7750 4500 50  0000 C CNN
+F 1 "60.4" V 7750 4500 50  0000 C CNN
 F 2 "Resistors_SMD:R_0603" V 7680 4500 50  0001 C CNN
-F 3 "https://www.mouser.de/ProductDetail/Yageo/RC0603FR-0759RL?qs=sGAEpiMZZMtlubZbdhIBIHvQf5egq9lvwCJIG56bzdE%3d" H 7750 4500 50  0001 C CNN
+F 3 "https://www.mouser.de/ProductDetail/Bourns/CR0603-FX-60R4ELF?qs=sGAEpiMZZMu61qfTUdNhG6LqqFhkr6pUa8gjAX4b5rM%3d" H 7750 4500 50  0001 C CNN
 	1    7750 4500
 	-1   0    0    1   
 $EndComp
@@ -311,9 +311,9 @@ L R R4
 U 1 1 5AED7E2A
 P 7950 4500
 F 0 "R4" V 8030 4500 50  0000 C CNN
-F 1 "60" V 7950 4500 50  0000 C CNN
+F 1 "60.4" V 7950 4500 50  0000 C CNN
 F 2 "Resistors_SMD:R_0603" V 7880 4500 50  0001 C CNN
-F 3 "https://www.mouser.de/ProductDetail/Yageo/RC0603FR-0759RL?qs=sGAEpiMZZMtlubZbdhIBIHvQf5egq9lvwCJIG56bzdE%3d" H 7950 4500 50  0001 C CNN
+F 3 "https://www.mouser.de/ProductDetail/Bourns/CR0603-FX-60R4ELF?qs=sGAEpiMZZMu61qfTUdNhG6LqqFhkr6pUa8gjAX4b5rM%3d" H 7950 4500 50  0001 C CNN
 	1    7950 4500
 	-1   0    0    1   
 $EndComp
@@ -357,9 +357,9 @@ L R R5
 U 1 1 5AED8B98
 P 10350 5900
 F 0 "R5" V 10430 5900 50  0000 C CNN
-F 1 "60" V 10350 5900 50  0000 C CNN
+F 1 "60.4" V 10350 5900 50  0000 C CNN
 F 2 "Resistors_SMD:R_0603" V 10280 5900 50  0001 C CNN
-F 3 "https://www.mouser.de/ProductDetail/Yageo/RC0603FR-0759RL?qs=sGAEpiMZZMtlubZbdhIBIHvQf5egq9lvwCJIG56bzdE%3d" H 10350 5900 50  0001 C CNN
+F 3 "https://www.mouser.de/ProductDetail/Bourns/CR0603-FX-60R4ELF?qs=sGAEpiMZZMu61qfTUdNhG6LqqFhkr6pUa8gjAX4b5rM%3d" H 10350 5900 50  0001 C CNN
 	1    10350 5900
 	0    -1   -1   0   
 $EndComp
@@ -368,9 +368,9 @@ L R R6
 U 1 1 5AED8BD0
 P 10350 6000
 F 0 "R6" V 10430 6000 50  0000 C CNN
-F 1 "60" V 10350 6000 50  0000 C CNN
+F 1 "60.4" V 10350 6000 50  0000 C CNN
 F 2 "Resistors_SMD:R_0603" V 10280 6000 50  0001 C CNN
-F 3 "https://www.mouser.de/ProductDetail/Yageo/RC0603FR-0759RL?qs=sGAEpiMZZMtlubZbdhIBIHvQf5egq9lvwCJIG56bzdE%3d" H 10350 6000 50  0001 C CNN
+F 3 "https://www.mouser.de/ProductDetail/Bourns/CR0603-FX-60R4ELF?qs=sGAEpiMZZMu61qfTUdNhG6LqqFhkr6pUa8gjAX4b5rM%3d" H 10350 6000 50  0001 C CNN
 	1    10350 6000
 	0    1    1    0   
 $EndComp
@@ -379,9 +379,9 @@ L R R7
 U 1 1 5AED8C25
 P 10350 6300
 F 0 "R7" V 10430 6300 50  0000 C CNN
-F 1 "60" V 10350 6300 50  0000 C CNN
+F 1 "60.4" V 10350 6300 50  0000 C CNN
 F 2 "Resistors_SMD:R_0603" V 10280 6300 50  0001 C CNN
-F 3 "https://www.mouser.de/ProductDetail/Yageo/RC0603FR-0759RL?qs=sGAEpiMZZMtlubZbdhIBIHvQf5egq9lvwCJIG56bzdE%3d" H 10350 6300 50  0001 C CNN
+F 3 "https://www.mouser.de/ProductDetail/Bourns/CR0603-FX-60R4ELF?qs=sGAEpiMZZMu61qfTUdNhG6LqqFhkr6pUa8gjAX4b5rM%3d" H 10350 6300 50  0001 C CNN
 	1    10350 6300
 	0    1    1    0   
 $EndComp
