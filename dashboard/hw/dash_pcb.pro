@@ -1,4 +1,4 @@
-update=Monday, May 07, 2018 'AMt' 09:56:07 AM
+update=Wednesday, May 16, 2018 'PMt' 04:58:55 PM
 version=1
 last_client=kicad
 [pcbnew]
@@ -61,3 +61,4 @@ LibName29=valves
 LibName30=nxp_can
 LibName31=lmz21700
 LibName32=tps6217x
+LibName33=switches
