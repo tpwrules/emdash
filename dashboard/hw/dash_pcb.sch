@@ -175,7 +175,7 @@ Text Label 4400 3800 2    60   ~ 0
 SWCLK
 Text Label 4400 4300 2    60   ~ 0
 SWDIO
-Text Label 4400 2800 2    60   ~ 0
+Text Label 4250 2800 2    60   ~ 0
 MCU_~RESET
 $Comp
 L Conn_02x05_Odd_Even J2
@@ -505,8 +505,6 @@ F 3 "" H 3550 2850 50  0001 C CNN
 	1    3550 2850
 	1    0    0    -1  
 $EndComp
-Text Label 2700 1500 0    60   ~ 0
-5VPG
 $Comp
 L TPS62175 U2
 U 1 1 5AF00B83
@@ -532,23 +530,12 @@ $EndComp
 $Comp
 L R R8
 U 1 1 5AF015E3
-P 2700 1700
-F 0 "R8" V 2780 1700 50  0000 C CNN
-F 1 "100k" V 2700 1700 50  0000 C CNN
-F 2 "Resistors_SMD:R_0603" V 2630 1700 50  0001 C CNN
-F 3 "" H 2700 1700 50  0001 C CNN
-	1    2700 1700
-	1    0    0    -1  
-$EndComp
-$Comp
-L +5V #PWR018
-U 1 1 5AF017BC
-P 2550 1800
-F 0 "#PWR018" H 2550 1650 50  0001 C CNN
-F 1 "+5V" H 2550 1940 50  0000 C CNN
-F 2 "" H 2550 1800 50  0001 C CNN
-F 3 "" H 2550 1800 50  0001 C CNN
-	1    2550 1800
+P 4300 2600
+F 0 "R8" V 4380 2600 50  0000 C CNN
+F 1 "100k" V 4300 2600 50  0000 C CNN
+F 2 "Resistors_SMD:R_0603" V 4230 2600 50  0001 C CNN
+F 3 "" H 4300 2600 50  0001 C CNN
+	1    4300 2600
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -980,12 +967,6 @@ Connection ~ 1550 1500
 Wire Wire Line
 	2650 1500 2950 1500
 Wire Wire Line
-	2700 1500 2700 1550
-Wire Wire Line
-	2550 1800 2550 1850
-Wire Wire Line
-	2550 1850 2700 1850
-Wire Wire Line
 	2650 750  2700 750 
 Wire Wire Line
 	3000 750  3650 750 
@@ -1094,7 +1075,6 @@ Wire Wire Line
 	2950 1500 2950 1900
 Wire Wire Line
 	2950 1900 3200 1900
-Connection ~ 2700 1500
 Wire Wire Line
 	1500 2600 1450 2600
 Wire Wire Line
@@ -1133,4 +1113,20 @@ Wire Wire Line
 Wire Wire Line
 	7850 4900 7850 4950
 Connection ~ 7850 4900
+Wire Wire Line
+	4250 2800 4400 2800
+Connection ~ 4300 2800
+$Comp
+L +3V3 #PWR?
+U 1 1 5AFC1DF1
+P 4300 2450
+F 0 "#PWR?" H 4300 2300 50  0001 C CNN
+F 1 "+3V3" H 4300 2590 50  0000 C CNN
+F 2 "" H 4300 2450 50  0001 C CNN
+F 3 "" H 4300 2450 50  0001 C CNN
+	1    4300 2450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4300 2750 4300 2800
 $EndSCHEMATC
