@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP LPC11C24FBD48
+D LPC11C20 CAN series, 50MHz Cortex-M0 MCU, C_CAN, CAN transceiver, ADC, USART, I2C, SPI, LQFP48 package
+K nxp lpc arm microcontroller cortex
+F http://www.nxp.com/documents/data_sheet/LPC11CX2_CX4.pdf
+$ENDCMP
+#
+#End Doc Library
