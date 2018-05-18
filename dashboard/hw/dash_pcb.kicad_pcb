@@ -5,10 +5,10 @@
     (no_connects 0)
     (area 84.924999 54.924999 265.075001 120.075001)
     (thickness 1.6)
-    (drawings 5)
+    (drawings 4)
     (tracks 388)
     (zones 0)
-    (modules 36)
+    (modules 38)
     (nets 65)
   )
 
@@ -37,7 +37,7 @@
   )
 
   (setup
-    (last_trace_width 0.3)
+    (last_trace_width 0.15)
     (user_trace_width 0.2)
     (user_trace_width 0.3)
     (user_trace_width 0.5)
@@ -234,6 +234,17 @@
     (add_net "Net-(U1-Pad46)")
     (add_net "Net-(U1-Pad47)")
     (add_net "Net-(U1-Pad48)")
+  )
+
+  (module custom_footprints:LCD_mount locked (layer F.Cu) (tedit 5AFEA622) (tstamp 5AFEA627)
+    (at 265 114.5)
+    (fp_text reference REF** (at 0 4.5) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value LCD_mount (at 0 -4.5) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole oval (at 0 0) (size 12 7.5) (drill oval 8 3.5) (layers *.Cu *.Mask))
   )
 
   (module Housings_QFP:LQFP-48_7x7mm_Pitch0.5mm (layer F.Cu) (tedit 5ADCB14F) (tstamp 5ADCB045)
@@ -1927,7 +1938,17 @@
     )
   )
 
-  (gr_arc (start 263 60.5) (end 263 62.3) (angle 183.0127591) (layer F.CrtYd) (width 0.2))
+  (module custom_footprints:LCD_mount locked (layer F.Cu) (tedit 5AFEA622) (tstamp 5AFEA465)
+    (at 265 60.5)
+    (fp_text reference REF** (at 0 4.5) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value LCD_mount (at 0 -4.5) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole oval (at 0 0) (size 12 7.5) (drill oval 8 3.5) (layers *.Cu *.Mask))
+  )
+
   (gr_line (start 265 120) (end 265 55) (layer Edge.Cuts) (width 0.15))
   (gr_line (start 85 120) (end 265 120) (layer Edge.Cuts) (width 0.15))
   (gr_line (start 85 55) (end 85 120) (layer Edge.Cuts) (width 0.15))
