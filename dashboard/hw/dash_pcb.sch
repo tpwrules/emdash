@@ -781,27 +781,27 @@ $EndComp
 $Comp
 L Conn_01x04 J4
 U 1 1 5AF30641
-P 10700 1200
-F 0 "J4" H 10700 1400 50  0000 C CNN
-F 1 "CAR" H 10700 900 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Angled_1x04_Pitch2.54mm" H 10700 1200 50  0001 C CNN
-F 3 "https://www.mouser.de/ProductDetail/TE-Connectivity-AMP/281698-4?qs=%2fha2pyFadugOWSnGxX0tdzch1lu8VUuW2SzrxAWts0w%3d" H 10700 1200 50  0001 C CNN
-	1    10700 1200
-	1    0    0    1   
+P 10700 1100
+F 0 "J4" H 10700 1300 50  0000 C CNN
+F 1 "CAR" H 10700 800 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Angled_1x04_Pitch2.54mm" H 10700 1100 50  0001 C CNN
+F 3 "https://www.mouser.de/ProductDetail/TE-Connectivity-AMP/281698-4?qs=%2fha2pyFadugOWSnGxX0tdzch1lu8VUuW2SzrxAWts0w%3d" H 10700 1100 50  0001 C CNN
+	1    10700 1100
+	1    0    0    -1  
 $EndComp
-Text Label 10500 1100 2    60   ~ 0
-CANH
 Text Label 10500 1000 2    60   ~ 0
+CANH
+Text Label 10500 1100 2    60   ~ 0
 CANL
 $Comp
 L +BATT #PWR027
 U 1 1 5AF308D1
-P 10100 1250
-F 0 "#PWR027" H 10100 1100 50  0001 C CNN
-F 1 "+BATT" H 10100 1390 50  0000 C CNN
-F 2 "" H 10100 1250 50  0001 C CNN
-F 3 "" H 10100 1250 50  0001 C CNN
-	1    10100 1250
+P 10100 1050
+F 0 "#PWR027" H 10100 900 50  0001 C CNN
+F 1 "+BATT" H 10100 1190 50  0000 C CNN
+F 2 "" H 10100 1050 50  0001 C CNN
+F 3 "" H 10100 1050 50  0001 C CNN
+	1    10100 1050
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -830,6 +830,36 @@ F 3 "https://www.mouser.de/ProductDetail/Vishay/CRCW120636R0FKEA?qs=sGAEpiMZZMtl
 $EndComp
 Text Label 3200 1900 0    60   ~ 0
 MCU_~RESET
+$Comp
+L +3V3 #PWR029
+U 1 1 5AFC1DF1
+P 4300 2450
+F 0 "#PWR029" H 4300 2300 50  0001 C CNN
+F 1 "+3V3" H 4300 2590 50  0000 C CNN
+F 2 "" H 4300 2450 50  0001 C CNN
+F 3 "" H 4300 2450 50  0001 C CNN
+	1    4300 2450
+	1    0    0    -1  
+$EndComp
+$Comp
+L SW_DIP_x04 SW1
+U 1 1 5AFC4E3D
+P 9900 4450
+F 0 "SW1" H 9900 4800 50  0000 C CNN
+F 1 "CONFIG" H 9900 4200 50  0000 C CNN
+F 2 "Buttons_Switches_THT:SW_DIP_x4_W7.62mm_Slide" H 9900 4450 50  0001 C CNN
+F 3 "https://www.mouser.de/ProductDetail/TE-Connectivity-Alcoswitch/ADE0404?qs=sGAEpiMZZMv%2f%252b2JhlA6ysER62VlXw6iZ4HTlb4kKXdw%3d" H 9900 4450 50  0001 C CNN
+	1    9900 4450
+	1    0    0    -1  
+$EndComp
+Text Label 7750 4650 3    60   ~ 0
+CANH_TERM
+Text Label 7950 4650 3    60   ~ 0
+CANL_TERM
+Text Label 9600 4350 2    60   ~ 0
+CANH_TERM
+Text Label 9600 4250 2    60   ~ 0
+CANL_TERM
 Wire Wire Line
 	9000 2600 9500 2600
 Wire Wire Line
@@ -1047,14 +1077,6 @@ Wire Wire Line
 Wire Wire Line
 	1150 750  1650 750 
 Wire Wire Line
-	10100 1250 10100 1300
-Wire Wire Line
-	10100 1300 10500 1300
-Wire Wire Line
-	10500 1200 10400 1200
-Wire Wire Line
-	10400 1200 10400 1400
-Wire Wire Line
 	6800 4300 8050 4300
 Wire Wire Line
 	6800 4200 8050 4200
@@ -1086,30 +1108,8 @@ Wire Wire Line
 Wire Wire Line
 	4250 2800 4400 2800
 Connection ~ 4300 2800
-$Comp
-L +3V3 #PWR029
-U 1 1 5AFC1DF1
-P 4300 2450
-F 0 "#PWR029" H 4300 2300 50  0001 C CNN
-F 1 "+3V3" H 4300 2590 50  0000 C CNN
-F 2 "" H 4300 2450 50  0001 C CNN
-F 3 "" H 4300 2450 50  0001 C CNN
-	1    4300 2450
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	4300 2750 4300 2800
-$Comp
-L SW_DIP_x04 SW1
-U 1 1 5AFC4E3D
-P 9900 4450
-F 0 "SW1" H 9900 4800 50  0000 C CNN
-F 1 "CONFIG" H 9900 4200 50  0000 C CNN
-F 2 "Buttons_Switches_THT:SW_DIP_x4_W7.62mm_Slide" H 9900 4450 50  0001 C CNN
-F 3 "https://www.mouser.de/ProductDetail/TE-Connectivity-Alcoswitch/ADE0404?qs=sGAEpiMZZMv%2f%252b2JhlA6ysER62VlXw6iZ4HTlb4kKXdw%3d" H 9900 4450 50  0001 C CNN
-	1    9900 4450
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	10200 4250 10250 4250
 Wire Wire Line
@@ -1119,12 +1119,12 @@ Wire Wire Line
 Wire Wire Line
 	10250 4300 10700 4300
 Connection ~ 10250 4300
-Text Label 7750 4650 3    60   ~ 0
-CANH_TERM
-Text Label 7950 4650 3    60   ~ 0
-CANL_TERM
-Text Label 9600 4350 2    60   ~ 0
-CANH_TERM
-Text Label 9600 4250 2    60   ~ 0
-CANL_TERM
+Wire Wire Line
+	10100 1050 10100 1200
+Wire Wire Line
+	10100 1200 10500 1200
+Wire Wire Line
+	10500 1300 10400 1300
+Wire Wire Line
+	10400 1300 10400 1400
 $EndSCHEMATC
