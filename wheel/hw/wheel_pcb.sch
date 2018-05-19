@@ -103,21 +103,21 @@ F 3 "" H 7300 4550 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 4400 3000 2    60   ~ 0
-LCD_DB0
+IO_C4
 Text Label 4400 3100 2    60   ~ 0
-LCD_DB1
+IO_C2
 Text Label 6800 3300 0    60   ~ 0
-LCD_DB2
+IO_C5
 Text Label 6800 3400 0    60   ~ 0
-LCD_DB3
+IO_B1
 Text Label 4400 3400 2    60   ~ 0
-LCD_DB4
+IO_B2
 Text Label 4400 3500 2    60   ~ 0
-LCD_DB5
+IO_B3
 Text Label 4400 3600 2    60   ~ 0
-LCD_DB6
+IO_B4
 Text Label 4400 3700 2    60   ~ 0
-LCD_DB7
+IO_B5
 Text Label 4400 3800 2    60   ~ 0
 SWCLK
 Text Label 4400 4300 2    60   ~ 0
@@ -163,14 +163,8 @@ Text Label 10650 5900 0    60   ~ 0
 SWDIO
 Text Label 10650 6000 0    60   ~ 0
 SWCLK
-Text Label 6800 2900 0    60   ~ 0
-LCD_C/~D
 Text Label 4400 4800 2    60   ~ 0
-LCD_~RST
-Text Label 6800 3200 0    60   ~ 0
-LCD_~WR
-Text Label 6800 2800 0    60   ~ 0
-LCD_~RD
+IO_C3
 $Comp
 L R R2
 U 1 1 5AED7DC7
@@ -988,28 +982,53 @@ F 3 "" H 10450 3250 50  0001 C CNN
 	1    10450 3250
 	-1   0    0    1   
 $EndComp
-Text Label 10450 1600 2    60   ~ 0
-LCD_C/~D
 Text Label 10450 1700 2    60   ~ 0
-LCD_DB1
+IO_C2
 Text Label 10450 1800 2    60   ~ 0
-LCD_~RST
+IO_C3
 Text Label 10450 1900 2    60   ~ 0
-LCD_DB0
+IO_C4
 Text Label 10450 2000 2    60   ~ 0
-LCD_DB2
+IO_C5
 Text Label 10450 2500 2    60   ~ 0
-LCD_DB3
+IO_B1
 Text Label 10450 2600 2    60   ~ 0
-LCD_DB4
+IO_B2
 Text Label 10450 2700 2    60   ~ 0
-LCD_DB5
+IO_B3
 Text Label 10450 2800 2    60   ~ 0
-LCD_DB6
+IO_B4
 Text Label 10450 2900 2    60   ~ 0
-LCD_DB7
+IO_B5
 Text Label 10450 3350 2    60   ~ 0
-LCD_~RD
+IO_A1
 Text Label 10450 3450 2    60   ~ 0
-LCD_~WR
+IO_A2
+Text Label 10450 1600 2    60   ~ 0
+IO_C1
+Text Label 6800 2900 0    60   ~ 0
+IO_C1
+Text Label 10450 3550 2    60   ~ 0
+IO_A3
+Text Label 10450 3650 2    60   ~ 0
+IO_A4
+$Comp
+L +3V3 #PWR?
+U 1 1 5B00156F
+P 10450 3750
+F 0 "#PWR?" H 10450 3600 50  0001 C CNN
+F 1 "+3V3" H 10450 3890 50  0000 C CNN
+F 2 "" H 10450 3750 50  0001 C CNN
+F 3 "" H 10450 3750 50  0001 C CNN
+	1    10450 3750
+	-1   0    0    1   
+$EndComp
+Text Label 4400 3900 2    60   ~ 0
+IO_A1
+Text Label 4400 4000 2    60   ~ 0
+IO_A2
+Text Label 4400 4100 2    60   ~ 0
+IO_A3
+Text Label 4400 4200 2    60   ~ 0
+IO_A4
 $EndSCHEMATC
