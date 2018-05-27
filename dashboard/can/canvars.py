@@ -191,17 +191,21 @@ variables = [
 variables.sort(key=lambda v: 
     (v.msg_id if v.msg_id is not None else 0xFFFF, v.start))
 
+for i, var in enumerate(variables):
+    var.canvar_id = i
+
 if len(variables) >= 255:
     raise Exception("too many variables")
 
 import threading
 
 class CanvarInterface:
-    def __init__(self, fn):
+    def __init__(self, can_send, canvar_send):
         self.lock = threading.RLock()
 
         # the can_send function
-        self.can_send = fn
+        self.can_send = can_send
+        self.canvar_send = canvar_send
 
         # build maps of name -> variable
         # and msg id -> variable
@@ -209,6 +213,7 @@ class CanvarInterface:
         self.cv_msg_ids = {}
         for var in variables:
             self.cv_names[var.name] = var
+            if var.msg_id == None: continue
             vars_in_id = self.cv_msg_ids.get(var.msg_id, {})
             vars_for_mpx = vars_in_id.get(var.multiplex, [])
             vars_for_mpx.append(var)
@@ -216,6 +221,7 @@ class CanvarInterface:
             self.cv_msg_ids[var.msg_id] = vars_in_id
 
         self.dirty_ids = set()
+        self.dirty_canvars = {}
         self.buffered = True
 
     def set_buffering(self, buffered):
@@ -233,6 +239,9 @@ class CanvarInterface:
             for msg_id in self.dirty_ids:
                 self.flush_id(msg_id, clean=False)
             self.dirty_ids = set()
+            for canvar_id, val in self.dirty_canvars.items():
+                self.canvar_send(canvar_id, val)
+            self.dirty_canvars = {}
 
     def flush_id(self, msg_id, clean=True):
         with self.lock:
@@ -289,9 +298,15 @@ class CanvarInterface:
             # and either mark id as dirty if in buffered mode
             # or flush the id in nonbuffered mode
             if self.buffered:
-                self.dirty_ids.add(var.msg_id)
+                if var.msg_id is not None:
+                    self.dirty_ids.add(var.msg_id)
+                else:
+                    self.dirty_canvars[var.canvar_id] = value
             else:
-                self.flush_id(var.msg_id)
+                if var.msg_id is not None:
+                    self.flush_id(var.msg_id)
+                else:
+                    self.canvar_send(var.canvar_id, value)
 
 import os
 

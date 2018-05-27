@@ -225,9 +225,15 @@ def can_send(msg_id, data):
         flog.write("\n")
         flog.flush()
 
+def canvar_send(canvar_id, val):
+    with interrupt_lock:
+        lib.app_canvar_interrupt(canvar_id, val)
+        # since this is an interrupt, alert that an interrupt happened
+        with interrupt_happened:
+            interrupt_happened.notify_all()
 
 # construct a canvar interface for it as we need one too
-cv = canvars.CanvarInterface(can_send)
+cv = canvars.CanvarInterface(can_send, canvar_send)
 
 import cangen
 can_thread = threading.Thread(target=cangen.do, args=(can_send,cv), daemon=True)
