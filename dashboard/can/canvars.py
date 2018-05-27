@@ -10,9 +10,9 @@ class Variable:
             # information to get the variable from the message
             name, # variable name. variable is called cv_name
             msg_id, # can ID the variable is in
-            start, # first byte of the variable
             size, # size of variable in bytes. multibyte values are little endian
-            signed, # True if variable is a signed type
+            start=0, # first byte of the variable
+            signed=False, # True if variable is a signed type
             multiplex=None, # Multiplexer Value. if None, entire msg is not
                             # multiplexed
 
@@ -188,7 +188,8 @@ variables = [
 ]
 
 # sort variables by message ID then start byte
-variables.sort(key=lambda v: (v.msg_id, v.start))
+variables.sort(key=lambda v: 
+    (v.msg_id if v.msg_id is not None else 0xFFFF, v.start))
 
 if len(variables) >= 255:
     raise Exception("too many variables")
@@ -310,7 +311,7 @@ def build_defs():
     can_id_dict = {}
     old_can_id = -1
     for i, var in enumerate(variables):
-        if var.msg_id not in can_id_dict:
+        if var.msg_id is not None and var.msg_id not in can_id_dict:
             can_id_dict[var.msg_id] = i
         
         f.write("#define CV_ID_{} ({})\n".format(var.name.upper(), i))
@@ -355,7 +356,7 @@ def build_defs():
     for var in variables:
         f.write("{{{}, {}, {}, {}, {}, {}, {}}},\n".format(
             var.callback if var.callback is not None else 0,
-            var.msg_id,
+            var.msg_id if var.msg_id is not None else 0xFFFF,
             var.start,
             var.size,
             1 if var.signed else 0,
