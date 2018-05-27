@@ -53,9 +53,8 @@ void app_entry(void) {
 
     // show the version mode
     app_mode_change_func = version_mode_change;
-    // hope display is still clear, it should be
     // and now show it
-    version_mode_change(false);
+    app_show_next_mode();
     mode_was_ever_switched = 0;
 
     while (1) {
@@ -113,17 +112,18 @@ void app_timer_interrupt(void) {
 
 void app_wb_dash_mode_update(uint32_t val) {
     // go to next mode if button is pressed
-    if (val)
+    if (val) {
+        // update the mode change func pointer
+        // by asking the current function to update it
+        app_mode_change_func(true);
         app_show_next_mode();
+    }
 }
 
 app_mode_t app_mode_change_func;
 
 void app_show_next_mode(void) {
     mode_was_ever_switched = 1;
-    // update the mode change func pointer
-    // by asking the current function to update it
-    app_mode_change_func(true);
 
     // erase the modal area
     for (int r=2; r<7; r++)
