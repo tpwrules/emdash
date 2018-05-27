@@ -6,12 +6,21 @@ volatile int canvar_was_updated = 0;
 
 void app_can_interrupt(uint32_t msg_id, uint8_t dlc, const uint8_t *data) {
     // step 1: find the first variable in this message
-    int msg_idx = msg_id - CANVAR_ID_MAP_FIRST;
-    if (msg_idx < 0 || msg_idx >= CANVAR_ID_MAP_COUNT)
-        return; // we def don't have any handlers for it
 
-    int var_idx = canvar_id_map[msg_idx];
-    const canvar_def_t *def = &canvar_defs[var_idx];
+    // calculate the message id hash
+    uint32_t msg_idx = msg_id % CANVAR_ID_MAP_COUNT;
+    const canvar_def_t *def; // we want msg definition
+    uint8_t var_idx;
+    while (1) {
+        var_idx = canvar_id_map[msg_idx];
+        if (var_idx == 0xFF)
+            return; // this message isn't recognized
+        def = &canvar_defs[var_idx];
+        if (def->msg_id == msg_id)
+            break; // we found it
+        msg_idx = (msg_idx + 1) % CANVAR_ID_MAP_COUNT;
+    }
+
     volatile canvar_state_t *st = &canvar_states[var_idx];
 
     // step 2: loop over all the vars with this message ID

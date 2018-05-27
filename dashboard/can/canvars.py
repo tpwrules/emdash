@@ -190,7 +190,7 @@ variables = [
 # sort variables by message ID then start byte
 variables.sort(key=lambda v: (v.msg_id, v.start))
 
-if len(variables) > 256:
+if len(variables) >= 255:
     raise Exception("too many variables")
 
 import threading
@@ -315,14 +315,16 @@ def build_defs():
         
         f.write("#define cv_{} (canvar_states[{}])\n".format(var.name, i))
 
-    # build the can id map array
+    # build the can id hash map
     can_ids = list(can_id_dict.items())
     can_ids.sort()
-    ci_first = can_ids[0][0]
-    ci_count = can_ids[-1][0] - ci_first + 1
-    ci_vals = [0]*ci_count
+    ci_count = 2*len(can_ids)
+    ci_map = [0xFF]*ci_count
     for ci, i in can_ids:
-        ci_vals[ci-ci_first] = i
+        idx = ci % ci_count
+        while ci_map[idx] != 0xFF:
+            idx = (idx + 1) % ci_count
+        ci_map[idx] = i
 
     # write out the extern defs
     f.write("\nextern volatile canvar_state_t canvar_states[{}];\n".format(len(variables)))
@@ -330,7 +332,6 @@ def build_defs():
 
     # and the can id stuff
     f.write("#define CANVAR_NUM_VARS ({})\n".format(len(variables)))
-    f.write("#define CANVAR_ID_MAP_FIRST ({})\n".format(ci_first))
     f.write("#define CANVAR_ID_MAP_COUNT ({})\n".format(ci_count))
     f.write("extern const uint8_t canvar_id_map[{}];\n\n".format(ci_count))
 
@@ -364,7 +365,7 @@ def build_defs():
     f.write("};\n\n")
 
     f.write("const uint8_t canvar_id_map[{}] = {{\n".format(ci_count))
-    for val in ci_vals:
+    for val in ci_map:
         f.write("{},\n".format(val))
     f.write("};\n")
     

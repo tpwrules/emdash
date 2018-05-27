@@ -30,8 +30,7 @@ extern volatile canvar_state_t canvar_states[21];
 extern const canvar_def_t canvar_defs[21];
 
 #define CANVAR_NUM_VARS (21)
-#define CANVAR_ID_MAP_FIRST (257)
-#define CANVAR_ID_MAP_COUNT (1658)
-extern const uint8_t canvar_id_map[1658];
+#define CANVAR_ID_MAP_COUNT (18)
+extern const uint8_t canvar_id_map[18];
 
 #endif
