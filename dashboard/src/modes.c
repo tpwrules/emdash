@@ -27,10 +27,8 @@ void modes_m1_init(void) {
 
     // set can messages to new so that they will be redrawn
     interrupt_disable();
-    if (cv_ath.st != CV_ST_INVALID)
-        cv_ath.st = CV_ST_NEW;
-    if (cv_pclutch.st != CV_ST_INVALID)
-        cv_pclutch.st = CV_ST_NEW;
+    CV_RENEW(cv_ath);
+    CV_RENEW(cv_pclutch);
     interrupt_enable();
 }
 

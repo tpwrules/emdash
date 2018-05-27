@@ -32,10 +32,8 @@ void version_init(void) {
 
     // set can messages to new so that they will be redrawn
     interrupt_disable();
-    if (cv_wb_version_commit.st != CV_ST_INVALID)
-        cv_wb_version_commit.st = CV_ST_NEW;
-    if (cv_wb_version_build.st != CV_ST_INVALID)
-        cv_wb_version_build.st = CV_ST_NEW;
+    CV_RENEW(cv_wb_version_commit);
+    CV_RENEW(cv_wb_version_build);
     interrupt_enable();
 }
 
