@@ -57,3 +57,19 @@ void app_can_interrupt(uint32_t msg_id, uint8_t dlc, const uint8_t *data) {
         st++;
     }
 }
+
+void app_canvar_interrupt(uint8_t cv_id, uint32_t val) {
+    if (cv_id >= CANVAR_NUM_VARS)
+        return;
+
+    const canvar_def_t *def = &canvar_defs[cv_id];
+    volatile canvar_state_t *st = &canvar_states[cv_id];
+
+    // just do step 5 above: update canvar state
+    if (def->call_every_time ||
+            st->val != val || st->st == CV_ST_INVALID) {
+        st->val = val;
+        st->st = CV_ST_NEW;
+        canvar_was_updated = 1;
+    }
+}
