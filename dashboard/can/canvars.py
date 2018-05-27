@@ -313,6 +313,7 @@ def build_defs():
         if var.msg_id not in can_id_dict:
             can_id_dict[var.msg_id] = i
         
+        f.write("#define CV_ID_{} ({})\n".format(var.name.upper(), i))
         f.write("#define cv_{} (canvar_states[{}])\n".format(var.name, i))
 
     # build the can id hash map
