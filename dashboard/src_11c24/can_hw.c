@@ -6,6 +6,7 @@
 #include "../src/platform.h"
 #include "can_hw.h"
 #include "../src/canvar.h"
+#include "../src_gen/canvar_defs.h"
 
 #include "chip.h"
 
@@ -61,7 +62,8 @@ static void CAN_tx(uint8_t msg_obj_num) {
 
 // called when a bus error has happened
 static void CAN_error(uint32_t error_info) {
-    // TODO: really need to make this do something
+    // tell the app what happened
+    app_canvar_interrupt(CV_ID_NOBUS_CAN_STATUS, error_info);
 }
 
 // CAN hardware interrupt

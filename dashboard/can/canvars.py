@@ -184,6 +184,13 @@ variables = [
         name="pclutch",
         msg_id=0x37C, start=0, size=2, signed=False,
         callback="modes_m1_pclutch_update", call_every_time=False
+    ),
+
+    # current canbus status (sent internally)
+    Variable (
+        name="nobus_can_status",
+        msg_id=None, size=4, signed=False,
+        callback="cv_can_status_update", call_every_time=False
     )
 ]
 

@@ -2,6 +2,7 @@
 #define CANVAR_H
 
 #include <inttypes.h>
+#include <stdbool.h>
 
 // canvar system definitions
 typedef void (*canvar_callback_t)(uint32_t val);
@@ -45,5 +46,9 @@ void app_canvar_interrupt(uint8_t cv_id, uint32_t val);
 extern volatile int canvar_was_updated;
 
 #include "../src_gen/canvar_defs.h"
+
+// we also have a mode to display CAN status
+void cv_status_mode_change(bool next);
+void cv_can_status_update(uint32_t val);
 
 #endif

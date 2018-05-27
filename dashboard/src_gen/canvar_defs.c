@@ -1,6 +1,6 @@
 #include "../src/canvar.h"
 #include "canvar_defs.h"
-volatile canvar_state_t canvar_states[21];
+volatile canvar_state_t canvar_states[22];
 
 void modes_m1_ath_update(uint32_t val);
 void drive_B_autoshiften_ems_update(uint32_t val);
@@ -23,8 +23,9 @@ void warn_poil_update(uint32_t val);
 void warn_toil_update(uint32_t val);
 void warn_pfuel_update(uint32_t val);
 void warn_tmot2_update(uint32_t val);
+void cv_can_status_update(uint32_t val);
 
-const canvar_def_t canvar_defs[21] = {
+const canvar_def_t canvar_defs[22] = {
 {modes_m1_ath_update, 257, 0, 2, 0, 0, 255},
 {drive_B_autoshiften_ems_update, 257, 2, 1, 0, 0, 255},
 {drive_B_launch_update, 281, 2, 1, 0, 0, 255},
@@ -46,6 +47,7 @@ const canvar_def_t canvar_defs[21] = {
 {warn_toil_update, 1914, 5, 1, 0, 0, 4},
 {warn_pfuel_update, 1914, 7, 1, 0, 0, 1},
 {warn_tmot2_update, 1914, 7, 1, 0, 0, 2},
+{cv_can_status_update, 65535, 0, 4, 0, 0, 255},
 };
 
 const uint8_t canvar_id_map[18] = {

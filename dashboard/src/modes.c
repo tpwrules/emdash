@@ -19,7 +19,7 @@
 void modes_m1_change(bool next) {
     if (next) {
         // set the next mode
-        app_mode_change_func = app_blank_mode;
+        app_mode_change_func = cv_status_mode_change;
         return;
     }
 

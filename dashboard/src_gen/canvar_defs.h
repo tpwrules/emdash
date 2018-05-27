@@ -46,11 +46,13 @@
 #define cv_pfuel (canvar_states[19])
 #define CV_ID_TMOT2 (20)
 #define cv_tmot2 (canvar_states[20])
+#define CV_ID_NOBUS_CAN_STATUS (21)
+#define cv_nobus_can_status (canvar_states[21])
 
-extern volatile canvar_state_t canvar_states[21];
-extern const canvar_def_t canvar_defs[21];
+extern volatile canvar_state_t canvar_states[22];
+extern const canvar_def_t canvar_defs[22];
 
-#define CANVAR_NUM_VARS (21)
+#define CANVAR_NUM_VARS (22)
 #define CANVAR_ID_MAP_COUNT (18)
 extern const uint8_t canvar_id_map[18];
 
