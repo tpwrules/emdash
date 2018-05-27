@@ -12,7 +12,7 @@
 #include "modes.h"
 #include "../src_gen/build_version.h"
 
-#define OUR_MODE_FUNC (modes_m1_change)
+#define OUR_MODE_FUNC (version_mode_change)
 
 void version_mode_change(bool next) {
     if (next) {
@@ -33,7 +33,7 @@ void version_mode_change(bool next) {
     // we can't draw it until it comes in over CAN
     scr_draw_text(SCR_TEXT_ADDR(0, 26, 5), "Wheel:????????");
     scr_draw_text(SCR_TEXT_ADDR(0, 28, 6), "20??????????");
-    
+
     // set can messages to new so that they will be redrawn
     interrupt_disable();
     CV_RENEW(cv_wb_version_commit);
