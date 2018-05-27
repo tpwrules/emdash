@@ -8,6 +8,7 @@
 #include "limits.h"
 
 #include <stdio.h>
+#include <stdbool.h>
 
 volatile int timer_val = 0;
 volatile static int timer_was_updated = 0;
@@ -50,10 +51,11 @@ void app_entry(void) {
     drive_init();
     warn_init();
 
-    // set up version screen as next mode
-    app_next_mode_func = version_init;
+    // show the version mode
+    app_mode_change_func = version_mode_change;
+    // hope display is still clear, it should be
     // and now show it
-    app_show_next_mode();
+    version_mode_change(false);
     mode_was_ever_switched = 0;
 
     while (1) {
@@ -115,24 +117,30 @@ void app_wb_dash_mode_update(uint32_t val) {
         app_show_next_mode();
 }
 
-app_mode_t app_next_mode_func;
+app_mode_t app_mode_change_func;
 
 void app_show_next_mode(void) {
     mode_was_ever_switched = 1;
+    // update the mode change func pointer
+    // by asking the current function to update it
+    app_mode_change_func(true);
+
     // erase the modal area
     for (int r=2; r<7; r++)
         scr_draw_text(SCR_TEXT_ADDR(0, 25, r), "               ");
     scr_draw_rect(SCR_BYTE_ADDR(0, 19*8/6, 16), 11*8, 5*8, 0);
 
-    // call next mode function
-    app_next_mode_func();
+    // call the change func to draw the screen
+    app_mode_change_func(false);
 
     // assume it changed some CAN stuff, so claim it was updated
     canvar_was_updated = 1;
 }
 
-void app_blank_mode(void) {
-    // mode that just sets up the next one
-    // in case that area needs to be clear
-    app_next_mode_func = version_init;
+void app_blank_mode(bool next) {
+    // mode that just shows a blank area in case
+    // it's distracting or smth
+    if (next) {
+        app_mode_change_func = version_mode_change;
+    }
 }

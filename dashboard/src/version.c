@@ -2,6 +2,7 @@
 // and wheel on the right area of the screen
 
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "platform.h"
 #include "version.h"
@@ -11,9 +12,15 @@
 #include "modes.h"
 #include "../src_gen/build_version.h"
 
-#define NEXT_MODE (modes_m1_init)
+#define OUR_MODE_FUNC (modes_m1_change)
 
-void version_init(void) {
+void version_mode_change(bool next) {
+    if (next) {
+        // set the next mode
+        app_mode_change_func = modes_m1_change;
+        return;
+    }
+
     // draw the dashboard version
     char str[20];
     scr_draw_text(SCR_TEXT_ADDR(0, 27, 2), "FW VERSIONS");
@@ -26,10 +33,7 @@ void version_init(void) {
     // we can't draw it until it comes in over CAN
     scr_draw_text(SCR_TEXT_ADDR(0, 26, 5), "Wheel:????????");
     scr_draw_text(SCR_TEXT_ADDR(0, 28, 6), "20??????????");
-
-    // set the next mode
-    app_next_mode_func = NEXT_MODE;
-
+    
     // set can messages to new so that they will be redrawn
     interrupt_disable();
     CV_RENEW(cv_wb_version_commit);
@@ -39,7 +43,7 @@ void version_init(void) {
 
 void version_wb_commit_update(uint32_t val) {
     char str[20];
-    if (app_next_mode_func == NEXT_MODE) {
+    if (app_mode_change_func == OUR_MODE_FUNC) {
         sprintf(str, "%08x", (unsigned int)val);
         scr_draw_text(SCR_TEXT_ADDR(0, 32, 5), str);
     }
@@ -47,7 +51,7 @@ void version_wb_commit_update(uint32_t val) {
 
 void version_wb_build_update(uint32_t val) {
     char str[20];
-    if (app_next_mode_func == NEXT_MODE) {
+    if (app_mode_change_func == OUR_MODE_FUNC) {
         sprintf(str, "%010u", (unsigned int)val);
         scr_draw_text(SCR_TEXT_ADDR(0, 30, 6), str);
     }

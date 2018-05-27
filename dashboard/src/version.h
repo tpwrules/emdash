@@ -1,6 +1,8 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-void version_init(void);
+#include <stdbool.h>
+
+void version_mode_change(bool next);
 
 #endif
