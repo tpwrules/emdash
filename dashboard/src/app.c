@@ -60,8 +60,10 @@ void app_entry(void) {
     while (1) {
         // switch away from version mode if a certain
         // amount of time has elapsed and the user hasn't done anything
-        if (!mode_was_ever_switched && timer_val >= LIM_VERSION_DISP_TIME)
+        if (!mode_was_ever_switched && timer_val >= LIM_VERSION_DISP_TIME) {
+            app_mode_change_func(true);
             app_show_next_mode();
+        }
 
         interrupt_disable();
 
