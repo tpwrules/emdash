@@ -12,7 +12,8 @@
 
 // calculate can timing from baudrate
 // stolen directly from ccan_rom example
-static void baudrateCalculate(uint32_t baud_rate, uint32_t *can_api_timing_cfg)
+static inline void baudrateCalculate(uint32_t baud_rate, 
+    uint32_t *can_api_timing_cfg)
 {
     uint32_t pClk, div, quanta, segs, seg1, seg2, clk_per_bit, can_sjw;
     Chip_Clock_EnablePeriphClock(SYSCTL_CLOCK_CAN);
@@ -82,7 +83,7 @@ void can_hw_init(void) {
     LPC_CCAN_API->init_can(&timing_data[0], true);
 
     // now configure the CAN callback functions
-    CCAN_CALLBACKS_T callbacks = {
+    static const CCAN_CALLBACKS_T callbacks = {
         // basic can message
         CAN_rx,
         CAN_tx,
@@ -95,13 +96,13 @@ void can_hw_init(void) {
         NULL
     };
     // tell the driver the above list
-    LPC_CCAN_API->config_calb(&callbacks);
+    LPC_CCAN_API->config_calb((CCAN_CALLBACKS_T*)&callbacks);
 
     // now enable CAN interrupts
     NVIC_EnableIRQ(CAN_IRQn);
 
     // configure message object 1 to receive all
-    // 11 bit ID messages
+    // messages with 11 bit IDs
     CCAN_MSG_OBJ_T msg_obj;
 	msg_obj.msgobj = 1;
 	msg_obj.mode_id = 0;

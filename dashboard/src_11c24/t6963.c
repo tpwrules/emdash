@@ -18,7 +18,6 @@
 #define set_DB_output(to) do {\
     if (to) {LPC_GPIO[0].DIR |= 0x3CC; LPC_GPIO[2].DIR |= 0x180;} \
     else {LPC_GPIO[0].DIR &= ~(0x3CC); LPC_GPIO[2].DIR &= ~(0x180);}} while(0)
-#define get_DB() (LPC_GPIO[0].DATA[0x3CC] >> 2)
 
 #define busywait(t) do {\
     volatile int i;\
@@ -34,11 +33,12 @@ static inline void lcd_wait_S0S1(void) {
         // assert read
         set_nRD(false);
         busywait(2); // wait for access time
-        status = get_DB(); // save data
+        // save data bits 0 and 1
+        status = LPC_GPIO[0].DATA[0xC];
         // and deassert
         set_nRD(true);
         busywait(2);
-    } while ((status & 3) != 3);
+    } while (status != 0xC);
 }
 
 void lcd_send(uint8_t data, bool command) {
@@ -63,7 +63,8 @@ static inline void lcd_wait_S3(void) {
         // assert read
         set_nRD(false);
         busywait(2); // wait for access time
-        status = Chip_GPIO_GetPinState(LPC_GPIO, 2, 8); // save data
+        // save data bit 3
+        status = Chip_GPIO_GetPinState(LPC_GPIO, 2, 8);
         // and deassert
         set_nRD(true);
         busywait(2);
@@ -128,7 +129,7 @@ void lcd_init(void) {
         IOCON_FUNC0 | IOCON_MODE_INACT);
 
     // now we can begin actually initializing the chip
-    set_nRESET(true);
+
     // assert reset
     set_nRESET(false);
     // wait for it to happen

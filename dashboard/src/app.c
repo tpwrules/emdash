@@ -59,7 +59,8 @@ void app_entry(void) {
 
     while (1) {
         // switch away from version mode if a certain
-        // amount of time has elapsed and the user hasn't done anything
+        // amount of time has elapsed and the user hasn't
+        // switched modes themselves
         if (!mode_was_ever_switched && timer_val >= LIM_VERSION_DISP_TIME) {
             app_mode_change_func(true);
             app_show_next_mode();
@@ -78,7 +79,7 @@ void app_entry(void) {
                     // well now it's not
                     canvar_states[vi].st = CV_ST_SAME;
                     if (canvar_defs[vi].callback) {
-                        // call the callback without interrupts
+                        // call the callback with interrupts enabled
                         // so that work can get done in the background
                         interrupt_enable();
                         canvar_defs[vi].callback(val);
@@ -135,7 +136,7 @@ void app_show_next_mode(void) {
     // call the change func to draw the screen
     app_mode_change_func(false);
 
-    // assume it changed some CAN stuff, so claim it was updated
+    // assume it changed some CAN stuff, so claim that was updated
     canvar_was_updated = 1;
 }
 
