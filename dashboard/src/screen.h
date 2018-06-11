@@ -27,7 +27,7 @@
 #define SCR_BYTE_ADDR(page, x, y) \
     (((page)*0x1000)+((y)<<6)+(x))
 #define SCR_PIXEL_ADDR(page, x, y) \
-    (SCR_BYTE_ADDR(page,(x)/6,y) | ((x%6)<<16))
+    (SCR_BYTE_ADDR(page,(x)/6,y) | (((x)%6)<<16))
 
 // sometimes we want to place graphics lined up with text
 // this returns the byte addr for text at a specific location

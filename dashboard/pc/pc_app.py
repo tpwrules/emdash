@@ -140,22 +140,13 @@ lib.scr_clear_page = lib.pc_scr_clear_page
 
 @ffi.def_extern()
 def pc_scr_draw_rect(pixel_addr, w, h, color):
-    byte_addr = pixel_addr & 0xFFFF
-    # here we do the hard work of selecting the rectangles
-    page = byte_addr >> 12
-    x = (byte_addr & 0x3F) * 6
-    y = (byte_addr >> 6) & 0x3F
+    page = (pixel_addr >> 12) & 0xF
+    x = ((pixel_addr & 0x3F) * 6) + (pixel_addr >> 16)
+    y = (pixel_addr >> 6) & 0x3F
 
-    # get RGB triplet for color bit
-    gc = lambda b: (0, 0, 0) if b else (255, 255, 255)
-
-    rects = []
-
-    rects.append(((x, y), (w, h), gc(color)))
-    if w % 6 != 0:
-        rects.append(((x+w, y), (6-(w%6), h), gc(False)))
-
-    gfx_ops.put(("rect", page, tuple(rects)))
+    gfx_ops.put(("rect", page, 
+        (x, y), (w, h), (0, 0, 0) if color else (255, 255, 255))
+    )
 lib.scr_draw_rect = lib.pc_scr_draw_rect
 
 @ffi.def_extern()
@@ -362,8 +353,7 @@ while True:
             else:
                 page.fill((255, 255, 255))
         elif cmd[0] == "rect":
-            for r in cmd[2]:
-                page.fill(r[2], rect=r[:2])
+            page.fill(cmd[4], rect=cmd[2:4])
         elif cmd[0] == "pic":
             page.blit(pics[cmd[3]][1 if cmd[4] else 0], cmd[2])
         elif cmd[0] == "text":
