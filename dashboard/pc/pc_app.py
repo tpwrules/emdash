@@ -139,7 +139,8 @@ def pc_scr_clear_page(text, page):
 lib.scr_clear_page = lib.pc_scr_clear_page
 
 @ffi.def_extern()
-def pc_scr_draw_rect(byte_addr, w, h, color):
+def pc_scr_draw_rect(pixel_addr, w, h, color):
+    byte_addr = pixel_addr & 0xFFFF
     # here we do the hard work of selecting the rectangles
     page = byte_addr >> 12
     x = (byte_addr & 0x3F) * 6

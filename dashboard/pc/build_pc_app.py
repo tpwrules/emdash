@@ -46,13 +46,13 @@ fb.cdef(r"""
 
     extern "Python" void pc_scr_show_page(uint8_t text, uint8_t page);
     extern "Python" void pc_scr_clear_page(uint8_t text, uint8_t page);
-    extern "Python" void pc_scr_draw_rect(uint32_t byte_addr, uint8_t w, uint8_t h, uint8_t color);
+    extern "Python" void pc_scr_draw_rect(uint32_t pixel_addr, uint8_t w, uint8_t h, uint8_t color);
     extern "Python" void pc_scr_draw_pic(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted);
     extern "Python" void pc_scr_draw_text(uint32_t text_addr, char *text);
 
     void (*scr_show_page)(uint8_t text, uint8_t page);
     void (*scr_clear_page)(uint8_t text, uint8_t page);
-    void (*scr_draw_rect)(uint32_t byte_addr, uint8_t w, uint8_t h, uint8_t color);
+    void (*scr_draw_rect)(uint32_t pixel_addr, uint8_t w, uint8_t h, uint8_t color);
     void (*scr_draw_pic)(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted);
     void (*scr_draw_text)(uint32_t text_addr, char *text);
 
@@ -74,7 +74,7 @@ fb.set_source('_pc_app',
     #define PCFUNC(type, name) type (*name)
     PCFUNC(void, scr_show_page)(uint8_t text, uint8_t page);
     PCFUNC(void, scr_clear_page)(uint8_t text, uint8_t page);
-    PCFUNC(void, scr_draw_rect)(uint32_t byte_addr, uint8_t w, uint8_t h, uint8_t color);
+    PCFUNC(void, scr_draw_rect)(uint32_t pixel_addr, uint8_t w, uint8_t h, uint8_t color);
     PCFUNC(void, scr_draw_pic)(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted);
     PCFUNC(void, scr_draw_text)(uint32_t text_addr, char *text);
 

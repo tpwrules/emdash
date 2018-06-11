@@ -14,8 +14,8 @@
 
 void drive_init(void) {
     // draw RPM border
-    scr_draw_rect(SCR_BYTE_ADDR(0, 0, 6), 240-60+1, 1, 1);
-    scr_draw_rect(SCR_BYTE_ADDR(0, (240-60)/6, 0), 1, 6, 1);
+    scr_draw_rect(SCR_PIXEL_ADDR(0, 0, 6), 240-60+1, 1, 1);
+    scr_draw_rect(SCR_PIXEL_ADDR(0, 240-60, 0), 1, 6, 1);
     // draw RPM text on normal and inverted screen
     scr_draw_text(SCR_TEXT_ADDR(0, 31, 0), "RPM:?????");
     scr_draw_text(SCR_TEXT_ADDR(1, 31, 0), "RPM:?????");
@@ -24,7 +24,7 @@ void drive_init(void) {
 
     // second page is used for flashing when to upshift
     // fill it with black
-    scr_draw_rect(SCR_BYTE_ADDR(1, 0, 0), 240, 64, 1);
+    scr_draw_rect(SCR_PIXEL_ADDR(1, 0, 0), 240, 64, 1);
 
     // drive mode text placeholders
     scr_draw_text(SCR_TEXT_ADDR(0, 18, 7), "TC??");
@@ -102,13 +102,13 @@ void drive_rpm_update(uint32_t val) {
     if (bar_val < old_bar_val) {
         uint8_t col = bar_val/6;
         // erase up to the byte of the new val
-        scr_draw_rect(SCR_BYTE_ADDR(0, col, 0), old_bar_val-(col*6), 6, 0);
+        scr_draw_rect(SCR_PIXEL_ADDR(0, col*6, 0), old_bar_val-(col*6), 6, 0);
         // let next statement take care of finishing it
         old_bar_val = col*6;
     }
     if (bar_val > old_bar_val) {
         uint8_t col = old_bar_val/6;
-        scr_draw_rect(SCR_BYTE_ADDR(0, col, 0), bar_val-(col*6), 6, 1);
+        scr_draw_rect(SCR_PIXEL_ADDR(0, col*6, 0), bar_val-(col*6), 6, 1);
         old_bar_val = bar_val;
     }
 
@@ -157,7 +157,7 @@ void drive_wb_upshift_update(uint32_t val) {
     if (val) {
         scr_draw_pic(SCR_BYTE_ADDR(0, 22, 16), PIC_ID_UPSHIFT_BTN, 0);
     } else {
-        scr_draw_rect(SCR_BYTE_ADDR(0, 22, 16), 16, 15, 0);
+        scr_draw_rect(SCR_PIXEL_ADDR(0, 22*6, 16), 16, 15, 0);
     }
 }
 
@@ -165,7 +165,7 @@ void drive_wb_downshift_update(uint32_t val) {
     if (val) {
         scr_draw_pic(SCR_BYTE_ADDR(0, 22, 32), PIC_ID_DOWNSHIFT_BTN, 0);
     } else {
-        scr_draw_rect(SCR_BYTE_ADDR(0, 22, 32), 16, 15, 0);
+        scr_draw_rect(SCR_PIXEL_ADDR(0, 22*6, 32), 16, 15, 0);
     }
 }
 
@@ -173,7 +173,7 @@ void drive_wb_radio_update(uint32_t val) {
     if (val) {
         scr_draw_pic(SCR_BYTE_ADDR(0, 22, 48), PIC_ID_RADIO, 0);
     } else {
-        scr_draw_rect(SCR_BYTE_ADDR(0, 22, 48), 16, 15, 0);
+        scr_draw_rect(SCR_PIXEL_ADDR(0, 22*6, 48), 16, 15, 0);
     }
 }
 

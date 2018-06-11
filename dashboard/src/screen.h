@@ -26,11 +26,16 @@
 // the screen is thus 40x64 bytes visible, 64x64 in memory
 #define SCR_BYTE_ADDR(page, x, y) \
     (((page)*0x1000)+((y)<<6)+(x))
+#define SCR_PIXEL_ADDR(page, x, y) \
+    (SCR_BYTE_ADDR(page,(x)/6,y) | ((x%6)<<16))
 
 // sometimes we want to place graphics lined up with text
 // this returns the byte addr for text at a specific location
 #define SCR_BYTE_ADDR_AT_TEXT(page, x, y) \
-    SCR_BYTE_ADDR(page, x, y*8)
+    SCR_BYTE_ADDR(page, x, (y)*8)
+// maybe we want to place rectangles aligned with text also
+#define SCR_PIXEL_ADDR_AT_TEXT(page, x, y) \
+    (SCR_BYTE_ADDR(page, x, (y)*8)) // conveniently the same!
 
 // Screen Operations
 
@@ -47,10 +52,9 @@ PCFUNC(void, scr_show_page)(uint8_t text, uint8_t page);
 PCFUNC(void, scr_clear_page)(uint8_t text, uint8_t page);
 
 // draw a rectangle
-// it must start on a 6 pixel boundary, but can be any length
 // the color is 1 for a black rectangle and 0 for white
 // the remaining pixels in the byte are always white
-PCFUNC(void, scr_draw_rect)(uint32_t byte_addr, uint8_t w, uint8_t h, uint8_t color);
+PCFUNC(void, scr_draw_rect)(uint32_t pixel_addr, uint8_t w, uint8_t h, uint8_t color);
 
 // draw a picture
 PCFUNC(void, scr_draw_pic)(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted);

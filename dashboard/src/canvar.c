@@ -115,11 +115,11 @@ void cv_can_status_update(uint32_t val) {
         scr_draw_text(SCR_TEXT_ADDR(0, 32, 3), str);
         if (val == 0) {
             scr_draw_text(SCR_TEXT_ADDR(0, 30, 2), "CAN:  good");
-            scr_draw_rect(SCR_BYTE_ADDR_AT_TEXT(0, 30, 2),
+            scr_draw_rect(SCR_PIXEL_ADDR_AT_TEXT(0, 30, 2),
                 6*10, 8, 0);
         } else {
             scr_draw_text(SCR_TEXT_ADDR(0, 30, 2), "CAN: ERROR");
-            scr_draw_rect(SCR_BYTE_ADDR_AT_TEXT(0, 30, 2),
+            scr_draw_rect(SCR_PIXEL_ADDR_AT_TEXT(0, 30, 2),
                 6*10, 8, 1);
         }
     }
