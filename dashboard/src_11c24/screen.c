@@ -39,31 +39,63 @@ void scr_clear_page(uint8_t text, uint8_t page) {
     lcd_send_auto(0xB2, true);
 }
 
-void scr_draw_rect(uint32_t byte_addr, uint8_t w, uint8_t h, uint8_t color) {
-    uint8_t main_color = color ? 0x3f : 0; // build main rectangle color
-    // build the byte at the end by putting in 0s where the rectangle
-    // is not
-    uint8_t end_color = main_color << (6-(w%6));
+void scr_draw_rect(uint32_t pixel_addr, uint8_t w, uint8_t h, uint8_t color) {
+    color = color ? 0x3f : 0; // normalize rectangle color
 
-    for (int y=0; y<h; y++) {
+    uint8_t start_offset = pixel_addr >> 16; // pixel within byte offset
+
+    for (; h>0; h--) {
         // position at the start of the line
-        lcd_send_acmd(0x24, byte_addr);
-        byte_addr += 64; // go to next row
-        // start auto send mode
-        lcd_send_0cmd(0xB0);
+        lcd_send_acmd(0x24, pixel_addr & 0xFFFF);
+        pixel_addr += 64;
+        int x = w;
+        if (start_offset != 0) {
+            // we're not starting exactly on a byte
+            // so we have to modify the byte in the LCD
+            uint8_t b = lcd_send_readcmd(0xC5);
+            // make a mask of bits that we will replace with rectangle
+            uint8_t mask = 0x3f >> start_offset;
+            // if we also end in this byte, we have to un-mask the
+            // non-rectangle bits at the end
+            if (start_offset + w < 6) {
+                mask &= ~((0x3f) >> (start_offset+w));
+            }
+            // now apply the mask, depending on color
+            if (color) {
+                b |= mask;
+            } else {
+                b &= (~mask);
+            }
+            // and write byte back to LCD
+            lcd_send_1cmd(0xC0, b);
 
-        // loop pixels backwards
-        for (int x=w; x>0; x-=6) {
-            if (x < 6) // if less than a full byte's worth
-                // send end value
-                lcd_send_auto(end_color, false);
-            else
-                // send main value
-                lcd_send_auto(main_color, false);
+            x -= (6-start_offset);
         }
 
-        // end auto mode
-        lcd_send_auto(0xB2, true);
+        // now fill up the main area
+        if (x >= 6) {
+            lcd_send_0cmd(0xB0); // start auto mode
+            while (x >= 6) {
+                lcd_send_auto(color, false); // fill this byte
+                x -= 6;
+            }
+            // end auto mode
+            lcd_send_auto(0xB2, true);
+        }
+
+        // now deal with the end
+        if (x > 0) {
+            // again, not ending on a byte. so rmw time
+            uint8_t b = lcd_send_readcmd(0xC5);
+            uint8_t mask = 0x3F << (6-x);
+            if (color) {
+                b |= mask;
+            } else {
+                b &= (~mask);
+            }
+            // write byte back to LCD
+            lcd_send_1cmd(0xC0, b);
+        }
     }
 }
 

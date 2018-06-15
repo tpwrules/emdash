@@ -19,6 +19,8 @@
     if (to) {LPC_GPIO[0].DIR |= 0x3CC; LPC_GPIO[2].DIR |= 0x180;} \
     else {LPC_GPIO[0].DIR &= ~(0x3CC); LPC_GPIO[2].DIR &= ~(0x180);}} while(0)
 
+#define get_DB() ((LPC_GPIO[0].DATA[0x3CC]>>2) | (LPC_GPIO[2].DATA[0x180]>>5))
+
 #define busywait(t) do {\
     volatile int i;\
     for (i=0; i<t; i++);} while(0)
@@ -51,6 +53,19 @@ void lcd_send(uint8_t data, bool command) {
     busywait(2);
     set_nWR(true);
     busywait(2);
+}
+
+uint8_t lcd_get() {
+    lcd_wait_S0S1(); // wait for display to be ready
+    set_CD(false); // it's always gonna be data
+    set_DB_output(false); // receive data on bus
+    // and do the read
+    set_nRD(false);
+    busywait(2);
+    uint8_t data = get_DB();
+    set_nRD(true);
+    busywait(2);
+    return data;
 }
 
 // read the S3 status bit to determine if the

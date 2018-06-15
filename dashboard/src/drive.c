@@ -100,16 +100,13 @@ void drive_rpm_update(uint32_t val) {
     uint8_t bar_val = bar_rpm*(240-60)/LIM_RPM_BAR_MAX;
 
     if (bar_val < old_bar_val) {
-        uint8_t col = bar_val/6;
-        // erase up to the byte of the new val
-        scr_draw_rect(SCR_PIXEL_ADDR(0, col*6, 0), old_bar_val-(col*6), 6, 0);
-        // let next statement take care of finishing it
-        old_bar_val = col*6;
-    }
-    if (bar_val > old_bar_val) {
-        uint8_t col = old_bar_val/6;
-        scr_draw_rect(SCR_PIXEL_ADDR(0, col*6, 0), bar_val-(col*6), 6, 1);
-        old_bar_val = bar_val;
+        // erase the difference
+        scr_draw_rect(SCR_PIXEL_ADDR(0, bar_val, 0),
+            old_bar_val-bar_val, 6, 0);
+    } else if (bar_val > old_bar_val) {
+        // fill the difference
+        scr_draw_rect(SCR_PIXEL_ADDR(0, old_bar_val, 0),
+            bar_val-old_bar_val, 6, 1);
     }
 
     sprintf(text, "%5d", rpm);

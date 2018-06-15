@@ -8,6 +8,7 @@ void lcd_init(void);
 
 void lcd_send(uint8_t data, bool command);
 void lcd_send_auto(uint8_t data, bool command);
+uint8_t lcd_get(void);
 
 // command with no arguments
 static inline void lcd_send_0cmd(uint8_t cmd) {
@@ -25,6 +26,12 @@ static inline void lcd_send_acmd(uint8_t cmd, uint16_t addr) {
     lcd_send(addr & 0xFF, false);
     lcd_send(addr >> 8, false);
     lcd_send(cmd, true);
+}
+
+// command that reads something
+static inline uint8_t lcd_send_readcmd(uint8_t cmd) {
+    lcd_send(cmd, true);
+    return lcd_get();
 }
 
 #endif
