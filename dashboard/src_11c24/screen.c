@@ -42,29 +42,33 @@ void scr_clear_page(uint8_t text, uint8_t page) {
 void scr_draw_rect(uint32_t pixel_addr, uint8_t w, uint8_t h, uint8_t color) {
     color = color ? 0x3f : 0; // normalize rectangle color
 
-    uint8_t start_offset = pixel_addr >> 16; // pixel within byte offset
+    // offset of the first pixel within the first byte
+    uint32_t start_offset = pixel_addr >> 16;
+    // and address of the first byte
+    uint32_t byte_addr = pixel_addr & 0xFFFF;
+
+    // precalculate starting mask
+    uint8_t mask_start = 0x3f >> start_offset;
+    // if we end in the starting byte, we have to
+    // remove the rectangle at the end
+    if (start_offset + w < 6) {
+        mask_start &= ~(0x3f >> (start_offset+w));
+    }
 
     for (; h>0; h--) {
         // position at the start of the line
-        lcd_send_acmd(0x24, pixel_addr & 0xFFFF);
-        pixel_addr += 64;
+        lcd_send_acmd(0x24, byte_addr);
+        byte_addr += 64;
         int x = w;
-        if (start_offset != 0) {
+        if (start_offset) {
             // we're not starting exactly on a byte
             // so we have to modify the byte in the LCD
             uint8_t b = lcd_send_readcmd(0xC5);
-            // make a mask of bits that we will replace with rectangle
-            uint8_t mask = 0x3f >> start_offset;
-            // if we also end in this byte, we have to un-mask the
-            // non-rectangle bits at the end
-            if (start_offset + w < 6) {
-                mask &= ~((0x3f) >> (start_offset+w));
-            }
-            // now apply the mask, depending on color
+            // set or clear rectangle bits, depending on color
             if (color) {
-                b |= mask;
+                b |= mask_start;
             } else {
-                b &= (~mask);
+                b &= ~mask_start;
             }
             // and write byte back to LCD
             lcd_send_1cmd(0xC0, b);
@@ -87,11 +91,11 @@ void scr_draw_rect(uint32_t pixel_addr, uint8_t w, uint8_t h, uint8_t color) {
         if (x > 0) {
             // again, not ending on a byte. so rmw time
             uint8_t b = lcd_send_readcmd(0xC5);
-            uint8_t mask = 0x3F << (6-x);
+            uint8_t mask_end = 0x3f << (6-x);
             if (color) {
-                b |= mask;
+                b |= mask_end;
             } else {
-                b &= (~mask);
+                b &= ~mask_end;
             }
             // write byte back to LCD
             lcd_send_1cmd(0xC0, b);
