@@ -8,13 +8,13 @@
 
 #include <stdbool.h>
 
-#define set_nWR(to) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 6, to)
-#define set_nRD(to) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, to)
-#define set_CD(to) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 1, to)
-#define set_nRESET(to) Chip_GPIO_WritePortBit(LPC_GPIO, 1, 8, to)
+#define set_nWR(to) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 6, (to))
+#define set_nRD(to) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, (to))
+#define set_CD(to) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 1, (to))
+#define set_nRESET(to) Chip_GPIO_WritePortBit(LPC_GPIO, 1, 8, (to))
 
-#define set_DB(to) do { LPC_GPIO[0].DATA[0x3CC] = to << 2; \
-    LPC_GPIO[2].DATA[0x180] = to << 5;} while(0)
+#define set_DB(to) do { LPC_GPIO[0].DATA[0x3CC] = (to) << 2; \
+    LPC_GPIO[2].DATA[0x180] = (to) << 5;} while(0)
 #define set_DB_output(to) do {\
     if (to) {LPC_GPIO[0].DIR |= 0x3CC; LPC_GPIO[2].DIR |= 0x180;} \
     else {LPC_GPIO[0].DIR &= ~(0x3CC); LPC_GPIO[2].DIR &= ~(0x180);}} while(0)
@@ -23,7 +23,7 @@
 
 #define busywait(t) do {\
     volatile int i;\
-    for (i=0; i<t; i++);} while(0)
+    for (i=0; i<(t); i++);} while(0)
 
 // read the S0 and S1 status bits to determine if the
 // display is ready

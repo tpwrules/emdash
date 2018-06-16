@@ -9,7 +9,7 @@ typedef void (*canvar_callback_t)(uint32_t val);
 
 // force a variable to new as long as it's not invalid
 #define CV_RENEW(var) do {\
-    if (var.st != CV_ST_INVALID) var.st = CV_ST_NEW;\
+    if ((var).st != CV_ST_INVALID) (var).st = CV_ST_NEW;\
     } while (0)
 
 #define CV_ST_SAME (2) // value is not new
