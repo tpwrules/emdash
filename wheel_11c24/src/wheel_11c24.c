@@ -19,30 +19,34 @@
 #include <cr_section_macros.h>
 
 // TODO: insert other include files here
+#include "../src_11c24/can_hw.h"
+#include "../src_11c24/app.h"
 
 // TODO: insert other definitions and declarations here
+
+void SysTick_Handler(void) {
+    app_timer_interrupt();
+}
 
 int main(void) {
 
 #if defined (__USE_LPCOPEN)
     // Read clock settings and update SystemCoreClock variable
     SystemCoreClockUpdate();
-#if !defined(NO_BOARD_LIB)
-    // Set up and initialize all required blocks and
-    // functions related to the board hardware
-    Board_Init();
-    // Set the LED to the state of "On"
-    Board_LED_Set(0, true);
-#endif
 #endif
 
-    // TODO: insert code here
+    __disable_irq();
 
-    // Force the counter to be placed into memory
-    volatile static int i = 0 ;
-    // Enter an infinite loop, just incrementing a counter
-    while(1) {
-        i++ ;
-    }
-    return 0 ;
+    // initialize GPIO
+    Chip_GPIO_Init(LPC_GPIO);
+
+    // configure SysTick timer to fire every millisecond
+    SysTick_Config(SystemCoreClock/1000);
+
+    // initialize CAN hardware
+    can_hw_init();
+
+    app_entry();
+
+    return 0;
 }
