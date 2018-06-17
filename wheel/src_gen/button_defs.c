@@ -8,7 +8,7 @@ msg_state_t msg_states[BP_NUM_CAN_MESSAGES] = {
 uint8_t br_dash_mode(void);
 
 const button_def_t button_defs[BP_NUM_BUTTONS] = {
-    {br_dash_mode, 0, 3, 10, 100},
+    {br_dash_mode, 0, 3, 10, 50},
 };
 
 button_state_t button_states[BP_NUM_BUTTONS];
