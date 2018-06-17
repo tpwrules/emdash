@@ -12,12 +12,16 @@ def build():
     os.chdir(os.path.join(".", os.path.dirname(__file__)))
 
     # add the other scripts to the path so we can import them
+    sys.path.append(os.path.abspath("buttons"))
     sys.path.append(os.path.abspath("misc"))
 
     # import said other scripts
+    import buttons
     import write_build_version
 
+
     # call their functions
+    buttons.write_buttons()
     write_build_version.do_write()
 
     print("SOURCE GENERATED SUCCESSFULLY")
