@@ -1,48 +1,38 @@
 // functions that actually read the button states for the button processor
 
-/*
-PIN HARDWARE MAPPINGS
-A1: PIO0_11, AD0
-A2: PIO1_0, AD1
-A3: PIO1_1, AD2
-A4: PIO1_2, AD3
-
-B1: PIO2_8
-B2: PIO0_6
-B3: PIO0_7
-B4: PIO0_8
-B5: PIO0_9
-
-C1: PIO2_1 -> dash_mode
-C2: PIO0_3
-C3: PIO1_8
-C4: PIO0_2
-
-software pullup must be enabled
-huysteresis is suggested
-
-*/
+// the simple reader covers the following case:
+//  * button is normally open
+//  * button is connected between an input and ground
+// in such a case, put a BR_SIMPLE_INIT(<name>, PIN_<pin>)
+// in the init function and a BR_SIMPLE(<name>, PIN_<pin>)
+// above it. just make your button's update function the same
+// name as above and it will be 1 when pressed and 0 when not pressed
 
 #include <inttypes.h>
 
 #include "button_read.h"
 #include "chip.h"
 
-static inline void br_dash_mode_init(void) {
-    // set default pin function, enable pullup,
-    // and enable hysteresis 
-    Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO2_1,
-        IOCON_FUNC0 | IOCON_MODE_PULLUP | IOCON_HYS_EN);
-    // set pin direction to input
-    Chip_GPIO_SetPinDIRInput(LPC_GPIO, 2, 1);
-}
+BR_SIMPLE(br_clutch, PIN_B1);
+BR_SIMPLE(br_upshift, PIN_B2);
+BR_SIMPLE(br_downshift, PIN_B3);
+BR_SIMPLE(br_radio, PIN_B4);
+BR_SIMPLE(br_launch, PIN_B5);
 
-uint8_t br_dash_mode(void) {
-    return !Chip_GPIO_GetPinState(LPC_GPIO, 2, 1);
-}
+BR_SIMPLE(br_dash_mode, PIN_C1);
+BR_SIMPLE(br_lap, PIN_C2);
+BR_SIMPLE(br_autoshift, PIN_C3);
 
 void br_init(void) {
     // SET PIN I/O STATE HERE
 
-    br_dash_mode_init();
+    BR_SIMPLE_INIT(br_clutch, PIN_B1);
+    BR_SIMPLE_INIT(br_upshift, PIN_B2);
+    BR_SIMPLE_INIT(br_downshift, PIN_B3);
+    BR_SIMPLE_INIT(br_radio, PIN_B4);
+    BR_SIMPLE_INIT(br_launch, PIN_B5);
+
+    BR_SIMPLE_INIT(br_dash_mode, PIN_C1);
+    BR_SIMPLE_INIT(br_lap, PIN_C2);
+    BR_SIMPLE_INIT(br_autoshift, PIN_C3);
 }

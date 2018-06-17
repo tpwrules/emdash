@@ -33,6 +33,36 @@ buttons = [
         name="wb_dash_mode", msg_id=0x131, byte=3,
         update="br_dash_mode"
     ),
+    Button(
+        name="wb_clutch", msg_id=0x131, byte=0,
+        update="br_clutch"
+    ),
+    Button(
+        name="wb_upshift", msg_id=0x131, byte=1,
+        update="br_upshift"
+    ),
+    Button(
+        name="wb_downshift", msg_id=0x131, byte=2,
+        update="br_downshift"
+    ),
+
+    Button(
+        name="wb_radio", msg_id=0x131, byte=4,
+        update="br_radio"
+    ),
+    Button(
+        name="wb_autoshift", msg_id=0x131, byte=5,
+        update="br_autoshift"
+    ),
+    Button(
+        name="wb_launch", msg_id=0x131, byte=7,
+        update="br_launch"
+    ),
+    Button(
+        name="wb_lap", msg_id=0x132, byte=0,
+        update="br_lap"
+    )
+
 ]
 
 import os
