@@ -13,3 +13,5 @@ dashboard/pc/Release
 *.bak
 *.bck
 *.kicad_pcb-bak
+
+wheel/src_gen/build_version_msg.h
