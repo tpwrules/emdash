@@ -19,6 +19,7 @@ typedef struct {
 // used to hold the state of a particular button
 typedef struct {
     uint8_t state; // current accepted state
+    uint8_t last_raw; // last state
     uint8_t raw; // current state
     uint8_t debounce; // debounce acceptance timer
 } button_state_t;
@@ -31,5 +32,8 @@ typedef struct {
     uint8_t debounce_press;
     uint8_t debounce_release;
 } button_def_t;
+
+// do the magic
+void bp_process(void);
 
 #endif

@@ -95,13 +95,13 @@ def write_buttons():
 
     # write out button function prototypes
     for button in buttons:
-        f.write("uint8_t {}(void);\n".format(button.name))
+        f.write("uint8_t {}(void);\n".format(button.update))
 
     # write out button definitions
     f.write("\nconst button_def_t button_defs[BP_NUM_BUTTONS] = {\n")
     for bi, button in enumerate(buttons):
         f.write("    {{{}, {}, {}, {}, {}}},\n".format(
-            button.name, msg_ids[button.msg_id],
+            button.update, msg_ids[button.msg_id],
             button.byte, button.debounce_press, button.debounce_release))
 
     f.write("};\n\n")
