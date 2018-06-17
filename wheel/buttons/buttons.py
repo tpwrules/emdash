@@ -61,8 +61,13 @@ buttons = [
     Button(
         name="wb_lap", msg_id=0x132, byte=0,
         update="br_lap"
-    )
+    ),
 
+    Button(
+        name="wb_traction_knob", msg_id=0x131, byte=6,
+        update="br_traction_knob",
+        debounce_press=100, debounce_release=100
+    )
 ]
 
 import os

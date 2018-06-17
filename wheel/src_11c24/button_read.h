@@ -11,7 +11,7 @@
 
 #define IOCON_PORT_B_C (IOCON_FUNC0 | IOCON_MODE_PULLUP | IOCON_HYS_EN)
 
-#define PIN_A1 0,11, IOCON_PORT_A
+#define PIN_A1 0,11, IOCON_PORT_A // traction_knob
 #define PIN_A2 1, 0, IOCON_PORT_A
 #define PIN_A3 1, 1, IOCON_PORT_A
 #define PIN_A4 1, 2, IOCON_PORT_A

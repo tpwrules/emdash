@@ -6,7 +6,7 @@
 
 #define WHEEL_VERSION_MESSAGE_ID (0x130)
 
-#define BP_NUM_BUTTONS (8)
+#define BP_NUM_BUTTONS (9)
 #define BP_NUM_CAN_MESSAGES (2)
 
 #define BTN_ID_WB_DASH_MODE (0)
@@ -25,6 +25,8 @@
 #define btn_wb_launch (button_states[6])
 #define BTN_ID_WB_LAP (7)
 #define btn_wb_lap (button_states[7])
+#define BTN_ID_WB_TRACTION_KNOB (8)
+#define btn_wb_traction_knob (button_states[8])
 
 extern msg_state_t msg_states[BP_NUM_CAN_MESSAGES];
 extern button_state_t button_states[BP_NUM_BUTTONS];
