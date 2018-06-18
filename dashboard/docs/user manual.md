@@ -1,4 +1,4 @@
-![boot screen](https://github.com/tpwrules/emdash/tree/master/dashboard/docs/boot_screen.png)
+![boot screen](https://github.com/tpwrules/emdash/raw/master/dashboard/docs/boot_screen.png)
 
 ## Introduction
 
@@ -6,7 +6,7 @@ Welcome to the user manual for the Einstein Motorsport Dashboard. The dashboard 
 
 ## Main Screen
 
-![main screen](https://github.com/tpwrules/emdash/tree/master/dashboard/docs/main_screen.png)
+![main screen](https://github.com/tpwrules/emdash/raw/master/dashboard/docs/main_screen.png)
 
 The main screen is divided into three areas:
 * Car Information (green)
