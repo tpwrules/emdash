@@ -12,6 +12,12 @@ typedef void (*canvar_callback_t)(uint32_t val);
     if ((var).st != CV_ST_INVALID) (var).st = CV_ST_NEW;\
     } while (0)
 
+// force a variable to invalid if it's same, thereby
+// causing it to be called on the next update
+#define CV_CALL_NEXT_UPDATE(var) do {\
+    if ((var).st == CV_ST_SAME) (var).st = CV_ST_INVALID;\
+    } while (0)
+
 #define CV_ST_SAME (2) // value is not new
 #define CV_ST_NEW (1) // value is new since the last read
 #define CV_ST_INVALID (0) // value is not yet valid
@@ -32,7 +38,6 @@ typedef struct {
     uint8_t start;
     uint8_t size;
     uint8_t is_signed;
-    uint8_t call_every_time;
     uint8_t multiplex;
 } canvar_def_t;
 

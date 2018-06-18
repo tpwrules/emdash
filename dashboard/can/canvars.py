@@ -19,9 +19,6 @@ class Variable:
             # information on acting on the variable
             callback=None, # name of the C function to call when this
                            # variable updates. if None, nothing is called
-            call_every_time=False # if True, the function is called every time
-                                  # the message is received. If false, it is
-                                  # only called when the value has changed
             ):
 
         self.name = name
@@ -31,14 +28,13 @@ class Variable:
         self.signed = signed
         self.multiplex = multiplex
         self.callback = callback
-        self.call_every_time = call_every_time
 
 variables = [
     # current engine speed in units of 1 RPM, max 20000rpm
     Variable(
         name="nmot",
         msg_id=0x773, start=2, size=2, signed=False,
-        callback="drive_rpm_update", call_every_time=False
+        callback="drive_rpm_update"
     ),
 
     # current gear
@@ -47,21 +43,21 @@ variables = [
     Variable(
         name="gear",
         msg_id=0x119, start=7, size=1, signed=False,
-        callback="drive_gear_update", call_every_time=False
+        callback="drive_gear_update"
     ),
 
     # oil pressure in units of 0.05 bar, max 10 bar
     Variable(
         name="poil",
         msg_id=0x77A, start=5, size=1, signed=False, multiplex=1,
-        callback="warn_poil_update", call_every_time=False
+        callback="warn_poil_update"
     ),
 
     # fuel pressure in units of 0.05 bar, max 10 bar
     Variable(
         name="pfuel",
         msg_id=0x77A, start=7, size=1, signed=False, multiplex=1,
-        callback="warn_pfuel_update", call_every_time=False
+        callback="warn_pfuel_update"
     ),
 
     # oil temperature in units of 1 C, max 150C
@@ -69,7 +65,7 @@ variables = [
     Variable(
         name="toil",
         msg_id=0x77A, start=5, size=1, signed=False, multiplex=4,
-        callback="warn_toil_update", call_every_time=False
+        callback="warn_toil_update"
     ),
 
     # engine block temperature in units of 1 C, max 150C
@@ -77,7 +73,7 @@ variables = [
     Variable(
         name="tmot",
         msg_id=0x77A, start=4, size=1, signed=False, multiplex=5,
-        callback="warn_tmot_update", call_every_time=False
+        callback="warn_tmot_update"
     ),
 
     # engine water temperature in units of 1 C, max 150C
@@ -85,7 +81,7 @@ variables = [
     Variable(
         name="tmot2",
         msg_id=0x77A, start=7, size=1, signed=False, multiplex=2,
-        callback="warn_tmot2_update", call_every_time=False
+        callback="warn_tmot2_update"
     ),
 
     # fuel temperature in units of 1 C, max 80C
@@ -93,42 +89,42 @@ variables = [
     Variable(
         name="tfuel",
         msg_id=0x77A, start=4, size=1, signed=False, multiplex=4,
-        callback="warn_tfuel_update", call_every_time=False
+        callback="warn_tfuel_update"
     ),
 
     # vehicle speed in units of 0.01kph, max 120kph
     Variable(
         name="speed",
         msg_id=0x121, start=6, size=2, signed=False,
-        callback="drive_speed_update", call_every_time=False
+        callback="drive_speed_update"
     ),
 
     # battery voltage in millivolts, max 25.5 volts
     Variable(
         name="ub",
         msg_id=0x779, start=0, size=2, signed=False,
-        callback="warn_ub_update", call_every_time=False
+        callback="warn_ub_update"
     ),
 
     # nonzero if transmission is in automatic mode
     Variable(
         name="B_autoshiften_ems",
         msg_id=0x101, start=2, size=1, signed=False,
-        callback="drive_B_autoshiften_ems_update", call_every_time=False
+        callback="drive_B_autoshiften_ems_update"
     ),
 
     # nonzero if launch control is active
     Variable(
         name="B_launch",
         msg_id=0x119, start=2, size=1, signed=False,
-        callback="drive_B_launch_update", call_every_time=False
+        callback="drive_B_launch_update"
     ),
 
     # first four bytes of git commit hash in wheel firmware
     Variable(
         name="wb_version_commit",
         msg_id=0x130, start=0, size=4, signed=False,
-        callback="version_wb_commit_update", call_every_time=False
+        callback="version_wb_commit_update"
     ),
 
     # integer time value of wheel firmware build
@@ -137,7 +133,7 @@ variables = [
     Variable(
         name="wb_version_build",
         msg_id=0x130, start=4, size=4, signed=False,
-        callback="version_wb_build_update", call_every_time=False
+        callback="version_wb_build_update"
     ),
 
     # relevant buttons from wheel
@@ -145,52 +141,52 @@ variables = [
     Variable(
         name="wb_upshift",
         msg_id=0x131, start=1, size=1, signed=False,
-        callback="drive_wb_upshift_update", call_every_time=False
+        callback="drive_wb_upshift_update"
     ),
 
     Variable(
         name="wb_downshift",
         msg_id=0x131, start=2, size=1, signed=False,
-        callback="drive_wb_downshift_update", call_every_time=False
+        callback="drive_wb_downshift_update"
     ),
 
     Variable(
         name="wb_radio",
         msg_id=0x131, start=4, size=1, signed=False,
-        callback="drive_wb_radio_update", call_every_time=False
+        callback="drive_wb_radio_update"
     ),
 
     Variable(
         name="wb_traction_knob",
         msg_id=0x131, start=6, size=1, signed=False,
-        callback="drive_wb_traction_knob_update", call_every_time=False
+        callback="drive_wb_traction_knob_update"
     ),
 
     Variable(
         name="wb_dash_mode",
         msg_id=0x131, start=3, size=1, signed=False,
-        callback="app_wb_dash_mode_update", call_every_time=False
+        callback="app_wb_dash_mode_update"
     ),
 
     # throttle plate percentage in units of 0.01%, max 110%
     Variable(
         name="ath",
         msg_id=0x101, start=0, size=2, signed=False,
-        callback="modes_m1_ath_update", call_every_time=False
+        callback="modes_m1_ath_update"
     ),
 
     # clutch pressure in units of 0.005 bar, max 25 bar
     Variable(
         name="pclutch",
         msg_id=0x37C, start=0, size=2, signed=False,
-        callback="modes_m1_pclutch_update", call_every_time=False
+        callback="modes_m1_pclutch_update"
     ),
 
     # current canbus status (sent internally)
     Variable (
         name="nobus_can_status",
         msg_id=None, size=4, signed=False,
-        callback="cv_can_status_update", call_every_time=False
+        callback="cv_can_status_update"
     )
 ]
 
@@ -376,13 +372,12 @@ def build_defs():
 
     f.write("\nconst canvar_def_t canvar_defs[{}] = {{\n".format(len(variables)))
     for var in variables:
-        f.write("{{{}, {}, {}, {}, {}, {}, {}}},\n".format(
+        f.write("{{{}, {}, {}, {}, {}, {}}},\n".format(
             var.callback if var.callback is not None else 0,
             var.msg_id if var.msg_id is not None else 0xFFFF,
             var.start,
             var.size,
             1 if var.signed else 0,
-            1 if var.call_every_time else 0,
             0xFF if var.multiplex is None else var.multiplex
         ))
 
