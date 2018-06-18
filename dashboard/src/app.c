@@ -78,13 +78,11 @@ void app_entry(void) {
                 if (st == CV_ST_NEW) {
                     // well now it's not
                     canvar_states[vi].st = CV_ST_SAME;
-                    if (canvar_defs[vi].callback) {
-                        // call the callback with interrupts enabled
-                        // so that work can get done in the background
-                        interrupt_enable();
-                        canvar_defs[vi].callback(val);
-                        interrupt_disable();
-                    }
+                    // call the callback with interrupts enabled
+                    // so that work can get done in the background
+                    interrupt_enable();
+                    canvar_defs[vi].callback(val);
+                    interrupt_disable();
                 }
             }
         }

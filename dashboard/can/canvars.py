@@ -366,14 +366,20 @@ def build_defs():
     f.write("volatile canvar_state_t canvar_states[{}];\n\n".format(len(variables)))
 
     # write out prototypes for the callbacks
+    unused_callback = False
     for var in variables:
         if var.callback is not None:
             f.write("void {}(uint32_t val);\n".format(var.callback))
+        else:
+            unused_callback = True
+
+    if unused_callback:
+        f.write("\nstatic void unused_callback_dummy(uint32_t val) {}\n")
 
     f.write("\nconst canvar_def_t canvar_defs[{}] = {{\n".format(len(variables)))
     for var in variables:
         f.write("{{{}, {}, {}, {}, {}, {}}},\n".format(
-            var.callback if var.callback is not None else 0,
+            var.callback if var.callback is not None else "unused_callback_dummy",
             var.msg_id if var.msg_id is not None else 0xFFFF,
             var.start,
             var.size,
