@@ -183,7 +183,7 @@ variables = [
     ),
 
     # current canbus status (sent internally)
-    Variable (
+    Variable(
         name="nobus_can_status",
         msg_id=None, size=4, signed=False,
         callback="cv_can_status_update"
