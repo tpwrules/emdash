@@ -136,7 +136,9 @@ def timer_thread_func():
         now = time.perf_counter()
         if now < next_time:
             time.sleep(next_time - now)
-        next_time += 0.01
+            next_time += 0.01
+        else:
+            next_time += 0.01 * int((now-next_time)/0.01 + 1)
 
 timer_thread = threading.Thread(target=timer_thread_func, daemon=True)
 
