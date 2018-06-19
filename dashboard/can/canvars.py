@@ -8,11 +8,14 @@ import struct
 class Variable:
     def __init__(self,
             # information to get the variable from the message
+            # messages are assumed little endian
             name, # variable name. variable is called cv_name
             msg_id, # can ID the variable is in
-            size, # size of variable in bytes. multibyte values are little endian
-            start=0, # first byte of the variable
-            signed=False, # True if variable is a signed type
+            size, # size of variable in bits
+            start=0, # first bit of the variable
+                        # bit 0 is the LSB of byte 0
+                        # bit 63 is the MSB of byte 7
+            signed=False, # True if variable is signed
             multiplex=None, # Multiplexer Value. if None, entire msg is not
                             # multiplexed
 
@@ -33,7 +36,7 @@ variables = [
     # current engine speed in units of 1 RPM, max 20000rpm
     Variable(
         name="nmot",
-        msg_id=0x773, start=2, size=2, signed=False,
+        msg_id=0x773, start=16, size=16, signed=False,
         callback="drive_rpm_update"
     ),
 
@@ -42,21 +45,21 @@ variables = [
     # 1-4 = gears 1-4
     Variable(
         name="gear",
-        msg_id=0x119, start=7, size=1, signed=False,
+        msg_id=0x119, start=56, size=8, signed=False,
         callback="drive_gear_update"
     ),
 
     # oil pressure in units of 0.05 bar, max 10 bar
     Variable(
         name="poil",
-        msg_id=0x77A, start=5, size=1, signed=False, multiplex=1,
+        msg_id=0x77A, start=40, size=8, signed=False, multiplex=1,
         callback="warn_poil_update"
     ),
 
     # fuel pressure in units of 0.05 bar, max 10 bar
     Variable(
         name="pfuel",
-        msg_id=0x77A, start=7, size=1, signed=False, multiplex=1,
+        msg_id=0x77A, start=56, size=8, signed=False, multiplex=1,
         callback="warn_pfuel_update"
     ),
 
@@ -64,7 +67,7 @@ variables = [
     # 0 = -40C
     Variable(
         name="toil",
-        msg_id=0x77A, start=5, size=1, signed=False, multiplex=4,
+        msg_id=0x77A, start=40, size=8, signed=False, multiplex=4,
         callback="warn_toil_update"
     ),
 
@@ -72,7 +75,7 @@ variables = [
     # 0 = -40C
     Variable(
         name="tmot",
-        msg_id=0x77A, start=4, size=1, signed=False, multiplex=5,
+        msg_id=0x77A, start=32, size=8, signed=False, multiplex=5,
         callback="warn_tmot_update"
     ),
 
@@ -80,7 +83,7 @@ variables = [
     # 0 = -40C
     Variable(
         name="tmot2",
-        msg_id=0x77A, start=7, size=1, signed=False, multiplex=2,
+        msg_id=0x77A, start=56, size=8, signed=False, multiplex=2,
         callback="warn_tmot2_update"
     ),
 
@@ -88,42 +91,42 @@ variables = [
     # 0 = -40C
     Variable(
         name="tfuel",
-        msg_id=0x77A, start=4, size=1, signed=False, multiplex=4,
+        msg_id=0x77A, start=32, size=8, signed=False, multiplex=4,
         callback="warn_tfuel_update"
     ),
 
     # vehicle speed in units of 0.01kph, max 120kph
     Variable(
         name="speed",
-        msg_id=0x121, start=6, size=2, signed=False,
+        msg_id=0x121, start=48, size=16, signed=False,
         callback="drive_speed_update"
     ),
 
     # battery voltage in millivolts, max 25.5 volts
     Variable(
         name="ub",
-        msg_id=0x779, start=0, size=2, signed=False,
+        msg_id=0x779, start=0, size=16, signed=False,
         callback="warn_ub_update"
     ),
 
     # nonzero if transmission is in automatic mode
     Variable(
         name="B_autoshiften_ems",
-        msg_id=0x101, start=2, size=1, signed=False,
+        msg_id=0x101, start=16, size=8, signed=False,
         callback="drive_B_autoshiften_ems_update"
     ),
 
     # nonzero if launch control is active
     Variable(
         name="B_launch",
-        msg_id=0x119, start=2, size=1, signed=False,
+        msg_id=0x119, start=16, size=8, signed=False,
         callback="drive_B_launch_update"
     ),
 
     # first four bytes of git commit hash in wheel firmware
     Variable(
         name="wb_version_commit",
-        msg_id=0x130, start=0, size=4, signed=False,
+        msg_id=0x130, start=0, size=32, signed=False,
         callback="version_wb_commit_update"
     ),
 
@@ -132,7 +135,7 @@ variables = [
     # value is 1804201755
     Variable(
         name="wb_version_build",
-        msg_id=0x130, start=4, size=4, signed=False,
+        msg_id=0x130, start=32, size=32, signed=False,
         callback="version_wb_build_update"
     ),
 
@@ -140,52 +143,52 @@ variables = [
 
     Variable(
         name="wb_upshift",
-        msg_id=0x131, start=1, size=1, signed=False,
+        msg_id=0x131, start=8, size=8, signed=False,
         callback="drive_wb_upshift_update"
     ),
 
     Variable(
         name="wb_downshift",
-        msg_id=0x131, start=2, size=1, signed=False,
+        msg_id=0x131, start=16, size=8, signed=False,
         callback="drive_wb_downshift_update"
     ),
 
     Variable(
         name="wb_radio",
-        msg_id=0x131, start=4, size=1, signed=False,
+        msg_id=0x131, start=32, size=8, signed=False,
         callback="drive_wb_radio_update"
     ),
 
     Variable(
         name="wb_traction_knob",
-        msg_id=0x131, start=6, size=1, signed=False,
+        msg_id=0x131, start=48, size=8, signed=False,
         callback="drive_wb_traction_knob_update"
     ),
 
     Variable(
         name="wb_dash_mode",
-        msg_id=0x131, start=3, size=1, signed=False,
+        msg_id=0x131, start=24, size=8, signed=False,
         callback="app_wb_dash_mode_update"
     ),
 
     # throttle plate percentage in units of 0.01%, max 110%
     Variable(
         name="ath",
-        msg_id=0x101, start=0, size=2, signed=False,
+        msg_id=0x101, start=0, size=16, signed=False,
         callback="modes_m1_ath_update"
     ),
 
     # clutch pressure in units of 0.005 bar, max 25 bar
     Variable(
         name="pclutch",
-        msg_id=0x37C, start=0, size=2, signed=False,
+        msg_id=0x37C, start=0, size=16, signed=False,
         callback="modes_m1_pclutch_update"
     ),
 
     # current canbus status (sent internally)
     Variable(
         name="nobus_can_status",
-        msg_id=None, size=4, signed=False,
+        msg_id=None, size=32, signed=False,
         callback="cv_can_status_update"
     )
 ]
@@ -252,36 +255,25 @@ class CanvarInterface:
                 del self.dirty_ids[msg_id]
 
             for mpx, mpx_vars in self.cv_msg_ids[msg_id].items():
-                if mpx is None:
-                    pstr = "<" # struct definition for this message
-                    data = [] # data for this definition
-                    byte = 0 # byte we are at
-                else:
+                data = 0 # packed into a 64 bit number
+                if mpx is not None:
                     # multiplex ID is first byte
-                    pstr = "<b"
-                    data = [mpx]
-                    byte = 1
+                    data |= mpx
 
                 for var in mpx_vars:
-                    # pad message to this variable
-                    while byte < var.start:
-                        pstr += "x"
-                        byte += 1
-                    # generate appropriate type character
-                    c = " bh i"[var.size]
-                    if not var.signed:
-                        c = c.upper()
-                    pstr += c # and add it to the struct
-                    # append the data for this var (or 0 if there's none yet)
+                    # mask the var according to the number of bits
+                    # it is declared as
                     try:
-                        data.append(var.val)
+                        vm = var.val & (0xFFFFFFFFFFFFFFFF) >> (64-var.size)
                     except:
-                        data.append(0)
-                    byte += var.size
+                        vm = 0
+                    # and then OR it into the data number
+                    data |= (vm << var.start)
 
                 # pack up the message
-                pdata = struct.pack(pstr, *data)
-                # and send it!
+                pdata = struct.pack("<Q", data)
+                # and send it! it might be longer than necessary
+                # but the canvar system won't care
                 self.can_send(msg_id, pdata)
 
     def __setattr__(self, name, value):
@@ -383,7 +375,7 @@ def build_defs():
             var.msg_id if var.msg_id is not None else 0xFFFF,
             var.start,
             var.size,
-            1 if var.signed else 0,
+            1 if var.signed and var.size < 32 else 0,
             0xFF if var.multiplex is None else var.multiplex
         ))
 

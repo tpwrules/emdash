@@ -5,6 +5,7 @@
 #include "app.h"
 
 #include <stdio.h>
+#include <string.h>
 #include <stdbool.h>
 
 volatile int canvar_was_updated = 0;
@@ -28,6 +29,10 @@ void app_can_interrupt(uint32_t msg_id, uint8_t dlc, const uint8_t *data) {
 
     volatile canvar_state_t *st = &canvar_states[var_idx];
 
+    // use the data as one long 64 bit number
+    uint64_t data_word = 0;
+    memcpy(&data_word, data, dlc);
+
     // step 2: loop over all the vars with this message ID
     while (def->msg_id == msg_id) {
         // step 3: make sure this can message has this variable
@@ -38,15 +43,16 @@ void app_can_interrupt(uint32_t msg_id, uint8_t dlc, const uint8_t *data) {
         }
         
         // step 4: extract the value for this variable
-        uint32_t val = 0;
-        int bi;
-        for (bi = 0; bi<def->size; bi++)
-            // value is little endian
-            val |= data[bi+def->start] << (8*bi);
+        // line up LSB with start of variable
+        // note that variable max size is 32 bits
+        uint32_t val = data_word >> def->start;
+        // now mask out the high bits we don't need
+        val &= ~(0xFFFFFFFF << def->size);
+
         // sign extend if required
-        if (def->is_signed && def->size < 4) {
-            uint32_t sign = (val >> ((8*bi)-1)) ? 0xFFFFFFFF : 0;
-            val |= sign << (8*bi);
+        if (def->is_signed) {
+            uint32_t sign = (val >> (def->size-1)) ? 0xFFFFFFFF : 0;
+            val |= sign << def->size;
         }
 
         // step 5: update canvar state
