@@ -38,7 +38,6 @@ void version_mode_change(bool next) {
     interrupt_disable();
     CV_RENEW(cv_wb_version_commit);
     CV_RENEW(cv_wb_version_build);
-    interrupt_enable();
 }
 
 void version_wb_commit_update(uint32_t val) {

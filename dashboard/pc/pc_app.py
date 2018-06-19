@@ -69,11 +69,31 @@ def term_main_thread(fn):
 
 # set up interrupt stuff
 
-# create a lock that represents interrupts being enable
-# when the lock is taken, interrupts cannot happen
-interrupt_lock = threading.Lock()
+# create a lock that is taken when an interrupt is happening
+interrupt_busy_lock = threading.Lock()
+interrupts_enabled = False
+# and a lock to protect whether interrupts are enabled
+interrupts_enabled_lock = threading.Lock()
+
+def set_interrupt_state(enabled):
+    global interrupts_enabled
+    with interrupts_enabled_lock:
+        if enabled:
+            if interrupts_enabled == False:
+                # release interrupt busy lock
+                # to allow interrupts to happen
+                interrupt_busy_lock.release()
+        else:
+            if interrupts_enabled == True:
+                # acquire interrupt busy lock
+                # to prevent interrupts from happening
+                interrupt_busy_lock.acquire()
+        interrupts_enabled = enabled
+
 # start with interrupts turned off
-interrupt_lock.acquire()
+# i.e. pretend an interrupt is happening
+interrupts_enabled = False
+interrupt_busy_lock.acquire()
 
 # we create a condition variable for when an interrupt happens
 # it is notified after every interrupt finishes
@@ -83,20 +103,24 @@ interrupt_happened = threading.Condition()
 @ffi.def_extern()
 @term_main_thread
 def pc_interrupt_disable():
-    interrupt_lock.acquire()
+    set_interrupt_state(False)
 lib.interrupt_disable = lib.pc_interrupt_disable
 
 @ffi.def_extern()
 @term_main_thread
 def pc_interrupt_enable():
-    interrupt_lock.release()
+    set_interrupt_state(True)
 lib.interrupt_enable = lib.pc_interrupt_enable
 
 @ffi.def_extern()
 @term_main_thread
 def pc_interrupt_wait():
     with interrupt_happened:
-        interrupt_lock.release()
+        # enable interrupts so an interrupt we're waiting for
+        # can actually happen. if interrupts are currently
+        # disabled, we can't lose a notification because we hold the
+        # interrupt_happened lock right now
+        set_interrupt_state(True)
         interrupt_happened.wait()
 lib.interrupt_wait = lib.pc_interrupt_wait
 
@@ -105,7 +129,7 @@ lib.interrupt_wait = lib.pc_interrupt_wait
 def timer_thread_func():
     next_time = time.perf_counter() + 0.01
     while True:
-        with interrupt_lock:
+        with interrupt_busy_lock:
             lib.app_timer_interrupt()
             with interrupt_happened:
                 interrupt_happened.notify_all()
@@ -201,7 +225,7 @@ def can_send(msg_id, data):
     # put the data into it
     ffi.memmove(d, data, len(data))
     # now call C with it
-    with interrupt_lock:
+    with interrupt_busy_lock:
         lib.app_can_interrupt(msg_id, len(data), d)
         # since this is an interrupt, alert that an interrupt happened
         with interrupt_happened:
@@ -218,7 +242,7 @@ def can_send(msg_id, data):
         flog.flush()
 
 def canvar_send(canvar_id, val):
-    with interrupt_lock:
+    with interrupt_busy_lock:
         lib.app_canvar_interrupt(canvar_id, val)
         # since this is an interrupt, alert that an interrupt happened
         with interrupt_happened:

@@ -33,7 +33,6 @@ void modes_m1_change(bool next) {
     interrupt_disable();
     CV_RENEW(cv_ath);
     CV_RENEW(cv_pclutch);
-    interrupt_enable();
 }
 
  void modes_m1_ath_update(uint32_t val) {

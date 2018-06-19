@@ -90,7 +90,6 @@ void cv_status_mode_change(bool next) {
     // set messages to new so that they will be redrawn
     interrupt_disable();
     CV_RENEW(cv_nobus_can_status);
-    interrupt_enable();
 }
 
 // CAN error meanings

@@ -56,4 +56,4 @@ The plaform calls the following interrupt functions in the application to perfor
 The following operations affect the platform:
 * `void interrupt_disable(void)` disables interrupts.
 * `void interrupt_enable(void)` enables interrupts.
-* `void interrupt_wait(void)` waits for an interrupt to occur, then returns with interrupts enabled. It must be called with interrupts disabled.
+* `void interrupt_wait(void)` waits for an interrupt to occur, then returns with interrupts enabled. It must be called with interrupts disabled to avoid waiting forever.

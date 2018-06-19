@@ -7,6 +7,7 @@
 #define interrupt_disable() (__disable_irq())
 #define interrupt_enable() (__enable_irq())
 
+// must be called with interrupts disabled to avoid waiting forever
 #define interrupt_wait() do {\
     __WFI(); \
     __enable_irq();\
