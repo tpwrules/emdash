@@ -1159,14 +1159,6 @@ F 3 "" H 7550 1150 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	7550 1150 7650 1150
-Text Label 8750 3000 2    60   ~ 0
-IO_A2
-Text Label 8750 2900 2    60   ~ 0
-IO_A1
-Text Label 8750 2800 2    60   ~ 0
-IO_B5
-Text Label 8750 2700 2    60   ~ 0
-IO_B4
 Wire Wire Line
 	9250 3100 9400 3100
 $Comp
@@ -1191,22 +1183,6 @@ F 3 "https://www.mouser.de/ProductDetail/Littelfuse/SP4065-08ATG?qs=sGAEpiMZZMvx
 	1    8950 2900
 	1    0    0    -1  
 $EndComp
-Text Label 9250 2150 0    60   ~ 0
-IO_B3
-Text Label 9250 2050 0    60   ~ 0
-IO_B2
-Text Label 9250 1950 0    60   ~ 0
-IO_B1
-Text Label 9250 1850 0    60   ~ 0
-IO_C5
-Text Label 8750 2150 2    60   ~ 0
-IO_C4
-Text Label 8750 2050 2    60   ~ 0
-IO_C3
-Text Label 8750 1950 2    60   ~ 0
-IO_C2
-Text Label 8750 1850 2    60   ~ 0
-IO_C1
 Wire Wire Line
 	9250 2250 9400 2250
 $Comp
@@ -1231,10 +1207,34 @@ F 3 "https://www.mouser.de/ProductDetail/Littelfuse/SP4065-08ATG?qs=sGAEpiMZZMvx
 	1    8950 2050
 	1    0    0    -1  
 $EndComp
-Text Label 9250 2700 0    60   ~ 0
-IO_A3
-Text Label 9250 2800 0    60   ~ 0
-IO_A4
 Wire Wire Line
 	7800 800  7900 800 
+Text Label 8750 1850 2    60   ~ 0
+IO_C1
+Text Label 8750 1950 2    60   ~ 0
+IO_C2
+Text Label 9250 1850 0    60   ~ 0
+IO_C3
+Text Label 9250 1950 0    60   ~ 0
+IO_C4
+Text Label 9250 2050 0    60   ~ 0
+IO_C5
+Text Label 9250 2150 0    60   ~ 0
+IO_B1
+Text Label 8750 2700 2    60   ~ 0
+IO_B5
+Text Label 8750 2800 2    60   ~ 0
+IO_B4
+Text Label 8750 2900 2    60   ~ 0
+IO_B3
+Text Label 8750 3000 2    60   ~ 0
+IO_B2
+Text Label 9250 2700 0    60   ~ 0
+IO_A1
+Text Label 9250 2800 0    60   ~ 0
+IO_A2
+Text Label 9250 2900 0    60   ~ 0
+IO_A3
+Text Label 9250 3000 0    60   ~ 0
+IO_A4
 $EndSCHEMATC
