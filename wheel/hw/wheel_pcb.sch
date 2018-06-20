@@ -250,7 +250,7 @@ U 1 1 5AED8C25
 P 10350 6300
 F 0 "R7" V 10430 6300 50  0000 C CNN
 F 1 "100" V 10350 6300 50  0000 C CNN
-F 2 "" V 10280 6300 50  0001 C CNN
+F 2 "Resistors_SMD:R_0603" V 10280 6300 50  0001 C CNN
 F 3 "https://www.mouser.de/ProductDetail/Bourns/CR0603-FX-60R4ELF?qs=sGAEpiMZZMu61qfTUdNhG6LqqFhkr6pUa8gjAX4b5rM%3d" H 10350 6300 50  0001 C CNN
 	1    10350 6300
 	0    1    1    0   
@@ -664,14 +664,14 @@ F 3 "" H 4300 2450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L SW_DIP_x04 SW1
+L SW_DIP_x02 SW1
 U 1 1 5AFC4E3D
-P 9900 4450
-F 0 "SW1" H 9900 4800 50  0000 C CNN
-F 1 "CONFIG" H 9900 4200 50  0000 C CNN
-F 2 "Buttons_Switches_THT:SW_DIP_x4_W7.62mm_Slide" H 9900 4450 50  0001 C CNN
-F 3 "https://www.mouser.de/ProductDetail/TE-Connectivity-Alcoswitch/ADE0404?qs=sGAEpiMZZMv%2f%252b2JhlA6ysER62VlXw6iZ4HTlb4kKXdw%3d" H 9900 4450 50  0001 C CNN
-	1    9900 4450
+P 9900 4350
+F 0 "SW1" H 9900 4600 50  0000 C CNN
+F 1 "TERM" H 9900 4200 50  0000 C CNN
+F 2 "Buttons_Switches_THT:SW_DIP_x2_W7.62mm_Slide" H 9900 4350 50  0001 C CNN
+F 3 "https://www.mouser.de/ProductDetail/Apem/NDS02V?qs=sGAEpiMZZMvHnN%252b%2fGH9WnarhEfYmPrhIFZ2OxET8b5I%3d" H 9900 4350 50  0001 C CNN
+	1    9900 4350
 	1    0    0    -1  
 $EndComp
 Text Label 7750 4650 3    60   ~ 0
