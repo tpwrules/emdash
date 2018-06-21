@@ -2,48 +2,52 @@
 
 ## Introduction
 
-Welcome to the user manual for the Einstein Motorsport Dashboard. The dashboard is designed to be easy to use and customize. This User Manual shows you how to use the dashboard. Customizing it is covered elsewhere.
+Welcome to the user manual for the Einstein Motorsport Dashboard. The dashboard is designed to be easy to use, and customizable for any application. This User Manual describes how to use the dashboard's current firmware. You may also wish to read the [Programmer's Manual](https://github.com/tpwrules/emdash/blob/master/dashboard/docs/programmer%20manual.md) to understand how the firmware works, or the [Customizer's Manual](https://github.com/tpwrules/emdash/blob/master/dashboard/docs/customizer%20manual.md) to understand how to modify it.
 
 ## Main Screen
 
 ![main screen](https://github.com/tpwrules/emdash/raw/master/dashboard/docs/main_screen.png)
 
-The main screen is divided into three areas:
+The main screen is divided into three sections:
 * Car Information (green)
 * Driver Information (blue)
-* Misc. Information (red)
+* Mode Area (red)
 
 ### Car Information
 
-This area displays the status of the car systems. The following parameters are monitored: oil temperature and pressure, fuel temperature and pressure, motor temperature, and battery voltage. Warning icons illuminate when certain thresholds are exceeded. When an icon is illuminated, the corresponding measurement is drawn with inverted color.
+This sections displays the measurements and status of the car's systems. Warning icons are displayed when certain thresholds are exceeded. When an icon is displayed, the corresponding measurement is drawn with inverted color.
 
-#### Warning Icon Description
-The meaning of each icon is described below. The table is in left to right, top to bottom order. The "Meaning" colummn describes when the warning icon illuminates and the "Limit" column is the constant in `the limits file` which controls the value at which it should happen.
+Display of the section is handled by `warn.c`.
 
-Icon | Limit | Meaning
----- | ----- | -------
-No. 1 | LIM_OIL_PRESSURE_MIN | Illuminates when oil pressure is too low
-No. 2 | LIM_WATER_TEMP_MAX | Illuminates when cooling water temperature (Tmot2) is too high.
-No. 3 | LIM_FUEL_PRESSURE_MIN | Illuminates when fuel pressure is too low
-No. 4 | LIM_BATTERY_MIN | Illuminates when battery voltage is too low (as measured by ECU)
-No. 5 | LIM_OIL_TEMP_MAX | Illuminates when oil temperature is too high
-No. 6 | LIM_BLOCK_TEMP_MAX | Illuminates when engine temperature (Tmot) is too high.
-No. 7 | LIM_FUEL_TEMP_MAX | Illuminates when fuel temperature is too high.
-No. 8 | LIM_OIL_TEMP_MIN | Illuminates when engine oil temperature is too low.
+#### Measurement Description
+The meaning of each measurement icon is described below. The table describes the icons in left to right, top to bottom order. The "Variable" column tells which canvar is monitored. The "Limit" column is the constant in `the limits file` which controls the value at which it should happen.
+
+Variable | Limit | Displayed when
+-------- | ----- | --------------
+poil | LIM_OIL_PRESSURE_MIN | Oil pressure is too low.
+tmot2 | LIM_WATER_TEMP_MAX | Cooling water temperature is too high.
+pfuel | LIM_FUEL_PRESSURE_MIN | Fuel pressure is too low.
+ub | LIM_BATTERY_MIN | Battery voltage is too low (as measured by ECU).
+toil | LIM_OIL_TEMP_MAX | Oil temperature is too high.
+tmot | LIM_BLOCK_TEMP_MAX | Engine temperature is too high.
+tfuel | LIM_FUEL_TEMP_MAX | Fuel temperature is too high.
+toil | LIM_OIL_TEMP_MIN | Engine oil temperature is too low.
 
 ### Driver Information
 
-This area displays measurements important to the driver. The following measurements are displayed:
+This area displays status and measurements important to the driver. Display of this section is handled by `drive.c`.
 
-* The RPM bar and current engine RPM are displayed the top of the screen. When the current RPM exceeds the optimal RPM (illustrated by the black line), the entire screen flashes to prompt the driver to upshift. This is configurable in `the limits file` as well.
-* Current gear is displayed in the center of the screen.
-* If the upshift paddle on the wheel is pressed, an up arrow is displayed next to the gear indicator.
-* If the downshift paddle on the wheel is pressed, a down arrow is displayed next to the gear indicator.
-* If automatic shifting is enabled, AUTO is displayed below the gear indicator.
-* Current speed is displayed above the gear indicator.
-* If launch control is active, LAUNCH is displayed next to the current speed.
-* If the radio button on the wheel is pressed, a headset icon is displayed.
-* Current traction control level is displayed at the bottom center of the screen.
+The following measurements are displayed:
+
+* The RPM bar and current engine RPM (`nmot`) are displayed the top of the screen. When the current RPM exceeds the optimal RPM (illustrated by the black line), the entire screen flashes to prompt the driver to upshift. This is configurable in `the limits file` as well.
+* Current gear (`gear`) is displayed in the center of the screen.
+* If the upshift paddle on the wheel is pressed (`wb_upshift != 0`), an up arrow is displayed next to the gear indicator.
+* If the downshift paddle on the wheel is pressed (`wb_downshift != 0`), a down arrow is displayed next to the gear indicator.
+* If automatic shifting is enabled (`B_autoshiften_ems != 0`), AUTO is displayed below the gear indicator.
+* Current speed (`speed`) is displayed above the gear indicator.
+* If launch control is active (`B_launch != 0`), LAUNCH is displayed next to the current speed.
+* If the radio button on the wheel is pressed (`wb_radio != 0`), a headset icon is displayed.
+* Current traction control level (`wb_traction_knob`) is displayed at the bottom center of the screen.
 
 ### Misc. Information
 
