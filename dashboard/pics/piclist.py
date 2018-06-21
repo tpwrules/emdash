@@ -54,6 +54,7 @@ piclist = [
     Picture("icons/buttons.png", "downshift_btn", (32, 0, 16, 15)),
 
     # gear icons
+    # these must stay in exactly this order! N, 1, 2, 3, 4
     Picture("gears/gears.png", "gear_neutral", (32*2, 0, 30, 31)),
     Picture("gears/gears.png", "gear_1", (32*5, 0, 30, 31)),
     Picture("gears/gears.png", "gear_2", (32*6, 0, 30, 31)),
