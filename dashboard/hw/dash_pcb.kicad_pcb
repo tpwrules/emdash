@@ -1,14 +1,14 @@
 (kicad_pcb (version 4) (host pcbnew 4.0.7)
 
   (general
-    (links 153)
+    (links 161)
     (no_connects 0)
     (area 222.924999 54.924999 265.075001 120.075001)
     (thickness 1.6)
     (drawings 10)
     (tracks 449)
     (zones 0)
-    (modules 71)
+    (modules 79)
     (nets 62)
   )
 
@@ -37,7 +37,7 @@
   )
 
   (setup
-    (last_trace_width 0.2)
+    (last_trace_width 0.15)
     (user_trace_width 0.2)
     (user_trace_width 0.3)
     (user_trace_width 0.5)
@@ -228,6 +228,102 @@
     (add_net "Net-(U1-Pad46)")
     (add_net "Net-(U1-Pad47)")
     (add_net "Net-(U1-Pad48)")
+  )
+
+  (module custom_footprints:a_via locked (layer B.Cu) (tedit 5AFECD8D) (tstamp 5B2E4639)
+    (at 259 57.4)
+    (fp_text reference REF** (at 0 -0.5) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value a_via (at 0 0.5) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 1 1) (drill 0.5) (layers *.Cu)
+      (net 1 GND) (zone_connect 2))
+  )
+
+  (module custom_footprints:a_via locked (layer B.Cu) (tedit 5AFECD8D) (tstamp 5B2E4632)
+    (at 259 63.6)
+    (fp_text reference REF** (at 0 -0.5) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value a_via (at 0 0.5) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 1 1) (drill 0.5) (layers *.Cu)
+      (net 1 GND) (zone_connect 2))
+  )
+
+  (module custom_footprints:a_via locked (layer B.Cu) (tedit 5AFECD8D) (tstamp 5B2E462E)
+    (at 264.2 65.2)
+    (fp_text reference REF** (at 0 -0.5) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value a_via (at 0 0.5) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 1 1) (drill 0.5) (layers *.Cu)
+      (net 1 GND) (zone_connect 2))
+  )
+
+  (module custom_footprints:a_via locked (layer B.Cu) (tedit 5AFECD8D) (tstamp 5B2E4629)
+    (at 264.2 55.8)
+    (fp_text reference REF** (at 0 -0.5) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value a_via (at 0 0.5) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 1 1) (drill 0.5) (layers *.Cu)
+      (net 1 GND) (zone_connect 2))
+  )
+
+  (module custom_footprints:a_via locked (layer B.Cu) (tedit 5AFECD8D) (tstamp 5B2E4625)
+    (at 264.2 119.2)
+    (fp_text reference REF** (at 0 -0.5) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value a_via (at 0 0.5) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 1 1) (drill 0.5) (layers *.Cu)
+      (net 1 GND) (zone_connect 2))
+  )
+
+  (module custom_footprints:a_via locked (layer B.Cu) (tedit 5AFECD8D) (tstamp 5B2E461F)
+    (at 258.8 117.8)
+    (fp_text reference REF** (at 0 -0.5) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value a_via (at 0 0.5) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 1 1) (drill 0.5) (layers *.Cu)
+      (net 1 GND) (zone_connect 2))
+  )
+
+  (module custom_footprints:a_via locked (layer B.Cu) (tedit 5AFECD8D) (tstamp 5B2E461B)
+    (at 258.8 111.8)
+    (fp_text reference REF** (at 0 -0.5) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value a_via (at 0 0.5) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 1 1) (drill 0.5) (layers *.Cu)
+      (net 1 GND) (zone_connect 2))
+  )
+
+  (module custom_footprints:a_via locked (layer B.Cu) (tedit 5AFECD8D) (tstamp 5B2E4617)
+    (at 264.2 109.6)
+    (fp_text reference REF** (at 0 -0.5) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value a_via (at 0 0.5) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 1 1) (drill 0.5) (layers *.Cu)
+      (net 1 GND) (zone_connect 2))
   )
 
   (module custom_footprints:a_via locked (layer B.Cu) (tedit 5AFECD8D) (tstamp 5B2E2A1E)
