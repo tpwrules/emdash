@@ -132,6 +132,7 @@ F 0 "J2" H 9750 6400 50  0000 C CNN
 F 1 "DEBUG" H 9750 5800 50  0000 C CNN
 F 2 "custom_footprints:Pin_Header_Angled_2x05_Pitch1.27mm_AMPHENOL_SHROUDED" H 9700 6100 50  0001 C CNN
 F 3 "https://www.mouser.de/ProductDetail/Amphenol-FCI/20021512-00010T4LF?qs=sGAEpiMZZMs%252bGHln7q6pmwodwKqstCemugheqdGIyCk%3d" H 9700 6100 50  0001 C CNN
+F 4 "de.farnell.com/samtec/shf-105-01-l-d-ra/stiftleiste-10-pos-2-reihen-1/dp/2505002?st=SHF-105-01-L-D-RA" H 9700 6100 60  0001 C CNN "Datasheet2"
 	1    9700 6100
 	1    0    0    -1  
 $EndComp
