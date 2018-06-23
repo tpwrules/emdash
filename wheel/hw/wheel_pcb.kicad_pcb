@@ -3,7 +3,7 @@
   (general
     (links 162)
     (no_connects 0)
-    (area 222.924999 54.924999 259.075001 122.075001)
+    (area 217.492857 53.825 259.155001 123.025)
     (thickness 1.6)
     (drawings 26)
     (tracks 475)
@@ -94,7 +94,7 @@
       (mirror false)
       (drillshape 0)
       (scaleselection 1)
-      (outputdirectory r1/))
+      (outputdirectory r2/))
   )
 
   (net 0 "")
@@ -2774,7 +2774,7 @@
   (gr_text "B5:6\nB4:5\nB3:4\nB2:3\nB1:2\nGND:1" (at 243.5 95.2 180) (layer B.SilkS) (tstamp 5B000AFF)
     (effects (font (size 1.5 1.5) (thickness 0.3)) (justify right mirror))
   )
-  (gr_text "Revision 1\n2018-05-19" (at 254.4 119.2) (layer F.SilkS)
+  (gr_text "Revision 2\n2018-06-23" (at 254.4 119.2) (layer F.SilkS)
     (effects (font (size 1.4 1.4) (thickness 0.28)) (justify right))
   )
   (gr_text "Einstein Motorsport\nWheelboard\nby Thomas Watson" (at 243.95 113.05) (layer F.SilkS)
