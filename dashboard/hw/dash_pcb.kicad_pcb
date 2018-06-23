@@ -6,7 +6,7 @@
     (area 222.924999 54.924999 265.075001 120.075001)
     (thickness 1.6)
     (drawings 10)
-    (tracks 453)
+    (tracks 449)
     (zones 0)
     (modules 71)
     (nets 62)
@@ -37,7 +37,7 @@
   )
 
   (setup
-    (last_trace_width 0.15)
+    (last_trace_width 0.2)
     (user_trace_width 0.2)
     (user_trace_width 0.3)
     (user_trace_width 0.5)
@@ -230,6 +230,18 @@
     (add_net "Net-(U1-Pad48)")
   )
 
+  (module custom_footprints:a_via locked (layer B.Cu) (tedit 5AFECD8D) (tstamp 5B2E2A1E)
+    (at 224.4 115.2)
+    (fp_text reference REF** (at 0 -0.5) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value a_via (at 0 0.5) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 1 1) (drill 0.5) (layers *.Cu)
+      (net 1 GND) (zone_connect 2))
+  )
+
   (module custom_footprints:a_via locked (layer B.Cu) (tedit 5AFECD8D) (tstamp 5B2E2A2C)
     (at 251.2 114.4)
     (fp_text reference REF** (at 0 -0.5) (layer B.SilkS) hide
@@ -244,18 +256,6 @@
 
   (module custom_footprints:a_via locked (layer B.Cu) (tedit 5AFECD8D) (tstamp 5B2E2A22)
     (at 230.2 98.2)
-    (fp_text reference REF** (at 0 -0.5) (layer B.SilkS) hide
-      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
-    )
-    (fp_text value a_via (at 0 0.5) (layer B.Fab) hide
-      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
-    )
-    (pad 1 thru_hole circle (at 0 0) (size 1 1) (drill 0.5) (layers *.Cu)
-      (net 1 GND) (zone_connect 2))
-  )
-
-  (module custom_footprints:a_via locked (layer B.Cu) (tedit 5AFECD8D) (tstamp 5B2E2A1E)
-    (at 224.4 115.2)
     (fp_text reference REF** (at 0 -0.5) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
@@ -2818,20 +2818,16 @@
   (segment (start 251 98.888098) (end 251 99.2) (width 0.3) (layer F.Cu) (net 19))
   (via (at 250.311902 98.2) (size 0.5) (drill 0.25) (layers F.Cu B.Cu) (net 19))
   (via (at 232 84.6) (size 0.5) (drill 0.25) (layers F.Cu B.Cu) (net 19))
-  (segment (start 246.75 83.75) (end 248.75 83.75) (width 0.3) (layer F.Cu) (net 39) (status 10))
-  (segment (start 248.75 83.75) (end 251 86) (width 0.3) (layer F.Cu) (net 39) (status 20))
-  (segment (start 251 86) (end 251 87.25) (width 0.3) (layer F.Cu) (net 39) (status 30))
-  (segment (start 238.85 83.25) (end 245.25 83.25) (width 0.3) (layer F.Cu) (net 39) (status 10))
-  (segment (start 245.25 83.25) (end 245.75 83.75) (width 0.3) (layer F.Cu) (net 39))
-  (segment (start 245.75 83.75) (end 246.5 83.75) (width 0.3) (layer F.Cu) (net 39) (status 20))
-  (segment (start 245.425 82.25) (end 248.75 82.25) (width 0.3) (layer F.Cu) (net 40))
-  (segment (start 245.175 82.5) (end 245.425 82.25) (width 0.3) (layer F.Cu) (net 40))
-  (segment (start 244.5 82.5) (end 245.175 82.5) (width 0.3) (layer F.Cu) (net 40) (status 10))
-  (segment (start 238.85 82.75) (end 243.575 82.75) (width 0.3) (layer F.Cu) (net 40) (status 10))
-  (segment (start 243.575 82.75) (end 243.825 82.5) (width 0.3) (layer F.Cu) (net 40))
-  (segment (start 243.825 82.5) (end 244.5 82.5) (width 0.3) (layer F.Cu) (net 40) (status 20))
-  (segment (start 248.75 82.25) (end 251 80) (width 0.3) (layer F.Cu) (net 40) (status 20))
-  (segment (start 251 80) (end 251 78.75) (width 0.3) (layer F.Cu) (net 40) (status 30))
+  (segment (start 246.5 83.75) (end 248.75 83.75) (width 0.2) (layer F.Cu) (net 39) (status 10))
+  (segment (start 248.75 83.75) (end 251 86) (width 0.2) (layer F.Cu) (net 39) (status 20))
+  (segment (start 251 86) (end 251 87.25) (width 0.2) (layer F.Cu) (net 39) (status 30))
+  (segment (start 238.85 83.25) (end 246 83.25) (width 0.2) (layer F.Cu) (net 39) (status 10))
+  (segment (start 246 83.25) (end 246.5 83.75) (width 0.2) (layer F.Cu) (net 39) (status 20))
+  (segment (start 244.5 82.5) (end 248.5 82.5) (width 0.2) (layer F.Cu) (net 40) (status 10))
+  (segment (start 248.5 82.5) (end 251 80) (width 0.2) (layer F.Cu) (net 40) (status 20))
+  (segment (start 251 80) (end 251 78.75) (width 0.2) (layer F.Cu) (net 40) (status 30))
+  (segment (start 238.85 82.75) (end 244.25 82.75) (width 0.2) (layer F.Cu) (net 40) (status 30))
+  (segment (start 244.25 82.75) (end 244.5 82.5) (width 0.2) (layer F.Cu) (net 40) (status 30))
   (segment (start 228 100.6) (end 225.2 97.8) (width 0.3) (layer F.Cu) (net 41))
   (segment (start 228 100.6) (end 228 106.08) (width 0.3) (layer F.Cu) (net 41))
   (segment (start 228 106.08) (end 233.68 111.76) (width 0.3) (layer F.Cu) (net 41) (status 20))

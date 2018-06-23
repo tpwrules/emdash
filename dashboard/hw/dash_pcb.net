@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /Users/thomaswatson/projects/einstein/repo/dashboard/hw/dash_pcb.sch)
-    (date "Saturday, June 23, 2018 'PMt' 12:05:19 PM")
+    (date "Saturday, June 23, 2018 'PMt' 02:17:36 PM")
     (tool "Eeschema 4.0.7")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -33,6 +33,8 @@
       (value DEBUG)
       (footprint custom_footprints:Pin_Header_Angled_2x05_Pitch1.27mm_AMPHENOL_SHROUDED)
       (datasheet https://www.mouser.de/ProductDetail/Amphenol-FCI/20021512-00010T4LF?qs=sGAEpiMZZMs%252bGHln7q6pmwodwKqstCemugheqdGIyCk%3d)
+      (fields
+        (field (name Datasheet2) de.farnell.com/samtec/shf-105-01-l-d-ra/stiftleiste-10-pos-2-reihen-1/dp/2505002?st=SHF-105-01-L-D-RA))
       (libsource (lib conn) (part Conn_02x05_Odd_Even))
       (sheetpath (names /) (tstamps /))
       (tstamp 5ADCAA88))
@@ -622,16 +624,16 @@
   (libraries
     (library (logical conn)
       (uri "/Users/thomaswatson/Library/Application Support/kicad/library/conn.lib"))
-    (library (logical device)
-      (uri "/Users/thomaswatson/Library/Application Support/kicad/library/device.lib"))
-    (library (logical switches)
-      (uri "/Users/thomaswatson/Library/Application Support/kicad/library/switches.lib"))
     (library (logical nxp_can)
       (uri /Users/thomaswatson/projects/einstein/repo/dashboard/hw/nxp_can.lib))
     (library (logical regul)
       (uri "/Users/thomaswatson/Library/Application Support/kicad/library/regul.lib"))
     (library (logical tps6217x)
-      (uri /Users/thomaswatson/projects/einstein/repo/hw_lib/tps6217x.lib)))
+      (uri /Users/thomaswatson/projects/einstein/repo/hw_lib/tps6217x.lib))
+    (library (logical switches)
+      (uri "/Users/thomaswatson/Library/Application Support/kicad/library/switches.lib"))
+    (library (logical device)
+      (uri "/Users/thomaswatson/Library/Application Support/kicad/library/device.lib")))
   (nets
     (net (code 1) (name "Net-(J2-Pad2)")
       (node (ref J2) (pin 2))
