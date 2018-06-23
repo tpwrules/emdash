@@ -1248,11 +1248,11 @@ F 3 "" H 9250 1200 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	9250 1200 9400 1200
-Text Label 9700 850  0    60   ~ 0
+Text Label 9700 1550 0    60   ~ 0
 CANH
 Wire Wire Line
 	9550 850  9700 850 
-Text Label 9700 1550 0    60   ~ 0
+Text Label 9700 850  0    60   ~ 0
 CANL
 Wire Wire Line
 	9700 1550 9550 1550
