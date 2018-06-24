@@ -10,7 +10,7 @@ The following tasks are covered:
 
 ## Adding a Canvar
 
-Canvar definitions are stored in the `file` as Python objects. Adding a canvar is done by instantiating a Python `Variable` object and adding it to the list of `variables` in the file. Once this is completed, the variable can be used. If `<name>` is the variable's name, `cv_<name>` is the data structure which holds its value (a `canvar_state_t`) and `CV_ID_<name in uppercase>` is defined as its ID in the data structure array.
+Canvar definitions are stored in `can/canvars.py` as Python objects. Adding a canvar is done by instantiating a Python `Variable` object and adding it to the list of `variables` in the file. Once this is completed, the variable can be used. If `<name>` is the variable's name, `cv_<name>` is the data structure which holds its value (a `canvar_state_t`) and `CV_ID_<name in uppercase>` is defined as its ID in the data structure array.
 
 The `Variable` constructor has the following arguments:
 * `name` is the name of the variable.
@@ -23,10 +23,10 @@ The `Variable` constructor has the following arguments:
 
 ## Adding a Picture
 
-Picture definitions are stored in the `file` as Python objects. Adding a picture is done by instantiating a Python `Picture` object and adding it to the `piclist` in the file. Once this is completed, the picture can be used. If `<name>` is the picture's name, its ID is defined as `PIC_ID_<name in uppercase>`. 
+Picture definitions are stored in `pics/piclist.py` as Python objects. Adding a picture is done by instantiating a Python `Picture` object and adding it to the `piclist` in the file. Once this is completed, the picture can be used. If `<name>` is the picture's name, its ID is defined as `PIC_ID_<name in uppercase>`. 
 
 The `Picture` constructor has the following arguments:
-* `path` is the file system path to the PNG file with the image data, relative to the `directory`.
+* `path` is the file system path to the PNG file with the image data, relative to `pics/`.
 * `name` is the name of the picture.
 * `area=None` is the area of the original image to use, or None to use the whole image. It is a tuple with the following numbers, in pixels: `(<upper left corner of picture, x coordinate>, <upper left corner of picture, y coordinate>, <picture width>, <picture height>)`.
 
@@ -36,7 +36,7 @@ When a canvar is changed, its callback is called to act on that change.
 
 Callback functions have the following prototype: `void callback(uint32_t val)`, where `val` is the value of the canvar at the time the callback is called. It is sign or zero extended to 32 bits according to the `signed` parameter of the `Variable`.
 
-The callback likely wants to change the screen based on the value of the canvar. Standard C functions like `sprintf` can be used to build the value, and the screen functions covered elsewhere can be used to update the screen. If the callback updates the screen in the mode area, it shuold check that `app_mode_change_func` equals the correct function, so that it only draws if the mode is actively being displayed.
+The callback likely wants to change the screen based on the value of the canvar. Standard C functions like `sprintf` can be used to build the value, and the screen functions covered elsewhere can be used to update the screen. If the callback updates the screen in the mode area, it should check that `app_mode_change_func` equals the correct function, so that it only draws if the mode is actively being displayed.
 
 The callback function is called with interrupts enabled. Interrupts can be disabled when necessary, but they should be enabled while screen functions are called.
 
