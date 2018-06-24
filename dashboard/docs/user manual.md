@@ -17,10 +17,10 @@ The main screen is divided into three sections:
 
 This sections displays the measurements and status of the car's systems. Warning icons are displayed when certain thresholds are exceeded. When an icon is displayed, the corresponding measurement is drawn with inverted color.
 
-Display of the section is handled by `warn.c`.
+Display of the section is handled by `src/warn.c`.
 
 #### Measurement Description
-The meaning of each measurement icon is described below. The table describes the icons in left to right, top to bottom order. The "Variable" column tells which canvar is monitored. The "Limit" column is the constant in `the limits file` which controls the value at which it should happen.
+The meaning of each measurement icon is described below. The table describes the icons in left to right, top to bottom order. The "Variable" column tells which canvar is monitored. The "Limit" column is the constant in `src/limits.h` which controls the value at which it should happen.
 
 Variable | Limit | Displayed when
 -------- | ----- | --------------
@@ -35,11 +35,11 @@ toil | LIM_OIL_TEMP_MIN | Engine oil temperature is too low.
 
 ### Driver Information
 
-This area displays status and measurements important to the driver. Display of this section is handled by `drive.c`.
+This area displays status and measurements important to the driver. Display of this section is handled by `src/drive.c`.
 
 The following measurements are displayed:
 
-* The RPM bar and current engine RPM (`nmot`) are displayed the top of the screen. When the current RPM exceeds the optimal RPM (illustrated by the black line), the entire screen flashes to prompt the driver to upshift. This is configurable in `the limits file` as well.
+* The RPM bar and current engine RPM (`nmot`) are displayed the top of the screen. When the current RPM exceeds the optimal RPM (illustrated by the black line), the entire screen flashes to prompt the driver to upshift. This is configurable in `src/limits.h` as well.
 * Current gear (`gear`) is displayed in the center of the screen.
 * If the upshift paddle on the wheel is pressed (`wb_upshift != 0`), an up arrow is displayed next to the gear indicator.
 * If the downshift paddle on the wheel is pressed (`wb_downshift != 0`), a down arrow is displayed next to the gear indicator.
@@ -49,17 +49,19 @@ The following measurements are displayed:
 * If the radio button on the wheel is pressed (`wb_radio != 0`), a headset icon is displayed.
 * Current traction control level (`wb_traction_knob`) is displayed at the bottom center of the screen.
 
-### Misc. Information
+### Mode Area
 
-This area displayes several pages of miscellaneous information. The pages are switched using the dash mode button on the wheel. The available pages are described below, in selection order.
+This area displays various other pieces of information, in several different modes. The mode is switched using the dash mode button on the wheel. The available modes are described below, in selection order.
+
+CAN Status mode is handled in `canvar.c`, Firmware Version mode is handled in `src/version.c`, and all other modes are handled in `src/modes.c`.
 
 #### Firmware Version
 
-This page displays the firmware versions of the dashboard and wheelboard. The first number is the Git commit hash the firmware was built from, and the second number is the time it was built in YYYYMMddhhmm format. It is displayed briefly at startup, then the dashboard automatically switches to the next page.
+This page displays the firmware versions of the dashboard and wheelboard. The first number is the Git commit hash the firmware was built from, and the second number is the time it was built in YYYYMMddhhmm format. It is displayed briefly at startup, then the dashboard automatically switches to the next mode.
 
 #### Clutch and Throttle
 
-This page displays the clutch system pressure. It also displays the position of the throttle pedal and the throttle plate.
+This page displays the clutch system pressure (`pclutch`). It also displays the position of the throttle pedal (???) and the throttle plate (`ath`).
 
 #### CAN Status
 
