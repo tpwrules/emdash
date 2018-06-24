@@ -52,8 +52,7 @@ PCFUNC(void, scr_show_page)(uint8_t text, uint8_t page);
 PCFUNC(void, scr_clear_page)(uint8_t text, uint8_t page);
 
 // draw a rectangle
-// the color is 1 for a black rectangle and 0 for white
-// the remaining pixels in the byte are always white
+// the color is non-zero for a black rectangle and 0 for white
 PCFUNC(void, scr_draw_rect)(uint32_t pixel_addr, uint8_t w, uint8_t h, uint8_t color);
 
 // draw a picture
@@ -61,8 +60,10 @@ PCFUNC(void, scr_draw_pic)(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted
 
 // draw some text
 // the font is DOS CP437 (https://en.wikipedia.org/wiki/Code_page_437)
-// \x84 -> ä   \x94 -> ö   \x81 -> ü
-// \x8E -> Ä   \x99 -> Ö   \x9A -> Ü
+// \x84"" -> ä   \x94"" -> ö   \x81"" -> ü   \xE1"" -> ß
+// \x8E"" -> Ä   \x99"" -> Ö   \x9A"" -> Ü
+// To draw: Knäckebrotkrümel Straße
+// scr_draw_text(SCR_TEXT_ADDR(0, 0, 0), "Kn\x84""ckebrotkr\x81""mel Stra\xE1""e");
 PCFUNC(void, scr_draw_text)(uint32_t text_addr, char *text);
 
 #endif
