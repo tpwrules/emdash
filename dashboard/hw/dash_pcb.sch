@@ -303,7 +303,7 @@ P 7750 4500
 F 0 "R2" V 7830 4500 50  0000 C CNN
 F 1 "62" V 7750 4500 50  0000 C CNN
 F 2 "Resistors_SMD:R_0603" V 7680 4500 50  0001 C CNN
-F 3 "https://www.mouser.de/ProductDetail/Bourns/CR0603-FX-62R0ELF?qs=0nF2VnfAjXnEYbikTYe9aw%3d%3d" H 7750 4500 50  0001 C CNN
+F 3 "https://www.mouser.de/ProductDetail/Panasonic-Industrial-Devices/ERJ-3EKF62R0V?qs=%2fha2pyFaduipAmbZAK%252bWzjHZ2aadI50bB9aceJN0t6iRDAR19Mwj2w%3d%3d" H 7750 4500 50  0001 C CNN
 	1    7750 4500
 	-1   0    0    1   
 $EndComp
@@ -314,7 +314,7 @@ P 7950 4500
 F 0 "R4" V 8030 4500 50  0000 C CNN
 F 1 "62" V 7950 4500 50  0000 C CNN
 F 2 "Resistors_SMD:R_0603" V 7880 4500 50  0001 C CNN
-F 3 "https://www.mouser.de/ProductDetail/Bourns/CR0603-FX-62R0ELF?qs=0nF2VnfAjXnEYbikTYe9aw%3d%3d" H 7950 4500 50  0001 C CNN
+F 3 "https://www.mouser.de/ProductDetail/Panasonic-Industrial-Devices/ERJ-3EKF62R0V?qs=%2fha2pyFaduipAmbZAK%252bWzjHZ2aadI50bB9aceJN0t6iRDAR19Mwj2w%3d%3d" H 7950 4500 50  0001 C CNN
 	1    7950 4500
 	-1   0    0    1   
 $EndComp
@@ -871,7 +871,7 @@ P 1050 750
 F 0 "D1" H 1050 850 50  0000 C CNN
 F 1 "SS14" H 1050 650 50  0000 C CNN
 F 2 "Diodes_SMD:D_SMA_Handsoldering" H 1050 750 50  0001 C CNN
-F 3 "https://www.mouser.de/ProductDetail/ON-Semiconductor-Fairchild/SS14?qs=sGAEpiMZZMv%252bkWzvOmGqmqvWeZDNRb1d" H 1050 750 50  0001 C CNN
+F 3 "https://www.mouser.de/ProductDetail/Vishay-Semiconductors/SS14-E3-61T?qs=sGAEpiMZZMtQ8nqTKtFS%2fJkHNs4hgXaDUKUi8%252b0d9Cg%3d" H 1050 750 50  0001 C CNN
 	1    1050 750 
 	-1   0    0    1   
 $EndComp
