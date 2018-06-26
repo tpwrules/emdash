@@ -29,7 +29,7 @@
 #define LIM_FUEL_TEMP_MAX (50) // 50C
 
 // minimum safe battery voltage, in 100 mV increments
-#define LIM_BATTERY_MIN (128) // 12.8V
+#define LIM_BATTERY_MIN (120) // 12.0V
 
 
 // drive.c limits
