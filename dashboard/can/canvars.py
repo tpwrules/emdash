@@ -45,7 +45,7 @@ variables = [
     # 1-4 = gears 1-4
     Variable(
         name="gear",
-        msg_id=0x119, start=56, size=8, signed=False,
+        msg_id=0x777, start=0, size=8, signed=False,
         callback="drive_gear_update"
     ),
 
@@ -98,7 +98,7 @@ variables = [
     # vehicle speed in units of 0.01kph, max 120kph
     Variable(
         name="speed",
-        msg_id=0x121, start=48, size=16, signed=False,
+        msg_id=0x773, start=0, size=16, signed=False,
         callback="drive_speed_update"
     ),
 
@@ -112,14 +112,14 @@ variables = [
     # nonzero if transmission is in automatic mode
     Variable(
         name="B_autoshiften_ems",
-        msg_id=0x101, start=16, size=8, signed=False,
+        msg_id=0x750, start=24, size=8, signed=False,
         callback="drive_B_autoshiften_ems_update"
     ),
 
     # nonzero if launch control is active
     Variable(
         name="B_launch",
-        msg_id=0x119, start=16, size=8, signed=False,
+        msg_id=0x750, start=32, size=8, signed=False,
         callback="drive_B_launch_update"
     ),
 
@@ -174,14 +174,20 @@ variables = [
     # throttle plate percentage in units of 0.01%, max 110%
     Variable(
         name="ath",
-        msg_id=0x101, start=0, size=16, signed=False,
+        msg_id=0x773, start=32, size=16, signed=False,
         callback="modes_m1_ath_update"
+    ),
+
+    Variable(
+        name="aps",
+        msg_id=0x112, start=0, size=16, signed=False,
+        callback="modes_m1_aps_update"
     ),
 
     # clutch pressure in units of 0.005 bar, max 25 bar
     Variable(
         name="pclutch",
-        msg_id=0x37C, start=0, size=16, signed=False,
+        msg_id=0x500, start=32, size=16, signed=False,
         callback="modes_m1_pclutch_update"
     ),
 

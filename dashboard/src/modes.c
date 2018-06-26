@@ -26,25 +26,35 @@ void modes_m1_change(bool next) {
     // draw the placeholder values
     scr_draw_text(SCR_TEXT_ADDR(0, 25, 2), "Clutch: ??,?bar");
 
-    scr_draw_text(SCR_TEXT_ADDR(0, 30, 4), "Plate:???%");
-    scr_draw_text(SCR_TEXT_ADDR(0, 30, 5), "Pedal:???%");
+    scr_draw_text(SCR_TEXT_ADDR(0, 32, 4), "ath:???%");
+    scr_draw_text(SCR_TEXT_ADDR(0, 32, 5), "aps:???%");
 
     // set can messages to new so that they will be redrawn
     interrupt_disable();
     CV_RENEW(cv_ath);
+    CV_RENEW(cv_aps);
     CV_RENEW(cv_pclutch);
 }
 
- void modes_m1_ath_update(uint32_t val) {
+void modes_m1_ath_update(uint32_t val) {
     char str[10];
     if (app_mode_change_func == M1_MODE_FUNC) {
         val = (val + 50)/100;
         sprintf(str, "%3u", (unsigned int)val);
         scr_draw_text(SCR_TEXT_ADDR(0, 36, 4), str);
     }
- }
+}
 
- void modes_m1_pclutch_update(uint32_t val) {
+void modes_m1_aps_update(uint32_t val) {
+    char str[10];
+    if (app_mode_change_func == M1_MODE_FUNC) {
+        val = (val + 50)/100;
+        sprintf(str, "%3u", (unsigned int)val);
+        scr_draw_text(SCR_TEXT_ADDR(0, 36, 5), str);
+    }
+}
+
+void modes_m1_pclutch_update(uint32_t val) {
     char str[10];
     if (app_mode_change_func == M1_MODE_FUNC) {
         val /= 20;
@@ -52,4 +62,4 @@ void modes_m1_change(bool next) {
             (unsigned int)(val/10), (unsigned int)(val%10));
         scr_draw_text(SCR_TEXT_ADDR(0, 33, 2), str);
     }
- }
+}
