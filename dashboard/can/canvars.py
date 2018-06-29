@@ -232,7 +232,7 @@ class CanvarInterface:
             vars_in_id[var.multiplex]= vars_for_mpx
             self.cv_msg_ids[var.msg_id] = vars_in_id
 
-        self.dirty_ids = set()
+        self.dirty_ids = {}
         self.dirty_canvars = {}
         self.buffered = True
 
@@ -250,7 +250,7 @@ class CanvarInterface:
         with self.lock:
             for msg_id in self.dirty_ids:
                 self.flush_id(msg_id, clean=False)
-            self.dirty_ids = set()
+            self.dirty_ids = {}
             for canvar_id, val in self.dirty_canvars.items():
                 self.canvar_send(canvar_id, val)
             self.dirty_canvars = {}
@@ -297,13 +297,12 @@ class CanvarInterface:
             # it is, set it
             var.val = value
             # and either mark id as dirty if in buffered mode
-            # or flush the id in nonbuffered mode
-            if self.buffered:
-                if var.msg_id is not None:
-                    self.dirty_ids.add(var.msg_id)
-                else:
-                    self.dirty_canvars[var.canvar_id] = value
+            # if in unbuffered mode, flush immediately
+            if var.msg_id is not None:
+                self.dirty_ids[var.msg_id] = True
             else:
+                self.dirty_canvars[var.canvar_id] = value
+            if not self.buffered:
                 if var.msg_id is not None:
                     self.flush_id(var.msg_id)
                 else:

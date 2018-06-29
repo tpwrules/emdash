@@ -27,7 +27,7 @@ def do(fn, cv):
     b = 0
     gear = 0
     while True:
-        v = max(int(math.sin(a)*6100+6000), 0)
+        v = max(int(math.sin(a)*5100+5000), 0)
         cv.nmot = v
         cv.speed = int(max(min(v, 12000), 0))
         if b % 40 == 0:
@@ -39,6 +39,7 @@ def do(fn, cv):
             cv.tfuel = rr(-40, 81)+40
             cv.ub = rr(0, 65535)
             cv.ath = rr(0, 11101)
+            cv.aps = rr(0, 11101)
             cv.pclutch = rr(0, 5001)
         if b % 10 == 0:
             cv.gear = gear % 5
