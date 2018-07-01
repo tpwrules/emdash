@@ -32,20 +32,20 @@ static const blink_icon_t blink_icons[NUM_BLINK_ICONS] = {
     {SCR_BYTE_ADDR(0, 0, 8), SCR_PIXEL_ADDR_AT_TEXT(0, 4, 5),
         PIC_ID_OIL_PRESSURE, 7*6+1},
 #define BLINK_OIL_TEMP (1)
-    {SCR_BYTE_ADDR(0, 0, 24), SCR_PIXEL_ADDR_AT_TEXT(0, 13, 5),
-        PIC_ID_OIL_TEMP, 4*6},
+    {SCR_BYTE_ADDR(0, 0, 24), SCR_PIXEL_ADDR_AT_TEXT(0, 12, 5),
+        PIC_ID_OIL_TEMP, 5*6},
 #define BLINK_WATER_TEMP (2)
-    {SCR_BYTE_ADDR(0, 4, 8), SCR_PIXEL_ADDR_AT_TEXT(0, 6, 6),
-        PIC_ID_WATER_TEMP, 4*6+1},
+    {SCR_BYTE_ADDR(0, 4, 8), SCR_PIXEL_ADDR_AT_TEXT(0, 4, 6),
+        PIC_ID_WATER_TEMP, 5*6+1},
 #define BLINK_BLOCK_TEMP (3)
-    {SCR_BYTE_ADDR(0, 4, 24), SCR_PIXEL_ADDR_AT_TEXT(0, 13, 6),
-        PIC_ID_BLOCK_TEMP, 4*6+1},
+    {SCR_BYTE_ADDR(0, 4, 24), SCR_PIXEL_ADDR_AT_TEXT(0, 12, 6),
+        PIC_ID_BLOCK_TEMP, 5*6+1},
 #define BLINK_FUEL_PRESSURE (4)
     {SCR_BYTE_ADDR(0, 8, 8), SCR_PIXEL_ADDR_AT_TEXT(0, 4, 7),
         PIC_ID_FUEL_PRESSURE, 7*6+1},
 #define BLINK_FUEL_TEMP (5)
-    {SCR_BYTE_ADDR(0, 8, 24), SCR_PIXEL_ADDR_AT_TEXT(0, 13, 7),
-        PIC_ID_FUEL_TEMP, 4*6+1},
+    {SCR_BYTE_ADDR(0, 8, 24), SCR_PIXEL_ADDR_AT_TEXT(0, 12, 7),
+        PIC_ID_FUEL_TEMP, 5*6+1},
 #define BLINK_BATTERY (6)
     {SCR_BYTE_ADDR(0, 12, 8), SCR_PIXEL_ADDR_AT_TEXT(0, 35, 7),
         PIC_ID_BATTERY, 5*6},
@@ -78,10 +78,14 @@ static void warn_set(int blink_id, uint8_t should_warn) {
 // initializer: draws default screen state
 void warn_init(void) {
     // draw the value placeholders
-    scr_draw_text(SCR_TEXT_ADDR(0, 0, 5), "Oil:??.?bar  ???C");
-    scr_draw_text(SCR_TEXT_ADDR(0, 0, 6), "Tmot1:???C 2:???C");
-    scr_draw_text(SCR_TEXT_ADDR(0, 0, 7), "F\x81l:??.?bar  ???C");
+    scr_draw_text(SCR_TEXT_ADDR(0, 0, 5), "Oil ??.?bar ???\xF8""C");
+    scr_draw_text(SCR_TEXT_ADDR(0, 0, 6), "Tmot???\xF8""C 2:???\xF8""C");
+    scr_draw_text(SCR_TEXT_ADDR(0, 0, 7), "Fuel??.?bar ???\xF8""C");
     scr_draw_text(SCR_TEXT_ADDR(0, 29, 7), "Batt: ??.?V");
+    scr_draw_rect(SCR_PIXEL_ADDR(0, 4*6-1, 40), 1, 24, 1);
+    scr_draw_rect(SCR_PIXEL_ADDR(0, 12*6-3, 40), 1, 8, 1);
+    scr_draw_rect(SCR_PIXEL_ADDR(0, 10*6-3, 48), 1, 8, 1);
+    scr_draw_rect(SCR_PIXEL_ADDR(0, 12*6-3, 56), 1, 8, 1);
 }
 
 // update handlers
@@ -99,7 +103,7 @@ void warn_toil_update(uint32_t val) {
     char str[8];
     int num = val - 40;
     sprintf(str, "%3d", num);
-    scr_draw_text(SCR_TEXT_ADDR(0, 13, 5), str);
+    scr_draw_text(SCR_TEXT_ADDR(0, 12, 5), str);
     warn_set(BLINK_OIL_TEMP, num > LIM_OIL_TEMP_MAX);
     warn_set(BLINK_OIL_TEMP_LOW, num < LIM_OIL_TEMP_MIN);
 }
@@ -108,7 +112,7 @@ void warn_tmot2_update(uint32_t val) {
     char str[8];
     int num = val - 40;
     sprintf(str, "%3d", num);
-    scr_draw_text(SCR_TEXT_ADDR(0, 13, 6), str);
+    scr_draw_text(SCR_TEXT_ADDR(0, 12, 6), str);
     warn_set(BLINK_WATER_TEMP, num > LIM_WATER_TEMP_MAX);
 }
 
@@ -116,7 +120,7 @@ void warn_tmot_update(uint32_t val) {
     char str[8];
     int num = val - 40;
     sprintf(str, "%3d", num);
-    scr_draw_text(SCR_TEXT_ADDR(0, 6, 6), str);
+    scr_draw_text(SCR_TEXT_ADDR(0, 4, 6), str);
     warn_set(BLINK_BLOCK_TEMP, num > LIM_BLOCK_TEMP_MAX);
 }
 
@@ -133,7 +137,7 @@ void warn_tfuel_update(uint32_t val) {
     char str[8];
     int num = val - 40;
     sprintf(str, "%3d", num);
-    scr_draw_text(SCR_TEXT_ADDR(0, 13, 7), str);
+    scr_draw_text(SCR_TEXT_ADDR(0, 12, 7), str);
     warn_set(BLINK_FUEL_TEMP, num > LIM_FUEL_TEMP_MAX);
 }
 
