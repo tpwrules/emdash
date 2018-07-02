@@ -20,6 +20,8 @@
 
 // TODO: insert other include files here
 
+#include "crc32.h"
+
 // TODO: insert other definitions and declarations here
 
 int main(void) {
@@ -37,6 +39,8 @@ int main(void) {
 #endif
 
     // TODO: insert code here
+
+    volatile int j = crc32_calc(1, 32767);
 
     // Force the counter to be placed into memory
     volatile static int i = 0 ;

@@ -29,6 +29,8 @@
 // this code.
 //*****************************************************************************
 
+#include "boot_app.h"
+
 #if defined (__cplusplus)
 #ifdef __REDLIB__
 #error Redlib does not support C++
@@ -262,6 +264,12 @@ ResetISR(void) {
         SectionLen = *SectionTableAddr++;
         bss_init(ExeAddr, SectionLen);
     }
+
+
+    // now that we're kind of running
+    // try and bootload the application
+    boot_app_if_possible();
+    // if that failed, we will continue startup as normal
 
 #if defined (__USE_CMSIS) || defined (__USE_LPCOPEN)
     SystemInit();

@@ -59,13 +59,6 @@ const uint32_t ExtRateIn = 0;
 /* Set up and initialize hardware prior to call to main */
 void SystemInit(void)
 {
-    // just call the bootloaded code
-    __asm__("ldr r3, =0x1000\n\t"
-            "ldr r2, [r3]\n\t"
-            "mov sp, r2\n\t"
-            "ldr r2, [r3, #4]\n\t"
-            "bx r2");
-
 #if defined(NO_BOARD_LIB)
 	/* Chip specific SystemInit */
 	Chip_SystemInit();
