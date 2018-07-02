@@ -41,7 +41,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lpc_chip_11cxx_lib/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/boot_11c24/src_11c24}&quot;"/>
 								</option>
-								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.571733142" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.size" valueType="enumerated"/>
+								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.571733142" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.size" valueType="enumerated"/>
 								<inputType id="com.crt.advproject.compiler.input.1180016580" superClass="com.crt.advproject.compiler.input"/>
 							</tool>
 							<tool id="com.crt.advproject.gas.exe.debug.553141620" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug">
@@ -80,7 +80,7 @@
 								</option>
 								<option id="com.crt.advproject.link.crpenable.549749380" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.link.gcc.multicore.slave.474551144" name="Multicore configuration" superClass="com.crt.advproject.link.gcc.multicore.slave"/>
-								<option defaultValue="com.crt.advproject.heapAndStack.lpcXpressoStyle" id="com.crt.advproject.link.memory.heapAndStack.style.587648249" superClass="com.crt.advproject.link.memory.heapAndStack.style" useByScannerDiscovery="false" valueType="enumerated"/>
+								<option defaultValue="com.crt.advproject.heapAndStack.lpcXpressoStyle" id="com.crt.advproject.link.memory.heapAndStack.style.587648249" name="Heap and Stack placement" superClass="com.crt.advproject.link.memory.heapAndStack.style" useByScannerDiscovery="false" valueType="enumerated"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.1842048150" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -205,7 +205,7 @@
 &lt;memory id="RAM" type="RAM"/&gt;
 &lt;memory id="Periph" is_volatile="true" type="Peripheral"/&gt;
 &lt;memoryInstance derived_from="Flash" edited="true" id="MFlash32" location="0x0" size="0x1000"/&gt;
-&lt;memoryInstance derived_from="RAM" edited="true" id="RamLoc8" location="0x100000c0" size="0x1f40"/&gt;
+&lt;memoryInstance derived_from="RAM" edited="true" id="RamLoc8" location="0x100000c0" size="0x1f20"/&gt;
 &lt;peripheralInstance derived_from="V6M_NVIC" id="NVIC" location="0xe000e000"/&gt;
 &lt;peripheralInstance derived_from="V6M_DCR" id="DCR" location="0xe000edf0"/&gt;
 &lt;peripheralInstance derived_from="I2C" id="I2C" location="0x40000000"/&gt;
