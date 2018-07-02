@@ -28,12 +28,12 @@
 		<link>
 			<name>src_11c24</name>
 			<type>2</type>
-			<location>/Users/thomaswatson/projects/einstein/repo/wheel/src_11c24</location>
+			<locationURI>PARENT-1-PROJECT_LOC/wheel/src_11c24</locationURI>
 		</link>
 		<link>
 			<name>src_gen</name>
 			<type>2</type>
-			<location>/Users/thomaswatson/projects/einstein/repo/wheel/src_gen</location>
+			<locationURI>PARENT-1-PROJECT_LOC/wheel/src_gen</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
