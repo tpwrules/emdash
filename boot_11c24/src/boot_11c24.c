@@ -20,7 +20,7 @@
 
 // TODO: insert other include files here
 
-#include "crc32.h"
+#include "can_hw.h"
 
 // TODO: insert other definitions and declarations here
 
@@ -38,9 +38,11 @@ int main(void) {
 #endif
 #endif
 
-    // TODO: insert code here
+    // okay, we need to run the bootloader now
 
-    volatile int j = crc32_calc(1, 32767);
+    // initialize the CAN bus
+    can_hw_init();
+
 
     // Force the counter to be placed into memory
     volatile static int i = 0 ;

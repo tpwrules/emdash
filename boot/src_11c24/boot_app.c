@@ -34,7 +34,7 @@ void boot_app_if_possible(void) {
         return;
     // calculate CRC based on above data
     // it starts at the 9th header entry
-    uint32_t calculated_crc = crc32_calc((const uint32_t*)&app_vectors[8], app_size);
+    uint32_t calculated_crc = crc32_calc((const uint8_t*)&app_vectors[8], app_size);
     // and boot if it matches what was stored
     if (calculated_crc == expected_crc) {
         boot_app();
