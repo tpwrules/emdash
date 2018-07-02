@@ -223,7 +223,7 @@
 &lt;memory can_program="true" id="Flash" is_ro="true" type="Flash"/&gt;
 &lt;memory id="RAM" type="RAM"/&gt;
 &lt;memory id="Periph" is_volatile="true" type="Peripheral"/&gt;
-&lt;memoryInstance derived_from="Flash" id="MFlash32" location="0x0" size="0x8000"/&gt;
+&lt;memoryInstance derived_from="Flash" edited="true" id="MFlash32" location="0x1000" size="0x7000"/&gt;
 &lt;memoryInstance derived_from="RAM" edited="true" id="RamLoc8" location="0x100000c0" size="0x1f40"/&gt;
 &lt;peripheralInstance derived_from="V6M_NVIC" id="NVIC" location="0xe000e000"/&gt;
 &lt;peripheralInstance derived_from="V6M_DCR" id="DCR" location="0xe000edf0"/&gt;
