@@ -8,6 +8,7 @@
 #include "crc32.h"
 #include "can_hw.h"
 #include "boot.h"
+#include "iap.h"
 
 // CAN message buffers
 // configure first message object to only receive commands
@@ -110,20 +111,21 @@ static void bl_respond(uint8_t response) {
 }
 
 // page buffer data and pointer
-static uint8_t page_buf[256];
+static uint32_t page_buf[256/4];
 static uint8_t page_buf_ptr;
 
 // command handlers
 static inline void bl_cmd_page_data(void) {
     // copy input data to page buffer
+    uint8_t* page_buf_byte = (uint8_t*)page_buf;
     for (int i=0; i<8; i++) {
-        page_buf[page_buf_ptr++] = rxmsg.data[i];
+        page_buf_byte[page_buf_ptr++] = rxmsg.data[i];
     }
 }
 
 static inline uint8_t bl_cmd_erase_all(void) {
-    // for now just pretend we did it
-    return RESP_SUCCESS;
+    // ask IAP to do the job
+    return iap_erase_and_blank_check();
 }
 
 static inline void bl_cmd_empty(void) {
@@ -138,13 +140,13 @@ static inline uint8_t bl_cmd_program_verify(uint16_t page_num, uint32_t expected
     }
 
     // verify CRC of page buffer
-    uint32_t crc = crc32_calc(page_buf, 256);
+    uint32_t crc = crc32_calc((uint8_t*)page_buf, 256);
     if (crc != expected_crc) {
         return RESP_CHECKSUM_INCORRECT;
     }
 
-    // pretend to program chip for now
-    return RESP_SUCCESS;
+    // and program the chip
+    return iap_program_and_verify(page_num, page_buf);
 }
 
 static inline void bl_cmd_reboot(bool into_app) {
