@@ -21,6 +21,14 @@ def send_data(data):
     canbus.send(m)
     canbus.flush_tx_buffer()
 
+def process_response(success=True):
+    cmd, resp = get_response()
+    if resp == 0:
+        if success:
+            print("success!")
+    else:
+        raise Exception("got {} for command {}".format(resp, cmd))
+
 print("waiting for hello")
 
 while True:
@@ -35,3 +43,36 @@ while True:
     if cmd == 0 and resp == 0:
         print("connected!")
         break
+
+import sys
+import binascii
+
+img = open(sys.argv[1], "rb").read()
+if len(img) % 256 != 0:
+    # pad with 0xFF for checksumming purposes
+    img += b"\xFF"*(256-(len(img)%256))
+
+print("erasing chip... ", end="")
+send_data(pack("<B", 1))
+process_response()
+
+print("programming {} pages...".format(len(img)>>8))
+
+for pi in range(0, len(img), 256):
+    print("{}/{}... ".format(pi, len(img)), end="")
+    pd = img[pi:pi+256]
+    # empty page buffer
+    send_data(pack("<B", 2))
+    process_response(False)
+    # send data
+    for pdi in range(0, 256, 8):
+        send_data(pd[pdi:pdi+8])
+    # checksum page
+    crc = binascii.crc32(pd, 0)
+    # and program it
+    send_data(pack("<BHI", 3, pi>>8, crc))
+    process_response()
+
+print("rebooting into app... ")
+send_data(pack("<BB", 4, 1))
+process_response()
