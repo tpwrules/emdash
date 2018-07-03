@@ -20,6 +20,7 @@
 
 // TODO: insert other include files here
 
+#include "bootload.h"
 #include "can_hw.h"
 
 // TODO: insert other definitions and declarations here
@@ -38,17 +39,18 @@ int main(void) {
 #endif
 #endif
 
-    // okay, we need to run the bootloader now
-
-    // initialize the CAN bus
+    // initialize hardware
     can_hw_init();
+    // configure systick to fire every millisecond
+    // configure reload register
+    SysTick->LOAD = ((SystemCoreClock/1000) & SysTick_LOAD_RELOAD_Msk)-1;
+    // initialize the counter itself
+    SysTick->VAL = 0;
+    // and turn it on
+    SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk;
 
+    // run the bootloader
+    bootload();
 
-    // Force the counter to be placed into memory
-    volatile static int i = 0 ;
-    // Enter an infinite loop, just incrementing a counter
-    while(1) {
-        i++ ;
-    }
-    return 0 ;
+    return 0;
 }

@@ -3,6 +3,4 @@
 
 void can_hw_init(void);
 
-void CAN_IRQHandler(void);
-
 #endif

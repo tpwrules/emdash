@@ -3,6 +3,7 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
+#include "bootload.h"
 #include "can_hw.h"
 
 #include "chip.h"
@@ -37,22 +38,6 @@ static inline void baudrateCalculate(uint32_t baud_rate,
             }
         }
     }
-}
-
-// CAN driver callbacks
-// called when a message is received
-static void CAN_rx(uint8_t msg_obj_num) {
-
-}
-
-// called after a message was transmitted
-static void CAN_tx(uint8_t msg_obj_num) {
-
-}
-
-// called when a bus error has happened
-static void CAN_error(uint32_t error_info) {
-
 }
 
 // called to get everything started for CAN

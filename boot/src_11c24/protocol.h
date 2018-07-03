@@ -49,6 +49,7 @@
 // when the bootloader is entered, a response is sent approximately
 // every 100ms with CMD of CMD_HELLO and RESP of RESP_HELLO
 // send a CMD_HELLO and wait for RESP_SUCCESS
+// no other commands will have a response
 // now the bootloader is ready
 
 // Error Handling
@@ -114,3 +115,5 @@
 #define RESP_ERROR (3)
 #define RESP_PROGRAM_FAILURE (4)
 #define RESP_CHECKSUM_INCORRECT (5)
+
+#endif
