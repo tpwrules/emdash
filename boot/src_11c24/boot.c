@@ -1,6 +1,8 @@
 #include <inttypes.h>
+#include <stdbool.h>
 
-#include "boot_app.h"
+#include "chip.h"
+#include "boot.h"
 #include "crc32.h"
 
 // set up CPU and jump to application code
@@ -14,6 +16,12 @@ static void boot_app(void) {
 }
 
 void boot_app_if_possible(void) {
+    // boot into bootloader if the appropriate memory is poked
+    uint32_t* boot_flag = (uint32_t*)(0x10000000);
+    if (*boot_flag == 0xb00410ad) {
+        *boot_flag = 0; // clear boot flag for next boot
+        return; // magic value met, enter bootloader
+    }
 
     // verify application and boot if it's okay
 
@@ -42,4 +50,14 @@ void boot_app_if_possible(void) {
 
     // hm, it doesn't match
     return; // start the bootloader itself
+}
+
+// reboot, into application if asked
+__attribute__ ((noreturn, section(".after_vectors")))
+void reboot(bool into_app) {
+    // set up magic boot flag to specific value to change boot type
+    uint32_t* boot_flag = (uint32_t*)(0x10000000);
+    *boot_flag = into_app ? 0 : 0xb00410ad;
+    // and reset system
+    NVIC_SystemReset();
 }

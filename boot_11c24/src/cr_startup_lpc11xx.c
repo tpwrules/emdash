@@ -29,7 +29,7 @@
 // this code.
 //*****************************************************************************
 
-#include "boot_app.h"
+#include "boot.h"
 
 #if defined (__cplusplus)
 #ifdef __REDLIB__
