@@ -43,7 +43,7 @@ typedef void (*IAP)(uint32_t command[], uint32_t result[]);
 IAP iap_func = (IAP)(IAP_LOCATION);
 
 // call IAP with a command and return the status code
-uint32_t iap_call(uint32_t cmd) {
+static uint32_t iap_call(uint32_t cmd) {
     command[0] = cmd;
     iap_func(command, result);
     return result[0];

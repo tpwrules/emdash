@@ -1,5 +1,3 @@
-// this file manages the dashboard CAN hardware
-
 #include <inttypes.h>
 #include <stdbool.h>
 

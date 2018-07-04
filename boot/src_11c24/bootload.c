@@ -55,27 +55,16 @@ void CAN_error(uint32_t error_info) {
     }
 }
 
-// wait for a message to be received
-static void can_wait_rx(void) {
-    while (!msg_was_received) {
-        LPC_CCAN_API->isr();
-    }
-    msg_was_received = false;
-}
-
-// send a message, then wait for successful transmission
-static void can_do_tx(void) {
+// send a response and wait for successful transmission
+// (command field has already been populated by main loop)
+static void bl_respond(uint8_t response) {
+    txmsg.data[1] = response;
     LPC_CCAN_API->can_transmit(&txmsg);
+
     while (!msg_was_transmitted) {
         LPC_CCAN_API->isr();
     }
     msg_was_transmitted = false;
-}
-
-// preprogrammed responses
-static void bl_respond(uint8_t response) {
-    txmsg.data[1] = response;
-    can_do_tx();
 }
 
 // page buffer data and pointer
@@ -97,7 +86,9 @@ static inline uint8_t bl_cmd_erase_all(void) {
 }
 
 static inline void bl_cmd_empty(void) {
+    // clear to FF (which is unprogrammed flash)
     memset(page_buf, 0xFF, 256);
+    // and reset data pointer to beginning
     page_buf_ptr = 0;
 }
 
@@ -120,7 +111,7 @@ static inline uint8_t bl_cmd_program_verify(uint16_t page_num, uint32_t expected
 static inline void bl_cmd_reboot(bool into_app) {
     // we're about to successfully reboot
     bl_respond(RESP_SUCCESS);
-    // and now do it
+    // now do it
     reboot(into_app);
 }
 
@@ -131,8 +122,11 @@ void bootload(void) {
     LPC_CCAN_API->config_rxmsgobj(&rxmsg);
 
     while (1) {
-        // receive a command
-        can_wait_rx();
+        // wait for a command to be received
+        while (!msg_was_received) {
+            LPC_CCAN_API->isr();
+        }
+        msg_was_received = false;
 
         // update command for response
         if (rxmsg.dlc > 0) {
@@ -146,17 +140,15 @@ void bootload(void) {
         }
 
         // process if it's a hello command
-        if (rxmsg.data[0] == CMD_HELLO && rxmsg.dlc == CMDLEN_HELLO) {
+        if (rxmsg.dlc == CMDLEN_HELLO && rxmsg.data[0] == CMD_HELLO) {
             // extract parameters
             uint16_t system_id;
             uint32_t hello_key;
             memcpy(&system_id, &rxmsg.data[1], 2);
             memcpy(&hello_key, &rxmsg.data[3], 4);
             // make sure the ID and key are valid
-            if (system_id == (CURR_SYSTEM_ID) &&
-                    hello_key == CMD_HELLO_KEY) {
-                // they are!
-                // mark that someone greeted us
+            if (system_id == (CURR_SYSTEM_ID) && hello_key == CMD_HELLO_KEY) {
+                // they are! mark that someone greeted us
                 said_hello = true;
                 // and say hi back
                 bl_respond(RESP_HELLO);
@@ -164,7 +156,7 @@ void bootload(void) {
             continue; // done processing this command
         }
 
-        // ignore the rest of the processing if nobody's said hi
+        // don't act on a command if nobody's said hi
         if (!said_hello) continue;
 
         // if it's a DLC of 8, we process it as a page data command
@@ -187,7 +179,7 @@ void bootload(void) {
                 if (rxmsg.dlc != CMDLEN_EMPTY) {
                     bl_respond(RESP_INVALID_COMMAND);
                 } else {
-                    bl_cmd_empty(); // can't fail
+                    bl_cmd_empty(); // nothing to fail
                     bl_respond(RESP_SUCCESS);
                 }
                 break;
