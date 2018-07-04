@@ -4,6 +4,7 @@
 
 #include "bootload.h"
 #include "protocol.h"
+#include "system_ids.h"
 #include "chip.h"
 #include "crc32.h"
 #include "can_hw.h"
@@ -55,7 +56,6 @@ void CAN_error(uint32_t error_info) {
 }
 
 // wait for a message to be received
-//__attribute__ ((section(".after_vectors")))
 static void can_wait_rx(void) {
     while (!msg_was_received) {
         LPC_CCAN_API->isr();
@@ -70,34 +70,6 @@ static void can_do_tx(void) {
         LPC_CCAN_API->isr();
     }
     msg_was_transmitted = false;
-}
-
-// shout hello until someone answers
-static void say_hello(void) {
-    int timer = 0; // 100ms per hello
-    while (1) {
-        if (timer == 0) {
-            can_do_tx(); // message object is already all set up
-            timer = 100;
-        }
-
-        // decrement timer if systick elapsed
-        if (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) {
-            timer--;
-        }
-
-        // process CAN and check if we got a response
-        LPC_CCAN_API->isr();
-        if (msg_was_received) {
-            msg_was_received = false;
-            if (rxmsg.data[0] == 0 && rxmsg.dlc == 1) {
-                // hello message is correct, send response
-                txmsg.data[1] = RESP_SUCCESS;
-                can_do_tx();
-                break;
-            }
-        }
-    }
 }
 
 // preprogrammed responses
@@ -152,41 +124,59 @@ static inline void bl_cmd_reboot(bool into_app) {
     reboot(into_app);
 }
 
+bool said_hello = false;
+
 void bootload(void) {
     // program message receive filter
     LPC_CCAN_API->config_rxmsgobj(&rxmsg);
 
-    say_hello();
-
-    // now enter main loop
     while (1) {
         // receive a command
         can_wait_rx();
+
         // update command for response
         if (rxmsg.dlc > 0) {
             txmsg.data[0] = rxmsg.data[0];
         } else {
             // invalid command if DLC is 0
             txmsg.data[0] = 0xFF;
-            bl_respond(RESP_INVALID_COMMAND);
+            if (said_hello)
+                bl_respond(RESP_INVALID_COMMAND);
             continue;
         }
 
+        // process if it's a hello command
+        if (rxmsg.data[0] == CMD_HELLO && rxmsg.dlc == CMDLEN_HELLO) {
+            // extract parameters
+            uint16_t system_id;
+            uint32_t hello_key;
+            memcpy(&system_id, &rxmsg.data[1], 2);
+            memcpy(&hello_key, &rxmsg.data[3], 4);
+            // make sure the ID and key are valid
+            if (system_id == (CURR_SYSTEM_ID) &&
+                    hello_key == CMD_HELLO_KEY) {
+                // they are!
+                // mark that someone greeted us
+                said_hello = true;
+                // and say hi back
+                bl_respond(RESP_HELLO);
+            }
+            continue; // done processing this command
+        }
+
+        // ignore the rest of the processing if nobody's said hi
+        if (!said_hello) continue;
+
         // if it's a DLC of 8, we process it as a page data command
-        if (rxmsg.dlc == 8) {
+        if (rxmsg.dlc == CMDLEN_PAGE_DATA) {
             bl_cmd_page_data();
             continue;
         }
 
         // otherwise, look it up in switch statement
         switch (rxmsg.data[0]) {
-            case CMD_HELLO:
-                // send successful response
-                bl_respond(RESP_SUCCESS);
-                break;
-
             case CMD_ERASE_ALL:
-                if (rxmsg.dlc != 1) {
+                if (rxmsg.dlc != CMDLEN_ERASE_ALL) {
                     bl_respond(RESP_INVALID_COMMAND);
                 } else {
                     bl_respond(bl_cmd_erase_all());
@@ -194,7 +184,7 @@ void bootload(void) {
                 break;
 
             case CMD_EMPTY:
-                if (rxmsg.dlc != 1) {
+                if (rxmsg.dlc != CMDLEN_EMPTY) {
                     bl_respond(RESP_INVALID_COMMAND);
                 } else {
                     bl_cmd_empty(); // can't fail
@@ -203,7 +193,7 @@ void bootload(void) {
                 break;
 
             case CMD_PROGRAM_VERIFY:
-                if (rxmsg.dlc != 7) {
+                if (rxmsg.dlc != CMDLEN_PROGRAM_VERIFY) {
                     bl_respond(RESP_INVALID_COMMAND);
                 } else {
                     // extract parameters
@@ -216,7 +206,7 @@ void bootload(void) {
                 break;
 
             case CMD_REBOOT:
-                if (rxmsg.dlc != 2) {
+                if (rxmsg.dlc != CMDLEN_REBOOT) {
                     bl_respond(RESP_INVALID_COMMAND);
                 } else {
                     bl_cmd_reboot(rxmsg.data[1] != 0);

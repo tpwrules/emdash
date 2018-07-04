@@ -6,14 +6,15 @@ canbus = can.interface.Bus(
     bustype='vector',
     app_name='emdash',
     channel=0,
-    bitrate=500000)
+    bitrate=500000,
+    can_filters=[{"can_id":0x7EE, "can_mask":0x7FF}])
 
-def get_response():
+def get_response(timeout=5):
     while True:
-        m = canbus.recv()
-        if m.arbitration_id == 0x7EE:
-            if len(m.data) == 2:
-                return (m.data[0], m.data[1])
+        m = canbus.recv(timeout=timeout)
+        if m is None: raise Exception("CAN receive timeout!")
+        if len(m.data) == 2:
+            return (m.data[0], m.data[1])
 
 def send_data(data):
     m = can.Message(arbitration_id=0x7EF,
@@ -29,20 +30,23 @@ def process_response(success=True):
     else:
         raise Exception("got {} for command {}".format(resp, cmd))
 
-print("waiting for hello")
-
-while True:
-    cmd, resp = get_response()
-    if cmd == 0 and resp == 1:
-        print("found a hello, saying hello back")
-        send_data(pack("<B", 0))
+print("saying hello")
+m = None
+for hi in range(10):
+    send_data(pack("<BHI", 0, 1, 0xb00710ad))
+    try:
+        m = get_response(timeout=0.2)
         break
+    except:
+        continue
 
-while True:
-    cmd, resp = get_response()
-    if cmd == 0 and resp == 0:
-        print("connected!")
-        break
+if m is None:
+    print("hello timed out!")
+    exit()
+
+cmd, resp = m
+if cmd == 0 and resp == 1:
+    print("they said hello back!")
 
 import sys
 import binascii
@@ -76,3 +80,4 @@ for pi in range(0, len(img), 256):
 print("rebooting into app... ")
 send_data(pack("<BB", 4, 1))
 process_response()
+canbus.shutdown()
