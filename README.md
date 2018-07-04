@@ -30,7 +30,7 @@ The Python scripting language is used to build data files and run the simulator.
 Some Python packages are required to build the data files and run the simulator. Fortunately, Python makes them easy to install.
 
 * Open up a command prompt.
-* Run the command `python -m pip install pypng`
+* Run the command `python3 -m pip install pypng` or `py -3 -m pip install pypng` (on Windows)
 * If python isn't found, close and re-open the command prompt.
 
 #### Testing the Base
@@ -47,7 +47,7 @@ Now that the base has been prepared, it's time to test to make sure it works.
 Building for LPC11C24 requires a working install of the base. It does not require the simulator. I use the free MCUXpresso IDE for development on the LPC11C24. You must install it and import the project in order to deploy the code onto the chip.
 
 #### Installing MCUXpresso
-You can download the MCUXpresso 10.1.1 installer from [here](https://nxp.flexnetoperations.com/control/frse/download?agree=Accept&element=9722367). Unfortunately, it does require an NXP account. Version 10.2 seems to be broken, so don't use it.
+You can download the MCUXpresso 10.1.1 installer from [here](https://www.nxp.com/support/developer-resources/software-development-tools/mcuxpresso-software-and-tools/mcuxpresso-integrated-development-environment-ide:MCUXpresso-IDE?tab=Design_Tools_Tab). Click the Download button, log in with an NXP account (required), then select 10.1.1 under the Previous tab. Version 10.2 seems to be broken, so don't use it.
 
 Run the installer using all the default options. Make a workspace in your favorite place.
 
@@ -61,9 +61,9 @@ NXP has provided libraries to use the chip's hardware. These libraries must be i
 * Select an LPCOpen - C Project and click Next
 * Give the project whatever name you want. It doesn't matter, it won't be saved.
 * Click the Import... button to import the chip libraries
-* In the Import window, select Browse... next to the Archive box.
-* Choose the LPC11C24 libraries by looking in the LPCOpen folder for the file with `11c24` in its name, selecting it, and clicking Open. Click next on the Import window.
-* Select the `lpc_chip_11cxx_lib` project to import and click Finish.
+* In the Import window, click Browse... next to the Archive box.
+* Choose the LPC11C24 libraries by looking in the LPCOpen folder for the file with `11c24` in its name, selecting it, and clicking Open. Click Next on the Import window.
+* Check only `lpc_chip_11cxx_lib` and click Finish.
 * Click Cancel on the New Project window. Chip library import is now complete.
 
 #### Importing the code
@@ -89,7 +89,7 @@ A custom simulator is included which runs the same code that is downloaded on th
 The simulator requires some additional Python packages to operate.
 
 * Open a command prompt
-* Run the command `python -m pip install cffi numpy pygame`
+* Run the command `python3 -m pip install cffi numpy pygame` or `py -3 -m pip install cffi numpy pygame` (on Windows)
 
 #### Installing Visual C++ Build Tools
 The build tools provide the compiler used to compile the application for simulation. You try to compile the application to see if the tools are already installed. If they are not, an installation is necessary.
@@ -98,6 +98,6 @@ The build tools provide the compiler used to compile the application for simulat
 * Change directories to the `dashboard/pc` directory inside the code
 * Run the command `build_pc_app.py`. If there are no errors, you're finished building for simulation
 * If it says you need to install Visual C++ 14.0, a compatible version of the build tools could not be found.
-* Download the installer from <https://go.microsoft.com/fwlink/?linkid=840931>.
+* Download the Build Tools for Visual Studio 2017 installer from <https://go.microsoft.com/fwlink/?linkid=840931>.
 * Once the main installer loads, check 'Visual C++ build tools' under the 'Workloads' tab and click Install
 * Wait quite a while. Once finished, try to run the script again. If it says `PC APP BUILT SUCCESSFULLY`, you've successfully built the simulator and you should be able to run it by running `pc_app.py`.
