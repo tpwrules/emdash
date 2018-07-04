@@ -1,20 +1,19 @@
 from struct import pack
 
-import can as can_import
-can = can_import
+import can
 canbus = can.interface.Bus(
     bustype='vector',
     app_name='emdash',
     channel=0,
     bitrate=500000,
-    can_filters=[{"can_id":0x7EE, "can_mask":0x7FF}])
+    can_filters=[{"can_id":0x7EE, "can_mask":0x7FF}],
+    receive_own_messages=False)
 
 def get_response(timeout=5):
-    while True:
-        m = canbus.recv(timeout=timeout)
-        if m is None: raise Exception("CAN receive timeout!")
-        if len(m.data) == 2:
-            return (m.data[0], m.data[1])
+    m = canbus.recv(timeout=timeout)
+    if m is None: raise Exception("CAN receive timeout!")
+    if len(m.data) == 2:
+        return (m.data[0], m.data[1])
 
 def send_data(data):
     m = can.Message(arbitration_id=0x7EF,
