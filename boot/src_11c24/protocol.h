@@ -5,11 +5,13 @@
 // and responses used in the bootloading protocol
 // plus other stuff
 
+#include "bootload_integrate.h"
+
 // address which the bootloader receives commands at
-#define CAN_CMD_ADDR (0x7EF)
+#define CAN_CMD_ADDR (BOOTLOAD_CAN_CMD_ADDR)
 
 // address which the bootloader sends responses from
-#define CAN_RESP_ADDR (0x7EE)
+#define CAN_RESP_ADDR (BOOTLOAD_CAN_RESP_ADDR)
 
 // number of sectors in the flash
 #define HW_TOTAL_SECTORS (8)
@@ -74,11 +76,11 @@
 // second argument is 32 bit little endian key which must be equal to
 // CMD_HELLO_KEY
 // if the system ID or key are incorrect, there will be no response
-// may need to be sent multiple times, if bootloader is not active
-// when command is sent
-#define CMD_HELLO (0)
-#define CMDLEN_HELLO (7)
-#define CMD_HELLO_KEY (0xb00710ad)
+// may need to be sent multiple times, if bootloader is not active or is
+// rebooting when command is sent
+#define CMD_HELLO (BOOTLOAD_CMD_HELLO)
+#define CMDLEN_HELLO (BOOTLOAD_CMDLEN_HELLO)
+#define CMD_HELLO_KEY (BOOTLOAD_CMD_HELLO_KEY)
 // possible responses
 // RESP_HELLO:
 //      connection successful

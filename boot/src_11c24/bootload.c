@@ -4,6 +4,7 @@
 
 #include "bootload.h"
 #include "protocol.h"
+#include "bootload_integrate.h"
 #include "system_ids.h"
 #include "chip.h"
 #include "crc32.h"
@@ -14,7 +15,7 @@
 // CAN message buffers
 // configure first message object to only receive commands
 static CCAN_MSG_OBJ_T rxmsg = {
-    CAN_CMD_ADDR, 0x7FF,
+    BOOTLOAD_CAN_CMD_ADDR, 0x7FF,
     {0, 0, 0, 0, 0, 0, 0, 0}, 0,
     1
 };
@@ -22,7 +23,7 @@ static CCAN_MSG_OBJ_T rxmsg = {
 // configure second message object to transmit responses
 // default response is HELLO
 static CCAN_MSG_OBJ_T txmsg = {
-    CAN_RESP_ADDR, 0,
+    BOOTLOAD_CAN_RESP_ADDR, 0,
     {CMD_HELLO, RESP_HELLO, 0, 0, 0, 0, 0, 0}, 2,
     2
 };

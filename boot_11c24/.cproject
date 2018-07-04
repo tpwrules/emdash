@@ -40,6 +40,7 @@
 								<option id="gnu.c.compiler.option.include.paths.918527254" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lpc_chip_11cxx_lib/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/boot_11c24/src_11c24}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/boot_11c24/inc_integrate}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.571733142" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.size" valueType="enumerated"/>
 								<inputType id="com.crt.advproject.compiler.input.1180016580" superClass="com.crt.advproject.compiler.input"/>
@@ -53,6 +54,7 @@
 								<option id="gnu.both.asm.option.include.paths.185027480" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lpc_chip_11cxx_lib/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/boot_11c24/src_11c24}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/boot_11c24/inc_integrate}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1597427757" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 								<inputType id="com.crt.advproject.assembler.input.438963430" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
@@ -135,6 +137,7 @@
 								<option id="gnu.c.compiler.option.include.paths.923823332" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lpc_chip_11cxx_lib/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/boot_11c24/src_11c24}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/boot_11c24/inc_integrate}&quot;"/>
 								</option>
 								<inputType id="com.crt.advproject.compiler.input.1469723184" superClass="com.crt.advproject.compiler.input"/>
 							</tool>
@@ -147,6 +150,7 @@
 								<option id="gnu.both.asm.option.include.paths.708388402" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lpc_chip_11cxx_lib/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/boot_11c24/src_11c24}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/boot_11c24/inc_integrate}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1009007481" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 								<inputType id="com.crt.advproject.assembler.input.1752363278" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>

@@ -3,7 +3,7 @@
 
 #include "chip.h"
 #include "boot.h"
-#include "boot_magic.h"
+#include "bootload_integrate.h"
 #include "crc32.h"
 
 // set up CPU and jump to application code
@@ -18,8 +18,8 @@ static void boot_app(void) {
 
 void boot_app_if_possible(void) {
     // boot into bootloader if the appropriate memory is poked
-    uint32_t* boot_flag = (uint32_t*)(BOOT_MAGIC_ADDR);
-    if (*boot_flag == BOOT_MAGIC_VAL) {
+    uint32_t* boot_flag = (uint32_t*)(BOOTLOAD_ENTER_KEY_ADDR);
+    if (*boot_flag == BOOTLOAD_ENTER_KEY) {
         *boot_flag = 0; // clear boot flag for next boot
         return; // magic value met, enter bootloader
     }
@@ -56,8 +56,8 @@ void boot_app_if_possible(void) {
 // reboot, into application if asked
 void reboot(bool into_app) {
     // set up magic boot flag to specific value to change boot type
-    uint32_t* boot_flag = (uint32_t*)(BOOT_MAGIC_ADDR);
-    *boot_flag = into_app ? 0 : BOOT_MAGIC_VAL;
+    uint32_t* boot_flag = (uint32_t*)(BOOTLOAD_ENTER_KEY_ADDR);
+    *boot_flag = into_app ? 0 : BOOTLOAD_ENTER_KEY;
     // and reset system
     NVIC_SystemReset();
 }

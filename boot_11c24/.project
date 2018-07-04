@@ -26,6 +26,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>inc_integrate</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/boot/inc_integrate</locationURI>
+		</link>
+		<link>
 			<name>src_11c24</name>
 			<type>2</type>
 			<locationURI>PARENT-1-PROJECT_LOC/boot/src_11c24</locationURI>

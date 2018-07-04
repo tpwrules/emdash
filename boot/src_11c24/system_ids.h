@@ -5,8 +5,10 @@
 // places this bootloader is deployed
 // you must uncomment the correct one before programming the bootloader
 
-//#define CURR_SYSTEM_ID (1) // dashboard
-//#define CURR_SYSTEM_ID (2) // wheelboard
+#include "bootload_integrate.h"
+
+//#define CURR_SYSTEM_ID (BOOTLOAD_SYSTEM_ID_DASHBOARD)
+//#define CURR_SYSTEM_ID (BOOTLOAD_SYSTEM_ID_WHEELBOARD)
 
 #ifndef CURR_SYSTEM_ID
 #error "system ID not defined!"
