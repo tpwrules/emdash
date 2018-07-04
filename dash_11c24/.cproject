@@ -44,6 +44,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dash_11c24/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dash_11c24/src_gen}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dash_11c24/src_11c24}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/boot_11c24/inc_integrate}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.gcc.fpu.1208850693" name="Floating point" superClass="com.crt.advproject.gcc.fpu" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.38143400" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.size" valueType="enumerated"/>
@@ -58,6 +59,7 @@
 								<option id="com.crt.advproject.gas.specs.164384102" name="Specs" superClass="com.crt.advproject.gas.specs" useByScannerDiscovery="false" value="com.crt.advproject.gas.specs.newlibnano" valueType="enumerated"/>
 								<option id="gnu.both.asm.option.include.paths.1761670106" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lpc_chip_11cxx_lib/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/boot_11c24/inc_integrate}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.gas.fpu.139157353" name="Floating point" superClass="com.crt.advproject.gas.fpu" useByScannerDiscovery="false"/>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1441141282" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
@@ -149,6 +151,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dash_11c24/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dash_11c24/src_gen}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/dash_11c24/src_11c24}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/boot_11c24/inc_integrate}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.gcc.fpu.623844514" name="Floating point" superClass="com.crt.advproject.gcc.fpu"/>
 								<inputType id="com.crt.advproject.compiler.input.1671911237" superClass="com.crt.advproject.compiler.input"/>
@@ -162,6 +165,7 @@
 								<option id="gnu.both.asm.option.include.paths.1901892306" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/nxp_lpcxpresso_11c24_board_lib/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lpc_chip_11cxx_lib/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/boot_11c24/inc_integrate}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.gas.fpu.1160519703" name="Floating point" superClass="com.crt.advproject.gas.fpu"/>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1828227339" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>

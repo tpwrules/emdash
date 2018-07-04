@@ -2,6 +2,7 @@
 
 #include <inttypes.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "../src/platform.h"
 #include "can_hw.h"
@@ -9,6 +10,8 @@
 #include "../src_gen/canvar_defs.h"
 
 #include "chip.h"
+
+#include "bootload_integrate.h"
 
 // calculate can timing from baudrate
 // stolen directly from ccan_rom example
@@ -50,7 +53,24 @@ static void CAN_rx(uint8_t msg_obj_num) {
     msg_obj.msgobj = msg_obj_num;
     LPC_CCAN_API->can_receive(&msg_obj);
 
-    // and give it to application interrupt
+    // check if this message is asking us to reboot
+    // into the bootloader
+    if (msg_obj.mode_id == BOOTLOAD_CAN_CMD_ADDR &&
+            msg_obj.dlc == BOOTLOAD_CMDLEN_HELLO &&
+            msg_obj.data[0] == BOOTLOAD_CMD_HELLO) {
+        // it seems to be. let's verify the parameters
+        uint16_t system_id;
+        uint32_t hello_key;
+        memcpy(&system_id, &msg_obj.data[1], 2);
+        memcpy(&hello_key, &msg_obj.data[3], 4);
+        if (system_id == BOOTLOAD_SYSTEM_ID_DASHBOARD &&
+                hello_key == BOOTLOAD_CMD_HELLO_KEY) {
+            // do what they want
+            reboot_into_bootloader();
+        }
+    }
+
+    // it's not, so give it to application interrupt
     app_can_interrupt(msg_obj.mode_id,
         msg_obj.dlc, msg_obj.data);
 }
