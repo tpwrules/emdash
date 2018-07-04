@@ -47,7 +47,7 @@ Now that the base has been prepared, it's time to test to make sure it works.
 Building for LPC11C24 requires a working install of the base. It does not require the simulator. I use the free MCUXpresso IDE for development on the LPC11C24. You must install it and import the project in order to deploy the code onto the chip.
 
 #### Installing MCUXpresso
-You can download the MCUXpresso installer from [here](https://www.nxp.com/support/developer-resources/software-development-tools/mcuxpresso-software-and-tools/mcuxpresso-integrated-development-environment-ide:MCUXpresso-IDE?tab=Design_Tools_Tab). Unfortunately, it does require an NXP account.
+You can download the MCUXpresso 10.1.1 installer from [here](https://nxp.flexnetoperations.com/control/frse/download?agree=Accept&element=9722367). Unfortunately, it does require an NXP account. Version 10.2 seems to be broken, so don't use it.
 
 Run the installer using all the default options. Make a workspace in your favorite place.
 

@@ -1,14 +1,20 @@
-#!/bin/bash
+#!/bin/sh
 
-cd "$(dirname "$0")"
+PYSRCPATH="$(dirname "$0")"/../wheel/build_src_gen.py
 
 PYTHON=`which python3`
-
 if [ $? -eq 0 ]; then
     # we have python3
-    python3 ../wheel/build_src_gen.py
+    python3 "$PYSRCPATH"
 else
-    # welp, may as well roll with it
-    # maybe it's 3 idk lol
-    python ../wheel/build_src_gen.py
+    # check for the Windows `py` shortcut
+    PY=`which py`
+    if [ $? -eq 0 ]; then
+        # ask to run it as python 3
+        py -3 "$PYSRCPATH"
+    else
+        # python 3 doesn't seem to be installed
+        echo "Python 3 not installed?"
+        exit 1
+    fi
 fi
