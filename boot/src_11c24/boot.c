@@ -54,7 +54,6 @@ void boot_app_if_possible(void) {
 }
 
 // reboot, into application if asked
-__attribute__ ((section(".after_vectors")))
 void reboot(bool into_app) {
     // set up magic boot flag to specific value to change boot type
     uint32_t* boot_flag = (uint32_t*)(BOOT_MAGIC_ADDR);

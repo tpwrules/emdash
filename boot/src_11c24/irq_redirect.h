@@ -6,7 +6,7 @@
 #define IRQ_REDIRECT(handler, which) IRQ_REDIRECT_real(handler, (which*4))
 
 #define IRQ_REDIRECT_real(handler, addr) \
-__attribute__  ((naked, section(".after_vectors")))\
+__attribute__  ((naked, noreturn, section(".after_vectors")))\
 void handler (void) {\
     __asm__("ldr r3, =0x1000\n\t"\
             "ldr r3, [r3, #" #addr "]\n\t"\
@@ -17,7 +17,7 @@ void handler (void) {\
 #define IRQ_REDIRECT2(handler, which) IRQ_REDIRECT_real(handler, (which*4)-0x80)
 
 #define IRQ_REDIRECT2_real(handler, addr) \
-__attribute__  ((naked, section(".after_vectors")))\
+__attribute__  ((naked, noreturn, section(".after_vectors")))\
 void handler (void) {\
     __asm__("ldr r3, =0x1080\n\t"\
             "ldr r3, [r3, #" #addr "]\n\t"\

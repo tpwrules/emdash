@@ -24,7 +24,6 @@
 #include "can_hw.h"
 
 // TODO: insert other definitions and declarations here
-
 int main(void) {
 
 #if defined (__USE_LPCOPEN)

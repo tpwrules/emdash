@@ -10,6 +10,7 @@
 
 // calculate can timing from baudrate
 // stolen directly from ccan_rom example
+__attribute__ ((section(".after_vectors")))
 static inline void baudrateCalculate(uint32_t baud_rate, 
     uint32_t *can_api_timing_cfg)
 {
@@ -41,6 +42,7 @@ static inline void baudrateCalculate(uint32_t baud_rate,
 }
 
 // called to get everything started for CAN
+__attribute__ ((section(".after_vectors")))
 void can_hw_init(void) {
     // calculate timing data from baudrate
     uint32_t timing_data[2];

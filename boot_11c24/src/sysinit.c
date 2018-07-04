@@ -57,6 +57,7 @@ const uint32_t ExtRateIn = 0;
  ****************************************************************************/
 
 /* Set up and initialize hardware prior to call to main */
+__attribute__ ((section(".after_vectors")))
 void SystemInit(void)
 {
 #if defined(NO_BOARD_LIB)

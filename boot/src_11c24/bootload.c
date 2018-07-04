@@ -31,7 +31,6 @@ static bool msg_was_transmitted = false;
 
 // CAN driver callbacks
 // called when a message is received
-__attribute__ ((section(".after_vectors")))
 void CAN_rx(uint8_t msg_obj_num) {
     if (msg_obj_num == 1) {
         LPC_CCAN_API->can_receive(&rxmsg);
@@ -40,7 +39,6 @@ void CAN_rx(uint8_t msg_obj_num) {
 }
 
 // called after a message was transmitted
-__attribute__ ((section(".after_vectors")))
 void CAN_tx(uint8_t msg_obj_num) {
     if (msg_obj_num == 2) {
         msg_was_transmitted = true;
@@ -48,7 +46,6 @@ void CAN_tx(uint8_t msg_obj_num) {
 }
 
 // called when a bus error has happened
-__attribute__ ((section(".after_vectors")))
 void CAN_error(uint32_t error_info) {
     // as promised in protocol, reboot back into the bootloader
     // if we've hit error passive or busoff
@@ -67,7 +64,6 @@ static void can_wait_rx(void) {
 }
 
 // send a message, then wait for successful transmission
-__attribute__ ((section(".after_vectors")))
 static void can_do_tx(void) {
     LPC_CCAN_API->can_transmit(&txmsg);
     while (!msg_was_transmitted) {
