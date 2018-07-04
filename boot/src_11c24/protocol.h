@@ -44,13 +44,7 @@
 // by the page pointer
 // no response is ever generated and this command cannot fail
 // however the bootloader may have reset due to CAN bus state
-
-// Connecting
-// when the bootloader is entered, a response is sent approximately
-// every 100ms with CMD of CMD_HELLO and RESP of RESP_HELLO
-// send a CMD_HELLO and wait for RESP_SUCCESS
-// no other commands will have a response
-// now the bootloader is ready
+#define CMDLEN_PAGE_DATA (8)
 
 // Error Handling
 // the bootloader verifies the CRC32 of flash before booting it
@@ -61,13 +55,30 @@
 //
 // message integrity and delivery is ensured by the CAN bus. if the CAN engine
 // enters error passive or busoff state, message integrity and delivery is no
-// longer guaranteed, so the bootloader will reset and the process must be
-// restarted
+// longer guaranteed, so the bootloader will reset and the connection must be
+// re-established
+
+// Connecting
+// the CMD_HELLO command must be sent to enter and connect to the
+// bootloader. if the application is running, it will reboot into
+// the bootloader without a response. so this command must be sent
+// multiple times. perhaps resend if there is no response after 100ms
+// and abort after 10 tries.
 
 // the Hello command
 // send this to connect to the bootloader
+// first argument is 16 bit little endian system ID
+// second argument is 32 bit little endian key which must be equal to
+// CMD_HELLO_KEY
+// if the system ID or key are incorrect, there will be no response
+// may need to be sent multiple times, if bootloader is not active
+// when command is sent
 #define CMD_HELLO (0)
-#define CMDLEN_HELLO (1)
+#define CMDLEN_HELLO (7)
+#define CMD_HELLO_KEY (0xb00710ad)
+// possible responses
+// RESP_HELLO:
+//      connection successful
 
 // the Erase All command
 // send this to erase the chip
