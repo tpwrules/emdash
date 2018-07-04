@@ -19,9 +19,9 @@ The Git source control system is used to hold the code. You must install the Git
 
 #### Installing Python
 
-The Python scripting language is used to build data files and run the simulator. Python 3.5 or above is required.
+The Python scripting language is used to build data files and run the simulator. These directions have been tested with Python 3.6.6. They will most likely work with 3.5 and 3.6. Python 3.7 is not yet supported.
 
-* Download and install the latest version of Python 3 for your operating system from <https://www.python.org/downloads/>
+* Download and install the latest version of Python 3.6 for your operating system from <https://www.python.org/downloads/>
     * For the Windows installer, you must check "Add Python to Path" on the first page
     * Otherwise, the default options are fine
 
@@ -49,7 +49,7 @@ Building for LPC11C24 requires a working install of the base. It does not requir
 #### Installing MCUXpresso
 You can download the MCUXpresso installer from [here](https://www.nxp.com/support/developer-resources/software-development-tools/mcuxpresso-software-and-tools/mcuxpresso-integrated-development-environment-ide:MCUXpresso-IDE?tab=Design_Tools_Tab). Unfortunately, it does require an NXP account.
 
-Run the installer using all the default options.
+Run the installer using all the default options. Make a workspace in your favorite place.
 
 #### Importing the chip libraries
 NXP has provided libraries to use the chip's hardware. These libraries must be imported into the MCUxpresso workspace so that the application software can use them. The easiest way to import them is to create a new project, but cancel creation after the libraries have been imported.
@@ -61,8 +61,8 @@ NXP has provided libraries to use the chip's hardware. These libraries must be i
 * Select an LPCOpen - C Project and click Next
 * Give the project whatever name you want. It doesn't matter, it won't be saved.
 * Click the Import... button to import the chip libraries
-* In the Import window, select Browse... next to the Archive entry.
-* Choose the LPC11C24 libraries by looking in the LPCOpen folder for the file with `11c24` in its name, seelcting it, and clicking Open. Click next on the Import window.
+* In the Import window, select Browse... next to the Archive box.
+* Choose the LPC11C24 libraries by looking in the LPCOpen folder for the file with `11c24` in its name, selecting it, and clicking Open. Click next on the Import window.
 * Select the `lpc_chip_11cxx_lib` project to import and click Finish.
 * Click Cancel on the New Project window. Chip library import is now complete.
 
@@ -98,6 +98,6 @@ The build tools provide the compiler used to compile the application for simulat
 * Change directories to the `dashboard/pc` directory inside the code
 * Run the command `build_pc_app.py`. If there are no errors, you're finished building for simulation
 * If it says you need to install Visual C++ 14.0, a compatible version of the build tools could not be found.
-* Download the installer at <https://landinghub.visualstudio.com/visual-cpp-build-tools>.
+* Download the installer from <https://go.microsoft.com/fwlink/?linkid=840931>.
 * Once the main installer loads, check 'Visual C++ build tools' under the 'Workloads' tab and click Install
-* Wait quite a while. Once finsihed, try to run the script again. If it says `PC APP BUILT SUCCESSFULLY`, you've successfully built the simulator and you should be able to run it by running `pc_app.py`.
+* Wait quite a while. Once finished, try to run the script again. If it says `PC APP BUILT SUCCESSFULLY`, you've successfully built the simulator and you should be able to run it by running `pc_app.py`.
