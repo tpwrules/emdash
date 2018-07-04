@@ -2,10 +2,16 @@
 
 #include <inttypes.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "can_hw.h"
 
 #include "chip.h"
+
+#include "bootload_integrate.h"
+
+// message object to receive stuff
+static CCAN_MSG_OBJ_T msg_obj;
 
 // calculate can timing from baudrate
 // stolen directly from ccan_rom example
@@ -42,7 +48,26 @@ static inline void baudrateCalculate(uint32_t baud_rate,
 // CAN driver callbacks
 // called when a message is received
 static void CAN_rx(uint8_t msg_obj_num) {
-
+    // we only have one message object to receive
+    // so don't bother resetting the msgobj number
+    LPC_CCAN_API->can_receive(&msg_obj);
+    
+    // check if this message is asking us to reboot
+    // into the bootloader
+    if (msg_obj.mode_id == BOOTLOAD_CAN_CMD_ADDR &&
+            msg_obj.dlc == BOOTLOAD_CMDLEN_HELLO &&
+            msg_obj.data[0] == BOOTLOAD_CMD_HELLO) {
+        // it seems to be. let's verify the parameters
+        uint16_t system_id;
+        uint32_t hello_key;
+        memcpy(&system_id, &msg_obj.data[1], 2);
+        memcpy(&hello_key, &msg_obj.data[3], 4);
+        if (system_id == BOOTLOAD_SYSTEM_ID_WHEELBOARD &&
+                hello_key == BOOTLOAD_CMD_HELLO_KEY) {
+            // do what they want
+            reboot_into_bootloader();
+        }
+    }
 }
 
 // called after a message was transmitted
@@ -88,4 +113,8 @@ void can_hw_init(void) {
 
     // now enable CAN interrupts
     NVIC_EnableIRQ(CAN_IRQn);
+
+    // configure message object to receive everything
+    // as object 0 (which it is by default)
+    LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 }

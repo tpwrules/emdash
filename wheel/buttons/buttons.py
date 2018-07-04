@@ -89,8 +89,8 @@ def write_buttons():
     for button in buttons:
         if button.msg_id not in msg_ids:
             msg_ids[button.msg_id] = len(msg_ids)
-    if len(msg_ids) > 31:
-        raise Exception("maximum of 31 unique message IDs allowed")
+    if len(msg_ids) > 30:
+        raise Exception("maximum of 30 unique message IDs allowed")
     if version_message_id in msg_ids:
         raise Exception("version message ID not allowed as button message ID")
 
