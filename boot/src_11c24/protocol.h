@@ -53,6 +53,9 @@
 // the correct action to error responses is detailed with the command
 // and response
 //
+// if the bootloader does not receive any message for 10 seconds,
+// it will attempt to reboot into the application
+//
 // message integrity and delivery is ensured by the CAN bus. if the CAN engine
 // enters error passive or busoff state, message integrity and delivery is no
 // longer guaranteed, so the bootloader will reset and the connection must be

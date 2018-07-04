@@ -55,6 +55,24 @@ void CAN_error(uint32_t error_info) {
     }
 }
 
+// wait for a message to be received
+// but reboot if one hasn't been in the last 10 seconds
+static inline void can_wait_rx(void) {
+    int msg_timeout = 10000; // ms
+    while (!msg_was_received) {
+        LPC_CCAN_API->isr();
+        // decrement timeout if one ms systick elapsed
+        if (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) {
+            msg_timeout--;
+        }
+        if (msg_timeout == 0) {
+            // reboot back into the app
+            reboot(true);
+        }
+    }
+    msg_was_received = false;
+}
+
 // send a response and wait for successful transmission
 // (command field has already been populated by main loop)
 static void bl_respond(uint8_t response) {
@@ -123,10 +141,7 @@ void bootload(void) {
 
     while (1) {
         // wait for a command to be received
-        while (!msg_was_received) {
-            LPC_CCAN_API->isr();
-        }
-        msg_was_received = false;
+        can_wait_rx();
 
         // update command for response
         if (rxmsg.dlc > 0) {
