@@ -14,15 +14,16 @@ import time
 
 parser = argparse.ArgumentParser(description=
     "Program the Einstein Motorsport dashboard or wheelboard over CAN. "
-    "Destination is read from the application file.")
+    "The device to program is read from the application image.")
 parser.add_argument('application', type=argparse.FileType('rb'),
-    help="Application memory image (.bin) to program")
+    help="Application memory image (.bin) to program.")
 parser.add_argument('-u', '--utilization', type=int, default=25,
     help="Maximum bus utilization permitted, in percent. Higher values "
          "allow faster programming, but may cause other devices on the "
-         "bus to function incorrectly. ")
+         "bus to function incorrectly. Integer between 1 and 100, "
+         "default value is 25.")
 parser.add_argument('-v', '--verbose', action="store_true", default=False,
-    help="Provide more detail during programming and errors.")
+    help="Provide more detail during programming and after errors.")
 
 args = parser.parse_args()
 
@@ -31,8 +32,7 @@ class BootloadError(Exception):
 
 class ImageError(BootloadError):
     def __str__(self):
-        return "Application image is corrupt: "+\
-            super().__str__()
+        return "Application image is corrupt: "+super().__str__()
 
 class CANError(BootloadError):
     def __str__(self):
@@ -46,7 +46,7 @@ def read_image():
     image = args.application.read()
     # header is 32 bytes
     if len(image) < 32:
-        raise ImageError("header is missing")
+        raise ImageError("header is missing.")
 
     # note that the bootloader does the same tests
     # and checksums
@@ -54,19 +54,19 @@ def read_image():
     # validate the header checksum
     header = struct.unpack("<8I", image[:32])
     if sum(header) & 0xFFFFFFFF != 0:
-        raise ImageError("header checksum failed")
+        raise ImageError("header checksum failed.")
 
     # get the header size and crc, then validate it that way
     app_crc = header[4]
     app_size = header[5]
     if app_size < 40*8 or app_size > (0x7000-(4*8)):
-        raise ImageError("application size in header is invalid")
+        raise ImageError("application size in header is invalid.")
     if app_size != len(image)-32:
-        raise ImageError("application size in header is incorrect")
+        raise ImageError("application size in header is incorrect.")
 
     crc = binascii.crc32(image[32:], 0)
     if crc != app_crc:
-        raise ImageError("application checksum failed")
+        raise ImageError("application checksum failed.")
 
     # pad the image with 0xFF to be a multiple of 256 bytes
     # (because the image is sent in 256 byte pages)
@@ -101,7 +101,7 @@ CMD_HELLO_KEY = 0xb00710ad
 class CAN:
     def __init__(self, app_name, channel, baudrate, utilization):
         if utilization < 1 or utilization > 100:
-            raise CANError("utilization percent must be an integer between 1 and 100")
+            raise CANError("utilization percent must be an integer between 1 and 100.")
         try:
             self.bus = can.interface.Bus(
                 bustype='vector',
@@ -120,7 +120,7 @@ class CAN:
                 raise CANError("could not initialize. "
                     "Is the interface plugged in?") from e
             else:
-                raise CANError("could not initialize.") from e
+                raise CANError("could not initialize: "+str(e)) from e
         except ValueError as e:
             # thrown by python-can 2.2.0 in this case
             # may be hiding something else but idk what to do
@@ -182,20 +182,20 @@ class CAN:
             raise CANError("timed out waiting for message to be transmitted. "
                 "Are CANH and CANL connected properly?")
         if m.arbitration_id != BOOTLOAD_CAN_CMD_ADDR or m.data != data:
-            raise CANError("received message unexpectedly")
+            raise CANError("received message unexpectedly: "+str(m))
 
     def recv_response(self, timeout=5, expected_resp=None):
         m = self.recv_filtered(timeout=timeout)
         if m is None:
             raise CANError("timed out waiting for message to be received.")
         if len(m.data) != 2:
-            raise ProgramError("response length is incorrect.")
+            raise ProgramError("response length is incorrect: {}".format(len(m.data)))
         cmd, resp = m.data[0], m.data[1]
         # some responses we can deal with here
         if cmd != self.last_cmd:
-            raise ProgramError("received response to incorrect command.")
+            raise ProgramError("received response to incorrect command: {}".format(cmd))
         elif cmd > CMD_REBOOT:
-            raise ProgramError("received response for invalid command.")
+            raise ProgramError("received response for invalid command: {}".format(cmd))
         if resp == RESP_INVALID_COMMAND:
             raise ProgramError("received 'invalid command' response.")
         elif resp == RESP_ERROR:
@@ -203,7 +203,7 @@ class CAN:
         elif resp == RESP_PROGRAM_FAILURE:
             raise ProgramError("Flash programming failure. Chip may be damaged.")
         elif expected_resp is not None and resp != expected_resp:
-            raise ProgramError("unexpected response.")
+            raise ProgramError("unexpected response: {}".format(cmd))
         # otherwise, return it for the caller
         return resp
 
@@ -256,9 +256,9 @@ class Programmer:
                 continue
             if r == RESP_SUCCESS:
                 break
-            raise ProgramError("unexpected response.")
+            raise ProgramError("unexpected response: {}".format(response))
         else: # loop did not break -> we were never successful
-            raise ProgramError("page was corrupt, even after 5 attempts to transfer. "
+            raise ProgramError("page transfer failed 5 times. "
                 "Are CANH and CANL connected properly? Is there noise on the bus?")
 
     def reboot(self):
