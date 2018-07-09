@@ -27,5 +27,5 @@ else
 fi
 
 arm-none-eabi-objcopy --update-section .text=text.bin "$1"
-
 rm text.bin mem_img.bin
+echo "finished checksum calculation!"

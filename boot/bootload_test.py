@@ -1,4 +1,5 @@
 from struct import pack
+import struct
 
 import can
 canbus = can.interface.Bus(
