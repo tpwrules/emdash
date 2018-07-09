@@ -82,10 +82,10 @@ void warn_init(void) {
     scr_draw_text(SCR_TEXT_ADDR(0, 0, 6), "Tmot???\xF8""C 2:???\xF8""C");
     scr_draw_text(SCR_TEXT_ADDR(0, 0, 7), "Fuel??.?bar ???\xF8""C");
     scr_draw_text(SCR_TEXT_ADDR(0, 29, 7), "Batt: ??.?V");
-    scr_draw_rect(SCR_PIXEL_ADDR(0, 4*6-1, 40), 1, 24, 1);
-    scr_draw_rect(SCR_PIXEL_ADDR(0, 12*6-3, 40), 1, 8, 1);
-    scr_draw_rect(SCR_PIXEL_ADDR(0, 10*6-3, 48), 1, 8, 1);
-    scr_draw_rect(SCR_PIXEL_ADDR(0, 12*6-3, 56), 1, 8, 1);
+    // scr_draw_rect(SCR_PIXEL_ADDR(0, 4*6-1, 40), 1, 24, 1);
+    // scr_draw_rect(SCR_PIXEL_ADDR(0, 12*6-3, 40), 1, 8, 1);
+    // scr_draw_rect(SCR_PIXEL_ADDR(0, 10*6-3, 48), 1, 8, 1);
+    // scr_draw_rect(SCR_PIXEL_ADDR(0, 12*6-3, 56), 1, 8, 1);
 }
 
 // update handlers
