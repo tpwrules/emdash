@@ -108,7 +108,6 @@ class CAN:
                 app_name=app_name,
                 channel=channel,
                 bitrate=baudrate,
-                can_filters=[{"can_id":BOOTLOAD_CAN_RESP_ADDR, "can_mask":0x7FF}],
                 receive_own_messages=True
             )
         except can.interfaces.vector.exceptions.VectorError as e:
@@ -140,6 +139,25 @@ class CAN:
         self.msgs_sent = 0
         self.next_msg_time = time.perf_counter()
 
+    def recv_filtered(self, timeout):
+        # apparently can_filters just doesn't work
+        # so we'll have to do it ourselves!
+        while timeout > 0:
+            start = time.monotonic()
+            m = self.bus.recv(timeout)
+            # subtract time elapsed from timeout duration
+            # in case we need to recv again
+            timeout -= time.monotonic()-start
+            # but if m is None, we've timed out for real
+            if m is None:
+                return None
+
+            if (m.arbitration_id == BOOTLOAD_CAN_CMD_ADDR or
+                    m.arbitration_id == BOOTLOAD_CAN_RESP_ADDR) and \
+                    m.is_error_frame is False:
+                # a message made it past the filter
+                return m
+
     def send_data(self, data):
         self.last_cmd = data[0] # used to verify response
         m = can.Message(arbitration_id=BOOTLOAD_CAN_CMD_ADDR,
@@ -159,19 +177,15 @@ class CAN:
         self.next_msg_time = now + self.msg_interval
 
         # next received message should be the transmission receipt
-        while True:
-            m = self.bus.recv(timeout=3)
-            if m is not None and m.is_error_frame:
-                continue
-            break
+        m = self.recv_filtered(timeout=5)
         if m is None:
             raise CANError("timed out waiting for message to be transmitted. "
                 "Are CANH and CANL connected properly?")
         if m.arbitration_id != BOOTLOAD_CAN_CMD_ADDR or m.data != data:
             raise CANError("received message unexpectedly")
 
-    def recv_response(self, timeout=3, expected_resp=None):
-        m = self.bus.recv(timeout=timeout)
+    def recv_response(self, timeout=5, expected_resp=None):
+        m = self.recv_filtered(timeout=timeout)
         if m is None:
             raise CANError("timed out waiting for message to be received.")
         if len(m.data) != 2:
@@ -212,8 +226,8 @@ class Programmer:
             except CANError:
                 continue
         else: # loop did not break -> receive always timed out
-            raise ProgramError("connection failed. Device did not respond. "
-                "Is it turned on?")
+            raise ProgramError("connection failed. Device did not respond "
+                "to 'Hello'. Is it turned on?")
 
     def erase(self):
         # send erase command and wait for it to happen
@@ -268,10 +282,10 @@ def main():
     prog = Programmer(bus, image)
 
     # and run through all the steps
-    print("Connecting to device... ", end="")
+    print("Connecting to device... ", end="", flush=True)
     prog.connect()
     print("connected!")
-    print("Erasing Flash... ", end="")
+    print("Erasing Flash... ", end="", flush=True)
     prog.erase()
     print("erased!")
 
@@ -282,7 +296,7 @@ def main():
         prog.program_page(page)
     print("programmed!")
 
-    print("Rebooting into application... ", end="")
+    print("Rebooting into application... ", end="", flush=True)
     prog.reboot()
     print("rebooted!")
     print("")
