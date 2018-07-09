@@ -29,6 +29,9 @@ def process_response(success=True):
     else:
         raise Exception("got {} for command {}".format(resp, cmd))
 
+import sys
+import binascii
+
 img = open(sys.argv[1], "rb").read()
 if len(img) % 256 != 0:
     # pad with 0xFF for checksumming purposes
@@ -53,9 +56,6 @@ if m is None:
 cmd, resp = m
 if cmd == 0 and resp == 1:
     print("they said hello back!")
-
-import sys
-import binascii
 
 print("erasing chip... ", end="")
 send_data(pack("<B", 1))
