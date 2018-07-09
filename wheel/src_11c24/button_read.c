@@ -40,7 +40,6 @@ uint8_t br_traction_knob(void) {
     static uint8_t val = 0;
 
     // read value from ADC
-    // TODO: do it without chip library
     uint16_t now = 0;
     Chip_ADC_EnableChannel(LPC_ADC, ADC_CH0, ENABLE);
     // start conversion
@@ -74,7 +73,7 @@ uint8_t br_traction_knob(void) {
             val = (switch_pos >> 2) + 1;
             break;
     }
-    
+
     // return the switch position with hysteresis
     return val;
 }
@@ -82,7 +81,6 @@ uint8_t br_traction_knob(void) {
 
 void br_init(void) {
     // initialize the ADC so it can be used for the A pins
-    // TODO: do it without chip library
     ADC_CLOCK_SETUP_T ADCSetup;
     Chip_ADC_Init(LPC_ADC, &ADCSetup);
 
