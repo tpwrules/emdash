@@ -1,7 +1,5 @@
 #!/bin/sh
 
-set -e
-
 # argument $1 is input filename
 
 arm-none-eabi-objcopy -O binary "$1" mem_img.bin
@@ -27,5 +25,5 @@ else
 fi
 
 arm-none-eabi-objcopy --update-section .text=text.bin "$1"
+
 rm text.bin mem_img.bin
-echo "finished checksum calculation!"
