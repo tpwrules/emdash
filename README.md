@@ -101,3 +101,28 @@ The build tools provide the compiler used to compile the application for simulat
 * Download the Build Tools for Visual Studio 2017 installer from <https://go.microsoft.com/fwlink/?linkid=840931>.
 * Once the main installer loads, check 'Visual C++ build tools' under the 'Workloads' tab and click Install
 * Wait quite a while. Once finished, try to run the script again. If it says `PC APP BUILT SUCCESSFULLY`, you've successfully built the simulator and you should be able to run it by running `pc_app.py`.
+
+## Installing the CAN libraries
+The LPC11C24 code has a bootloader and PC-based programming application so that the devices can be reprogrammed over CAN. The simulator can generate and receive CAN messages for test purposes. Both of these functionalities require the installation of CAN libraries for Python and the appropriate hardware drivers.
+
+#### Installing the Python libraries
+* Open up a command prompt.
+* Run the command `python3 -m pip install python-can` or `py -3 -m pip install python-can` (on Windows)
+
+#### Installing the Vector drivers
+The program uses Vector CAN interfaces. You can try to run the programming application to see if the correct drivers are already installed. If the Vector interface drivers are not installed, they are available [here](https://vector.com/vi_downloadcenter_en.html?type=Driver&formular_treffer_submit=1). Download the latest version of "Vector Driver Setup".
+
+* Open a command prompt
+* Change directories to balsdjfsldf
+* Run `the bootloader program`. If you see the error message `The Vector API has not been loaded`, the drivers must be installed. If you see a different error, continue to dkjfas;.
+* Run the Vector Driver Setup installer program. Select and install the interface types you wish to use.
+* Driver installation is now complete.
+
+#### Configuring the Vector drivers
+The Vector drivers require you to create an application configuration, which tells the application which hardware to use.
+
+* Open the Windows Control Panel and select the Vector Hardware option.
+* Select Application -> Add in the top bar to create a new application.
+* Name the application `emdash`, set 1 CAN channel and 0 for all other types, and click OK.
+* Select Application -> emdash in the left pane, then right-click on CAN 1 and select the interface you wish to use. You may have to plug in your interface first.
+* Close the window. Configuration is now complete.
