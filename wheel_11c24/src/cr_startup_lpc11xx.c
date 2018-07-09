@@ -30,6 +30,9 @@
 //*****************************************************************************
 
 #include "bootload_integrate.h"
+// system ID that this image is for
+// gets cast appropriately and put in the vector table
+#define SYS_ID (BOOTLOAD_SYSTEM_ID_WHEELBOARD)
 
 #if defined (__cplusplus)
 #ifdef __REDLIB__
@@ -150,7 +153,7 @@ void (* const g_pfnVectors[])(void) = {
                                             // 32 byte header
     0,                                      // Reserved
     __valid_user_code_checksum,             // LPC MCU Checksum
-    BOOTLOAD_SYSTEM_ID_WHEELBOARD,          // System ID image is for
+    (void (*)(void))SYS_ID,                 // System ID that image is for
     0,                                      // Reserved
     0,                                      // Reserved
     SVC_Handler,                            // SVCall handler
