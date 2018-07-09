@@ -10,6 +10,7 @@ BOOTLOAD_CAN_RESP_ADDR = 0x7EE
 import argparse
 import struct
 import binascii
+import time
 
 parser = argparse.ArgumentParser(description=
     "Program the Einstein Motorsport dashboard or wheelboard over CAN. "
@@ -137,14 +138,26 @@ class CAN:
 
         self.last_cmd = None
         self.msgs_sent = 0
+        self.next_msg_time = time.perf_counter()
 
     def send_data(self, data):
         self.last_cmd = data[0] # used to verify response
         m = can.Message(arbitration_id=BOOTLOAD_CAN_CMD_ADDR,
             data=data, extended_id=False)
         self.msgs_sent += 1
+
+        # busywait until we're allowed to send the next message
+        # putting > 0 for sleep is way too slow
+        now = time.perf_counter()
+        while self.next_msg_time > now:
+            time.sleep(0)
+            now = time.perf_counter()
         self.bus.send(m)
         self.bus.flush_tx_buffer()
+        # allow next message to be sent at the interval
+        # calculated to allow the desired bus utilizaton
+        self.next_msg_time = now + self.msg_interval
+
         # next received message should be the transmission receipt
         while True:
             m = self.bus.recv(timeout=3)
@@ -240,7 +253,6 @@ class Programmer:
         self.bus.send_data(struct.pack("<BB", CMD_REBOOT, True))
         self.bus.recv_response(expected_resp=RESP_SUCCESS)
 
-import time
 
 def main():
     # start out by reading in the image data
@@ -268,7 +280,6 @@ def main():
         print("\rProgramming page {}/{}... ".format(page+1, num_pages),
             end="", flush=True)
         prog.program_page(page)
-
     print("programmed!")
 
     print("Rebooting into application... ", end="")
