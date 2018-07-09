@@ -51,23 +51,8 @@ You can download the MCUXpresso 10.1.1 installer from [here](https://www.nxp.com
 
 Run the installer using all the default options. Make a workspace in your favorite place.
 
-#### Importing the chip libraries
-NXP has provided libraries to use the chip's hardware. These libraries must be imported into the MCUxpresso workspace so that the application software can use them. The easiest way to import them is to create a new project, but cancel creation after the libraries have been imported.
-
-* Open MCUXpresso
-* Select File -> New -> Project from the top menu
-* Under the MCUxpresso IDE category, select New C/C++ Project and click Next
-* Select the LPCXpresso11C24 board and click Next
-* Select an LPCOpen - C Project and click Next
-* Give the project whatever name you want. It doesn't matter, it won't be saved.
-* Click the Import... button to import the chip libraries
-* In the Import window, click Browse... next to the Archive box.
-* Choose the LPC11C24 libraries by looking in the LPCOpen folder for the file with `11c24` in its name, selecting it, and clicking Open. Click Next on the Import window.
-* Check only `lpc_chip_11cxx_lib` and click Finish.
-* Click Cancel on the New Project window. Chip library import is now complete.
-
 #### Importing the code
-Now that the chip libraries are available, you can import this project into MCUXpresso.
+Now that the projects are downloaded, they can be imported into MCUXpresso.
 
 * Select File -> Import
 * Select to import Git -> Projects from Git and click Next
