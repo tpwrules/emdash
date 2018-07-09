@@ -13,7 +13,7 @@ void handler (void) {\
             "bx r3");\
 }
 
-// second version for address > 128
+// second version for address > 128 (which first version could not reach)
 #define IRQ_REDIRECT2(handler, which) IRQ_REDIRECT_real(handler, (which*4)-0x80)
 
 #define IRQ_REDIRECT2_real(handler, addr) \

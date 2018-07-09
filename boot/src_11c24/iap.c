@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "iap.h"
 #include "chip.h"
 #include "protocol.h"
 
@@ -50,13 +51,13 @@ static uint32_t iap_call(uint32_t cmd) {
 }
 
 // erase and blank check the chip
-// returns a protocol error or success
+// returns a protocol response code
 uint8_t iap_erase_and_blank_check(void) {
     uint32_t status; // result of command
 
     // set up command table to hit all the sectors
-    command[1] = 1; // first sector to operate on
-    command[2] = HW_TOTAL_SECTORS-1; // last sector to operate on
+    command[1] = PAGE_TO_SECTOR(0); // first sector to operate on
+    command[2] = PAGE_TO_SECTOR(HW_AVAIL_PAGES-1); // last sector to operate on
     command[3] = CPU_CLK; // erase routine needs to know CPU clock in kHz
 
     // prepare the sectors for writing
@@ -89,14 +90,13 @@ uint8_t iap_erase_and_blank_check(void) {
 }
 
 // program and verify a specific page
-// returns a protocol error or success
+// returns a protocol response code
 uint8_t iap_program_and_verify(uint16_t page_num, uint32_t* data) {
     uint32_t status; // result of command
 
     // first, prepare the appropriate sector for programming
-    uint32_t sector = 1 + (page_num >> 4);
-    command[1] = sector;
-    command[2] = sector;
+    command[1] = PAGE_TO_SECTOR(page_num); // start and end sectors
+    command[2] = PAGE_TO_SECTOR(page_num); // are the same
     status = iap_call(PREPARE_SECTOR);
     if (status != CMD_SUCCESS) {
         // this should succeed, so if it doesn't
@@ -105,7 +105,7 @@ uint8_t iap_program_and_verify(uint16_t page_num, uint32_t* data) {
     }
 
     // now actually do the programming
-    command[1] = 0x1000 + (page_num<<8); // destination flash address
+    command[1] = PAGE_TO_ADDRESS(page_num); // destination flash address
     command[2] = (uint32_t)data; // source ram address
     command[3] = 256; // writing 256 bytes
     command[4] = CPU_CLK; // CPU frequency in kHz

@@ -21,7 +21,7 @@ static CCAN_MSG_OBJ_T rxmsg = {
 };
 
 // configure second message object to transmit responses
-// default response is HELLO
+// default response is Hello
 static CCAN_MSG_OBJ_T txmsg = {
     BOOTLOAD_CAN_RESP_ADDR, 0,
     {CMD_HELLO, RESP_HELLO, 0, 0, 0, 0, 0, 0}, 2,
@@ -87,6 +87,7 @@ static void bl_respond(uint8_t response) {
 }
 
 // page buffer data and pointer
+// data must be 32 bit aligned for IAP routine
 static uint32_t page_buf[256/4];
 static uint8_t page_buf_ptr;
 
@@ -155,7 +156,7 @@ void bootload(void) {
             continue;
         }
 
-        // process if it's a hello command
+        // process if it's a Hello command
         if (rxmsg.dlc == CMDLEN_HELLO && rxmsg.data[0] == CMD_HELLO) {
             // extract parameters
             uint16_t system_id;
@@ -181,7 +182,7 @@ void bootload(void) {
             continue;
         }
 
-        // otherwise, look it up in switch statement
+        // otherwise, process by command number
         switch (rxmsg.data[0]) {
             case CMD_ERASE_ALL:
                 if (rxmsg.dlc != CMDLEN_ERASE_ALL) {
@@ -218,12 +219,12 @@ void bootload(void) {
                     bl_respond(RESP_INVALID_COMMAND);
                 } else {
                     bl_cmd_reboot(rxmsg.data[1] != 0);
-                    // response is handled within command
+                    // response is handled within command function
                 }
                 break;
 
             default:
-                // invalid command, sorry
+                // don't know what you mean, sorry
                 bl_respond(RESP_INVALID_COMMAND);
                 break;
         }

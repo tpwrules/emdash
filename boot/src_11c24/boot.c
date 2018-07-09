@@ -6,7 +6,7 @@
 #include "bootload_integrate.h"
 #include "crc32.h"
 
-// set up CPU and jump to application code
+// set up stack and jump to application code
 __attribute__ ((naked, noreturn, section(".after_vectors")))
 static void boot_app(void) {
     __asm__("ldr r3, =0x1000\n\t" // app vector table is at 0x1000
@@ -16,15 +16,19 @@ static void boot_app(void) {
             "bx r2"); // is the address of the first instruction
 }
 
+// if this function returns, something went wrong
 void boot_app_if_possible(void) {
-    // boot into bootloader if the appropriate memory is poked
-    uint32_t* boot_flag = (uint32_t*)(BOOTLOAD_ENTER_KEY_ADDR);
-    if (*boot_flag == BOOTLOAD_ENTER_KEY) {
-        *boot_flag = 0; // clear boot flag for next boot
-        return; // magic value met, enter bootloader
+    // boot into bootloader if the enter key is at the correct address
+    uint32_t* boot_enter_key = (uint32_t*)(BOOTLOAD_ENTER_KEY_ADDR);
+    if (*boot_enter_key == BOOTLOAD_ENTER_KEY) {
+        // clear enter key so that a reboot won't automatically
+        // enter the bootloader
+        *boot_enter_key = 0;
+        return;
     }
 
-    // verify application and boot if it's okay
+    // if the enter key isn't correct, we verify the application
+    // and boot it if it checks out
 
     // application vectors start at the beginning of sector 1
     const uint32_t* app_vectors = (const uint32_t*)(0x1000);
@@ -32,7 +36,7 @@ void boot_app_if_possible(void) {
     uint32_t sum = 0;
     for (int i=0; i<8; i++)
         sum += app_vectors[i];
-    if (sum) // it's not, abandon booting
+    if (sum != 0)
         return;
 
     // pull expected crc and image size from the vectors
@@ -42,22 +46,23 @@ void boot_app_if_possible(void) {
     if (app_size > (0x7000-(4*8)) || app_size < 40*8)
         return;
     // calculate CRC based on above data
-    // it starts at the 9th header entry
+    // it starts calculating at the 9th header entry
     uint32_t calculated_crc = crc32_calc((const uint8_t*)&app_vectors[8], app_size);
-    // and boot if it matches what was stored
-    if (calculated_crc == expected_crc) {
-        boot_app();
-    }
+    if (calculated_crc != expected_crc)
+        return;
 
-    // hm, it doesn't match
-    return; // start the bootloader itself
+    // all checks passed!
+    // boot into the application
+    boot_app();
 }
 
-// reboot, into application if asked
+// reboot either into application (if possible) or bootloader
 void reboot(bool into_app) {
-    // set up magic boot flag to specific value to change boot type
-    uint32_t* boot_flag = (uint32_t*)(BOOTLOAD_ENTER_KEY_ADDR);
-    *boot_flag = into_app ? 0 : BOOTLOAD_ENTER_KEY;
+    // set enter key to enter bootloader if we're not booting into the application
+    if (!into_app) {
+        uint32_t* boot_enter_key = (uint32_t*)(BOOTLOAD_ENTER_KEY_ADDR);
+        *boot_enter_key = BOOTLOAD_ENTER_KEY;
+    }
     // and reset system
     NVIC_SystemReset();
 }

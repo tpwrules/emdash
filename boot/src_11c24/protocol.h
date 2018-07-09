@@ -3,26 +3,13 @@
 
 // this file contains definitions of the commands
 // and responses used in the bootloading protocol
-// plus other stuff
 
 #include "bootload_integrate.h"
 
-// address which the bootloader receives commands at
-#define CAN_CMD_ADDR (BOOTLOAD_CAN_CMD_ADDR)
-
-// address which the bootloader sends responses from
-#define CAN_RESP_ADDR (BOOTLOAD_CAN_RESP_ADDR)
-
-// number of sectors in the flash
-#define HW_TOTAL_SECTORS (8)
-
-// number of accessible pages (not taken by bootloader)
-#define HW_AVAIL_PAGES (0x7000/0x100)
-
 // Command Processing
-// commands are sent to CAN_CMD_ADDR above
-// and a response is sent from CAN_RESP_ADDR
-// with the exception of Page Data
+// commands are sent to BOOTLOAD_CAN_CMD_ADDR
+// and a response is sent from BOOTLOAD_CAN_RESP_ADDR
+// (unless the command was Page Data)
 
 // Command Format
 // the first byte of a command is its ID and the next are its arguments
@@ -70,7 +57,7 @@
 // multiple times. perhaps resend if there is no response after 100ms
 // and abort after 10 tries.
 
-// the Hello command
+// the Hello command (actual definitions in bootload_integrate.h)
 // send this to connect to the bootloader
 // first argument is 16 bit little endian system ID
 // second argument is 32 bit little endian key which must be equal to

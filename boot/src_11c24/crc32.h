@@ -2,7 +2,7 @@
 #define CRC_32_H
 
 // implementation of CRC32
-// inspired by http://www.hackersdelight.org/hdcodetxt/crc.c.txt
+// taken from http://www.hackersdelight.org/hdcodetxt/crc.c.txt
 
 #include <inttypes.h>
 

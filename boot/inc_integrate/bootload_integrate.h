@@ -7,7 +7,9 @@
 // running with this bootloader
 
 #define BOOTLOAD_ENTER_KEY (0xb00710ad)
-#define BOOTLOAD_ENTER_KEY_ADDR (0x10000000) // first address in RAM
+// first address in RAM. not used by ROM bootloader, our bootloader,
+// or any application
+#define BOOTLOAD_ENTER_KEY_ADDR (0x10000000)
 
 // address which the bootloader receives commands at
 // known so that the app can parse a Hello

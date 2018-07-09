@@ -1,5 +1,8 @@
 #include <inttypes.h>
 
+// implementation of CRC32
+// taken from http://www.hackersdelight.org/hdcodetxt/crc.c.txt
+
 #include "crc32.h"
 
 __attribute__ ((section(".after_vectors")))
@@ -22,7 +25,7 @@ uint32_t crc32_calc(const uint8_t* data, uint32_t len) {
 
     // now that we have the table
     // we can calculate the CRC
-    crc = 0xFFFFFFFF; // initial CRC is 0
+    crc = ~(0); // initial CRC is 0
     for(int i=0; i<len; i++) {
         crc = (crc >> 8) ^ table[(crc ^ data[i]) & 0xFF];
     }
