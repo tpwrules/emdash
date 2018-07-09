@@ -29,10 +29,17 @@ def process_response(success=True):
     else:
         raise Exception("got {} for command {}".format(resp, cmd))
 
+img = open(sys.argv[1], "rb").read()
+if len(img) % 256 != 0:
+    # pad with 0xFF for checksumming purposes
+    img += b"\xFF"*(256-(len(img)%256))
+
+system_id = struct.unpack("<I", img[32:36])&0xFFFF
+
 print("saying hello")
 m = None
 for hi in range(10):
-    send_data(pack("<BHI", 0, 1, 0xb00710ad))
+    send_data(pack("<BHI", 0, system_id, 0xb00710ad))
     try:
         m = get_response(timeout=0.2)
         break
@@ -49,11 +56,6 @@ if cmd == 0 and resp == 1:
 
 import sys
 import binascii
-
-img = open(sys.argv[1], "rb").read()
-if len(img) % 256 != 0:
-    # pad with 0xFF for checksumming purposes
-    img += b"\xFF"*(256-(len(img)%256))
 
 print("erasing chip... ", end="")
 send_data(pack("<B", 1))
