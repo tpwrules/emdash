@@ -56,14 +56,25 @@ uint8_t br_traction_knob(void) {
     uint16_t switch_pos = (now * ((TRACTION_NUM_POS-1)*4)) / 1024;
 
     // act on that with hysteresis
-    if ((switch_pos & 3) == 0) {
-        // current value
-        val = switch_pos >> 2;
-    } else if ((switch_pos & 3) == 3) {
-        // next higher value
-        val = (switch_pos >> 2) + 1;
+    switch (switch_pos & 3) {
+        case 0: // definitely at current value
+            val = switch_pos >> 2;
+            break;
+        case 1: // should be current value
+            // as long as it's not the next higher value
+            if (val != (switch_pos >> 2) + 1)
+                val = switch_pos >> 2;
+            break;
+        case 2: // should be next higher value
+            // as long as it's not current value
+            if (val != switch_pos >> 2)
+                val = (switch_pos >> 2) + 1;
+            break;
+        case 3: // definitely at next higher value
+            val = (switch_pos >> 2) + 1;
+            break;
     }
-
+    
     // return the switch position with hysteresis
     return val;
 }
