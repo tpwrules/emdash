@@ -38,7 +38,7 @@ if len(img) % 256 != 0:
     # pad with 0xFF for checksumming purposes
     img += b"\xFF"*(256-(len(img)%256))
 
-system_id = struct.unpack("<I", img[32:36])&0xFFFF
+system_id = struct.unpack("<I", img[32:36])[0]&0xFFFF
 
 print("saying hello")
 m = None
