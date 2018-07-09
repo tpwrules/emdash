@@ -58,28 +58,43 @@ cmd, resp = m
 if cmd == 0 and resp == 1:
     print("they said hello back!")
 
+import time
+
+
 print("erasing chip... ", end="")
 send_data(pack("<B", 1))
 process_response()
 
 print("programming {} pages...".format(len(img)>>8))
 
+timenow = time.monotonic()
+msgs = 0
+
 for pi in range(0, len(img), 256):
     print("{}/{}... ".format(pi, len(img)), end="")
     pd = img[pi:pi+256]
     # empty page buffer
     send_data(pack("<B", 2))
+    msgs += 1
     process_response(False)
     # send data
     for pdi in range(0, 256, 8):
         send_data(pd[pdi:pdi+8])
+        msgs += 1
     # checksum page
     crc = binascii.crc32(pd, 0)
     # and program it
     send_data(pack("<BHI", 3, pi>>8, crc))
+    msgs += 1
     process_response()
+
+timeafter = time.monotonic()
 
 print("rebooting into app... ")
 send_data(pack("<BB", 4, 1))
 process_response()
+
+print("msgs/sec:", int(msgs/(timeafter-timenow)))
+
+
 canbus.shutdown()
