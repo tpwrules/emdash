@@ -52,21 +52,26 @@ static void CAN_rx(uint8_t msg_obj_num) {
     // so don't bother resetting the msgobj number
     LPC_CCAN_API->can_receive(&msg_obj);
     
-    // check if this message is asking us to reboot
-    // into the bootloader
-    if (msg_obj.mode_id == BOOTLOAD_CAN_CMD_ADDR &&
-            msg_obj.dlc == BOOTLOAD_CMDLEN_HELLO &&
-            msg_obj.data[0] == BOOTLOAD_CMD_HELLO) {
-        // it seems to be. let's verify the parameters
-        uint16_t system_id;
-        uint32_t hello_key;
-        memcpy(&system_id, &msg_obj.data[1], 2);
-        memcpy(&hello_key, &msg_obj.data[3], 4);
-        if (system_id == BOOTLOAD_SYSTEM_ID_WHEELBOARD &&
-                hello_key == BOOTLOAD_CMD_HELLO_KEY) {
-            // do what they want
-            reboot_into_bootloader();
+    // check if this is a bootloader related message
+    if (msg_obj.mode_id == BOOTLOAD_CAN_CMD_ADDR) {
+        // check if this message is asking us to reboot
+        // into the bootloader
+        if (msg_obj.dlc == BOOTLOAD_CMDLEN_HELLO &&
+                msg_obj.data[0] == BOOTLOAD_CMD_HELLO) {
+            // it seems to be. let's verify the parameters
+            uint16_t system_id;
+            uint32_t hello_key;
+            memcpy(&system_id, &msg_obj.data[1], 2);
+            memcpy(&hello_key, &msg_obj.data[3], 4);
+            if (system_id == BOOTLOAD_SYSTEM_ID_WHEELBOARD &&
+                    hello_key == BOOTLOAD_CMD_HELLO_KEY) {
+                // do what they want
+                reboot_into_bootloader();
+            }
         }
+        // if it's not just ignore it
+    } else if (msg_obj.mode_id != BOOTLOAD_CAN_RESP_ADDR) {
+        // do other CAN processing
     }
 }
 
