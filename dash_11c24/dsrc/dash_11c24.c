@@ -21,65 +21,17 @@
 // TODO: insert other include files here
 
 #include "../src/app.h"
-#include "../src/canvar.h"
 #include "../src_11c24/t6963.h"
 #include "../src_11c24/can_log.h"
 #include "../src_11c24/can_hw.h"
-#include "../src_11c24/platform_11c24.h"
-#include "../src_gen/canvar_defs.h"
 
 // TODO: insert other definitions and declarations here
 
-uint32_t systicks = 0;
-
-#ifdef CAN_LOG_DISPLAY_ENABLED
-static const can_log_entry_t *curr_log_entry = &can_log_entries[0];
-#endif
-
-void SysTick_Handler(void) {
-    systicks++;
-	// call the application 10ms timer interrupt
-	app_timer_interrupt();
-
-    // inform the app of CPU usage if it's time
-    static uint32_t cpu_usage_timeout = 50;
-    if (--cpu_usage_timeout == 0) {
-        cpu_usage_timeout = 50;
-        uint32_t percent = cycles_asleep * 100 / (48000000/2);
-        cycles_asleep = 0;
-        app_canvar_interrupt(CV_ID_NOBUS_CPU_IDLE_PERCENT, percent);
-    }
-
-    // play back can log if allowed
-#ifdef CAN_LOG_DISPLAY_ENABLED
-    while (1) {
-        // if dlc is 0xFF, the log is at the end
-        if (curr_log_entry->dlc == 0xFF) {
-            systicks = 0;
-            curr_log_entry = &can_log_entries[0];
-        }
-
-        // check if it's time for this message yet
-        if (curr_log_entry->time > systicks) break;
-
-        // awesome, send it on
-        app_can_interrupt(curr_log_entry->id,
-            curr_log_entry->dlc,
-            curr_log_entry->data);
-
-        // and process next entry
-        curr_log_entry++;
-    }
-#endif
-}
-
 int main(void) {
-
 #if defined (__USE_LPCOPEN)
     // Read clock settings and update SystemCoreClock variable
     SystemCoreClockUpdate();
 #endif
-
 
     __disable_irq();
 

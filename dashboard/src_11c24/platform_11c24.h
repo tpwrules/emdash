@@ -12,6 +12,6 @@
 // must be called with interrupts disabled to avoid waiting forever
 void interrupt_wait(void);
 
-extern uint32_t cycles_asleep;
+void SysTick_Handler(void);
 
 #endif
