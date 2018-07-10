@@ -50,11 +50,13 @@
 #define cv_tmot2 (canvar_states[21])
 #define CV_ID_NOBUS_CAN_STATUS (22)
 #define cv_nobus_can_status (canvar_states[22])
+#define CV_ID_NOBUS_CPU_IDLE_PERCENT (23)
+#define cv_nobus_cpu_idle_percent (canvar_states[23])
 
-extern volatile canvar_state_t canvar_states[23];
-extern const canvar_def_t canvar_defs[23];
+extern volatile canvar_state_t canvar_states[24];
+extern const canvar_def_t canvar_defs[24];
 
-#define CANVAR_NUM_VARS (23)
+#define CANVAR_NUM_VARS (24)
 #define CANVAR_ID_MAP_COUNT (18)
 extern const uint8_t canvar_id_map[18];
 

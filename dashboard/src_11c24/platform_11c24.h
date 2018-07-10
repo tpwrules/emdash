@@ -1,6 +1,8 @@
 #ifndef PLATFORM_11C24_H
 #define PLATFORM_11C24_H
 
+#include <stdint.h>
+
 #include "cmsis.h"
 
 // define the interrupt interface routines
@@ -8,9 +10,8 @@
 #define interrupt_enable() (__enable_irq())
 
 // must be called with interrupts disabled to avoid waiting forever
-#define interrupt_wait() do {\
-    __WFI(); \
-    __enable_irq();\
-    } while (0)
+void interrupt_wait(void);
+
+extern uint32_t cycles_asleep;
 
 #endif

@@ -1,6 +1,6 @@
 #include "../src/canvar.h"
 #include "canvar_defs.h"
-volatile canvar_state_t canvar_states[23];
+volatile canvar_state_t canvar_states[24];
 
 void modes_m1_aps_update(uint32_t val);
 void version_wb_commit_update(uint32_t val);
@@ -25,8 +25,9 @@ void warn_toil_update(uint32_t val);
 void warn_pfuel_update(uint32_t val);
 void warn_tmot2_update(uint32_t val);
 void cv_can_status_update(uint32_t val);
+void app_cpu_idle_percent_update(uint32_t val);
 
-const canvar_def_t canvar_defs[23] = {
+const canvar_def_t canvar_defs[24] = {
 {modes_m1_aps_update, 274, 0, 16, 0, 255},
 {version_wb_commit_update, 304, 0, 32, 0, 255},
 {version_wb_build_update, 304, 32, 32, 0, 255},
@@ -50,6 +51,7 @@ const canvar_def_t canvar_defs[23] = {
 {warn_pfuel_update, 1914, 56, 8, 0, 1},
 {warn_tmot2_update, 1914, 56, 8, 0, 2},
 {cv_can_status_update, 65535, 0, 32, 0, 255},
+{app_cpu_idle_percent_update, 65535, 0, 32, 0, 255},
 };
 
 const uint8_t canvar_id_map[18] = {

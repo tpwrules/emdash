@@ -25,6 +25,8 @@
 #include "../src_11c24/t6963.h"
 #include "../src_11c24/can_log.h"
 #include "../src_11c24/can_hw.h"
+#include "../src_11c24/platform_11c24.h"
+#include "../src_gen/canvar_defs.h"
 
 // TODO: insert other definitions and declarations here
 
@@ -38,6 +40,15 @@ void SysTick_Handler(void) {
     systicks++;
 	// call the application 10ms timer interrupt
 	app_timer_interrupt();
+
+    // inform the app of CPU usage if it's time
+    static uint32_t cpu_usage_timeout = 50;
+    if (--cpu_usage_timeout == 0) {
+        cpu_usage_timeout = 50;
+        uint32_t percent = cycles_asleep * 100 / (48000000/2);
+        cycles_asleep = 0;
+        app_canvar_interrupt(CV_ID_NOBUS_CPU_IDLE_PERCENT, percent);
+    }
 
     // play back can log if allowed
 #ifdef CAN_LOG_DISPLAY_ENABLED
@@ -79,6 +90,7 @@ int main(void) {
     lcd_init();
 
     // configure SysTick timer to fire every 10ms
+    // (handler is in platform_11c24.c)
     SysTick_Config(SystemCoreClock/100);
 
     // initialize CAN hardware

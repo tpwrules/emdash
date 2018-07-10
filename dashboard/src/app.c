@@ -145,3 +145,9 @@ void app_blank_mode(bool next) {
         app_mode_change_func = version_mode_change;
     }
 }
+
+void app_cpu_idle_percent_update(uint32_t val) {
+    char str[8];
+    sprintf(str, "%2u", (unsigned int)val);
+    scr_draw_text(SCR_TEXT_ADDR(0, 26, 7), str);
+}

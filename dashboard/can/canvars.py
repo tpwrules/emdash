@@ -196,7 +196,14 @@ variables = [
         name="nobus_can_status",
         msg_id=None, size=32, signed=False,
         callback="cv_can_status_update"
-    )
+    ),
+
+    # current idle cpu percent (sent internally)
+    Variable(
+        name="nobus_cpu_idle_percent",
+        msg_id=None, size=32, signed=False,
+        callback="app_cpu_idle_percent_update"
+    ),
 ]
 
 # sort variables by message ID then start byte
