@@ -92,10 +92,12 @@ void cv_status_mode_change(bool next) {
     // draw placeholder values
     scr_draw_text(SCR_TEXT_ADDR(0, 30, 2), "CAN:  good");
     scr_draw_text(SCR_TEXT_ADDR(0, 32, 3), "00000000");
+    scr_draw_text(SCR_TEXT_ADDR(0, 32, 6), "CPU:???%");
 
     // set messages to new so that they will be redrawn
     interrupt_disable();
     CV_RENEW(cv_nobus_can_status);
+    CV_RENEW(cv_nobus_cpu_idle_percent);
 }
 
 // CAN error meanings

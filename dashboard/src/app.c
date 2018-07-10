@@ -146,8 +146,11 @@ void app_blank_mode(bool next) {
     }
 }
 
+// part of CAN status page (in canvar.c)
 void app_cpu_idle_percent_update(uint32_t val) {
     char str[8];
-    sprintf(str, "%2u", (unsigned int)val);
-    scr_draw_text(SCR_TEXT_ADDR(0, 26, 7), str);
+    if (app_mode_change_func == cv_status_mode_change) {
+        sprintf(str, "%3u", (unsigned int)(100-val));
+        scr_draw_text(SCR_TEXT_ADDR(0, 36, 6), str);
+    }
 }
