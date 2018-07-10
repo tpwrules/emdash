@@ -65,4 +65,4 @@ This page displays the clutch system pressure (`pclutch`). It also displays the 
 
 #### CAN Status
 
-This page displays the status of the CANBUS engine. If there is an error, this page is automatically shown.
+This page displays the status of the CANBUS engine. If there is an error, this page is automatically shown. It also displays the current CPU usage of the dashboard processor. All messages will be processed, so high CPU usage will not result in incorrect operation. However, high CPU usage may slow down display updates. This is not a problem unless the CPU usage is 100% for long periods of time.

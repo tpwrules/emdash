@@ -92,6 +92,7 @@ void cv_status_mode_change(bool next) {
     // draw placeholder values
     scr_draw_text(SCR_TEXT_ADDR(0, 30, 2), "CAN:  good");
     scr_draw_text(SCR_TEXT_ADDR(0, 32, 3), "00000000");
+    // CPU usage handler is in app.c
     scr_draw_text(SCR_TEXT_ADDR(0, 32, 6), "CPU:???%");
 
     // set messages to new so that they will be redrawn
