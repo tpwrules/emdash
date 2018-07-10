@@ -10,16 +10,19 @@ The firmware is divided into four distinct sections:
 
 ## Application and Main Loop
 
-The application handles dash mode changes. It is responsible for clearing the screen in preparation for a mode change and calling the appropriate functions to coordinate the change. The variable `app_mode_change_func` should point to the mode change function. More details are in the customizer manual.
+The application receives the timer interrupt and contains the main loop. The main loop calls the variable handlers when there are new values.
 
-The application also receives the timer interrupt and contains the main loop. The main loop calls the variable handlers when there are new values.
+The application is responsible for dash mode changes. It clears the screen in preparation for a mode change and calls the appropriate functions to coordinate the change. The variable `app_mode_change_func` should point to the mode change function. More details are in the customizer manual.
 
-The application code is contained in `src/app.c`.
+The application code is contained in `src/app.c`. This file also has helper routines which may be useful across the application.
 
 ### Application Operations
 
 The following operations change the state of the application:
 * `void app_show_next_mode(void)` shows the next dash mode by clearing the mode area of the screen, then calling the function pointed to by `app_mode_change_func` with a `false` value.
+
+The following helper routines are available:
+* `uint32_t hysteresis(uint32_t old, uint32_t new, uint32_t max_delta)` applies hysteresis to a value. If the difference between `new` and `old` is greater than `max_delta`, the function returns `new`. Otherwise, it returns `old`.
 
 ## Canvar System and Variable Handlers
 

@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 
+#include "app.h"
 #include "platform.h"
 #include "warn.h"
 #include "canvar.h"
@@ -91,17 +92,21 @@ void warn_init(void) {
 // update handlers
 
 void warn_poil_update(uint32_t val) {
+    static uint32_t disp_val = 0;
     char str[8];
-    val /= 2;
+    disp_val = hysteresis(disp_val, val, 1);
+    disp_val /= 2;
     sprintf(str, "%2u,%u",
-        (unsigned int)(val/10), (unsigned int)(val%10));
+        (unsigned int)(disp_val/10), (unsigned int)(disp_val%10));
     scr_draw_text(SCR_TEXT_ADDR(0, 4, 5), str);
-    warn_set(BLINK_OIL_PRESSURE, val < LIM_OIL_PRESSURE_MIN);
+    warn_set(BLINK_OIL_PRESSURE, disp_val < LIM_OIL_PRESSURE_MIN);
 }
 
 void warn_toil_update(uint32_t val) {
+    static uint32_t disp_val = 0;
     char str[8];
-    int num = val - 40;
+    disp_val = hysteresis(disp_val, val, 1);
+    int num = disp_val - 40;
     sprintf(str, "%3d", num);
     scr_draw_text(SCR_TEXT_ADDR(0, 12, 5), str);
     warn_set(BLINK_OIL_TEMP, num > LIM_OIL_TEMP_MAX);
@@ -109,33 +114,41 @@ void warn_toil_update(uint32_t val) {
 }
 
 void warn_tmot2_update(uint32_t val) {
+    static uint32_t disp_val = 0;
     char str[8];
-    int num = val - 40;
+    disp_val = hysteresis(disp_val, val, 1);
+    int num = disp_val - 40;
     sprintf(str, "%3d", num);
     scr_draw_text(SCR_TEXT_ADDR(0, 12, 6), str);
     warn_set(BLINK_WATER_TEMP, num > LIM_WATER_TEMP_MAX);
 }
 
 void warn_tmot_update(uint32_t val) {
+    static uint32_t disp_val = 0;
     char str[8];
-    int num = val - 40;
+    disp_val = hysteresis(disp_val, val, 1);
+    int num = disp_val - 40;
     sprintf(str, "%3d", num);
     scr_draw_text(SCR_TEXT_ADDR(0, 4, 6), str);
     warn_set(BLINK_BLOCK_TEMP, num > LIM_BLOCK_TEMP_MAX);
 }
 
 void warn_pfuel_update(uint32_t val) {
+    static uint32_t disp_val = 0;
     char str[8];
-    val /= 2;
+    disp_val = hysteresis(disp_val, val, 1);
+    disp_val /= 2;
     sprintf(str, "%2u,%u",
-        (unsigned int)(val/10), (unsigned int)(val%10));
+        (unsigned int)(disp_val/10), (unsigned int)(disp_val%10));
     scr_draw_text(SCR_TEXT_ADDR(0, 4, 7), str);
-    warn_set(BLINK_FUEL_PRESSURE, val < LIM_FUEL_PRESSURE_MIN);
+    warn_set(BLINK_FUEL_PRESSURE, disp_val < LIM_FUEL_PRESSURE_MIN);
 }
 
 void warn_tfuel_update(uint32_t val) {
+    static uint32_t disp_val = 0;
     char str[8];
-    int num = val - 40;
+    disp_val = hysteresis(disp_val, val, 1);
+    int num = disp_val - 40;
     sprintf(str, "%3d", num);
     scr_draw_text(SCR_TEXT_ADDR(0, 12, 7), str);
     warn_set(BLINK_FUEL_TEMP, num > LIM_FUEL_TEMP_MAX);

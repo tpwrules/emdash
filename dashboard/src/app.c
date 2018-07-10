@@ -154,3 +154,14 @@ void app_cpu_idle_percent_update(uint32_t val) {
         scr_draw_text(SCR_TEXT_ADDR(0, 36, 6), str);
     }
 }
+
+uint32_t hysteresis(uint32_t old, uint32_t new, uint32_t max_delta) {
+    if (old > new) {
+        if (old - new > max_delta)
+            return new;
+    } else if (new > old) {
+        if (new - old > max_delta)
+            return new;
+    }
+    return old;
+}

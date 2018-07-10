@@ -20,4 +20,9 @@ void app_show_next_mode(void);
 
 void app_blank_mode(bool next);
 
+// this applies hysteresis to a value
+// if abs(old - new) > max_delta, new is returned
+// else, old is returned
+uint32_t hysteresis(uint32_t old, uint32_t new, uint32_t max_delta);
+
 #endif

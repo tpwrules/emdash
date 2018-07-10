@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 
+#include "app.h"
 #include "platform.h"
 #include "canvar.h"
 #include "drive.h"
@@ -109,7 +110,7 @@ void drive_rpm_update(uint32_t val) {
             bar_val-old_bar_val, 6, 1);
     }
 
-    sprintf(text, "%5d", rpm);
+    sprintf(text, "%5u", (unsigned int)rpm);
     scr_draw_text(SCR_TEXT_ADDR(0, 35, 0), text);
     // also put it on the inverted screen
     scr_draw_text(SCR_TEXT_ADDR(1, 35, 0), text);
