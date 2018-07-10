@@ -165,3 +165,30 @@ uint32_t hysteresis(uint32_t old, uint32_t new, uint32_t max_delta) {
     }
     return old;
 }
+
+uint32_t hysteresis_div(uint32_t old, uint32_t new, uint32_t divisor) {
+    // divide number into four parts of final value
+    uint32_t num = new / (divisor >> 2);
+    // save which quarter the number is in
+    uint32_t num_sub = num & 0x3;
+    num >>= 2; // finish division
+    switch (num_sub) {
+        default: // default will never happen, but it stops the compiler whining
+        case 0: // definitely at current value
+            return num;
+        case 1: // should be current value
+            // as long as it's not the next higher value
+            if (old != num + 1)
+                return num;
+            else
+                return old;
+        case 2: // should be next higher value
+            // as long as it's not current value
+            if (old != num)
+                return num + 1;
+            else
+                return old;
+        case 3: // definitely the next higher value
+            return num + 1;
+    }
+}

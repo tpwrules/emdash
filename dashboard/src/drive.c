@@ -98,7 +98,8 @@ void drive_rpm_update(uint32_t val) {
     if (bar_rpm > LIM_RPM_BAR_MAX) {
         bar_rpm = LIM_RPM_BAR_MAX;
     }
-    uint8_t bar_val = bar_rpm*(240-60)/LIM_RPM_BAR_MAX;
+    uint32_t bar_val = bar_rpm*(240-60);
+    bar_val = hysteresis_div(old_bar_val, bar_val, LIM_RPM_BAR_MAX);
 
     if (bar_val < old_bar_val) {
         // erase the difference
@@ -129,9 +130,10 @@ void drive_gear_update(uint32_t val) {
 }
 
 void drive_speed_update(uint32_t val) {
+    static uint32_t disp_val = 0;
     char str[8];
-    val /= 100;
-    sprintf(str, "%3u", (unsigned int)val);
+    disp_val = hysteresis_div(disp_val, val, 100);
+    sprintf(str, "%3u", (unsigned int)disp_val);
     scr_draw_text(SCR_TEXT_ADDR(0, 17, 1), str);
 }
 

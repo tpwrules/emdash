@@ -25,4 +25,7 @@ void app_blank_mode(bool next);
 // else, old is returned
 uint32_t hysteresis(uint32_t old, uint32_t new, uint32_t max_delta);
 
+// this applies hysteresis to a value after dividing it by a number
+// the divisor must be divisible by 4!
+uint32_t hysteresis_div(uint32_t old, uint32_t new, uint32_t divisor);
 #endif

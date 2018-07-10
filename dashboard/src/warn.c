@@ -156,10 +156,11 @@ void warn_tfuel_update(uint32_t val) {
 
 // battery voltage
 void warn_ub_update(uint32_t val) {
+    static uint32_t disp_val = 0;
     char str[8];
-    val = (val + 50) / 100;
+    disp_val = hysteresis_div(disp_val, val, 100);
     sprintf(str, "%2u,%u",
-        (unsigned int)(val/10), (unsigned int)(val%10));
+        (unsigned int)(disp_val/10), (unsigned int)(disp_val%10));
     scr_draw_text(SCR_TEXT_ADDR(0, 35, 7), str);
-    warn_set(BLINK_BATTERY, val < LIM_BATTERY_MIN);
+    warn_set(BLINK_BATTERY, disp_val < LIM_BATTERY_MIN);
 }

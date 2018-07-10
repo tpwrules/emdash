@@ -22,7 +22,8 @@ The following operations change the state of the application:
 * `void app_show_next_mode(void)` shows the next dash mode by clearing the mode area of the screen, then calling the function pointed to by `app_mode_change_func` with a `false` value.
 
 The following helper routines are available:
-* `uint32_t hysteresis(uint32_t old, uint32_t new, uint32_t max_delta)` applies hysteresis to a value. If the difference between `new` and `old` is greater than `max_delta`, the function returns `new`. Otherwise, it returns `old`.
+* `uint32_t hysteresis(uint32_t old, uint32_t new, uint32_t max_delta)` applies hysteresis to a value. If the difference between `new` and `old` is greater than `max_delta`, the function returns `new`. Otherwise, it returns `old`. `old` should be the previous return value of the function.
+* `uint32_t hysteresis_div(uint32_t old, uint32_t new, uint32_t divisor)` applies hysteresis to `new`, then returns it divided by `divisor`. `divisor` must be a multiple of 4, or the returned value will be incorrect. `old` should be the previous return value of the function; it has already been divided.
 
 ## Canvar System and Variable Handlers
 
