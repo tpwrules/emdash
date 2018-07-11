@@ -11,10 +11,10 @@
 
 #define IOCON_PORT_B_C (IOCON_FUNC0 | IOCON_MODE_PULLUP | IOCON_HYS_EN)
 
-#define PIN_A1 0,11, IOCON_PORT_A // traction_knob
-#define PIN_A2 1, 0, IOCON_PORT_A
-#define PIN_A3 1, 1, IOCON_PORT_A
-#define PIN_A4 1, 2, IOCON_PORT_A
+#define PIN_A1 0,11, IOCON_PORT_A // ADC_CH0  traction_knob
+#define PIN_A2 1, 0, IOCON_PORT_A // ADC_CH1
+#define PIN_A3 1, 1, IOCON_PORT_A // ADC_CH2
+#define PIN_A4 1, 2, IOCON_PORT_A // ADC_CH3
 
 #define PIN_B1 2, 8, IOCON_PORT_B_C // clutch
 #define PIN_B2 0, 6, IOCON_PORT_B_C // upshift
