@@ -15,3 +15,5 @@ dashboard/pc/Release
 *.kicad_pcb-bak
 
 wheel/src_gen/build_version_msg.h
+
+boot/src_gen/build_version.h

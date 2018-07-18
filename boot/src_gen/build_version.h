@@ -1,7 +1,0 @@
-#ifndef BUILD_VERSION_H
-#define BUILD_VERSION_H
-
-#define BUILD_VERSION_COMMIT (0xb2ab3b53)
-#define BUILD_VERSION_TIME (1807182211)
-
-#endif
