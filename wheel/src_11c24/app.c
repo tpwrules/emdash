@@ -4,9 +4,11 @@
 #include "app.h"
 #include "button_read.h"
 #include "chip.h"
-#include "../src_gen/build_version_msg.h"
 #include "button_processor.h"
 #include "../src_gen/button_defs.h"
+
+#define DEFINE_BUILD_VERSION_MSG
+#include "../src_gen/build_version_msg.h"
 
 void app_timer_interrupt() {
     // happens every ms

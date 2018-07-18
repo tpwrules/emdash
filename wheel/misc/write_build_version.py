@@ -29,6 +29,7 @@ def do_write():
     f.write("#define BUILD_VERSION_TIME ({})\n\n".format(time_num))
 
     # write out CAN message structure
+    f.write("#ifdef DEFINE_BUILD_VERSION_MSG\n")
     bignum = time_num << 32 | commit_num
     f.write("#include \"chip.h\"\n\n")
     f.write("static const CCAN_MSG_OBJ_T build_version_msg = {\n")
@@ -36,7 +37,7 @@ def do_write():
     for i in range(8):
         f.write("0x{:02x},".format(bignum&0xFF))
         bignum >>= 8
-    f.write("},\n    8, 1\n};\n\n")
+    f.write("},\n    8, 1\n};\n#endif\n\n")
 
     f.write("#endif\n")
     f.close()

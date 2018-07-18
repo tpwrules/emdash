@@ -34,6 +34,8 @@
 // gets cast appropriately and put in the vector table
 #define SYS_ID (BOOTLOAD_SYSTEM_ID_DASHBOARD)
 
+#include "../src_gen/build_version.h"
+
 #if defined (__cplusplus)
 #ifdef __REDLIB__
 #error Redlib does not support C++
@@ -154,8 +156,8 @@ void (* const g_pfnVectors[])(void) = {
     0,                                      // Reserved
     __valid_user_code_checksum,             // LPC MCU Checksum
     (void (*)(void))SYS_ID,                 // System ID that image is for
-    0,                                      // Reserved
-    0,                                      // Reserved
+    (void (*)(void))BUILD_VERSION_COMMIT,   // Version: commmit
+    (void (*)(void))BUILD_VERSION_TIME,     // Version: build time
     SVC_Handler,                            // SVCall handler
     0,                                      // Reserved
     0,                                      // Reserved
