@@ -23,8 +23,6 @@ uint32_t crc32_calc(const uint8_t* data, uint32_t len) {
         }
     }
 
-    // now that we have the table
-    // we can calculate the CRC
     crc = ~(0); // initial CRC is 0
     for(int i=0; i<len; i++) {
         crc = (crc >> 8) ^ table[(crc ^ data[i]) & 0xFF];
