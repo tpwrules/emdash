@@ -15,7 +15,7 @@ class Button:
         # the processor waits for the button state to be stable for this
         # amount of ms before accepting it
         debounce_press=10, # time when new button value is non-zero
-        debounce_release=50, # time when new button value is zero
+        debounce_release=50 # time when new button value is zero
             ):
 
         self.name = name
