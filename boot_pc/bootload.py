@@ -101,10 +101,10 @@ def str_version_real(num):
 
 def str_version(num):
     # return a string corresponding to the version given
-    #try:
-    return str_version_real(num)
-    #except:
-    #    return "{:08x} (further information could not be retrieved)".format(num)
+    try:
+        return str_version_real(num)
+    except:
+        return "{:08x} (further information could not be retrieved)".format(num)
 
 def str_build_date(num):
     # return a string corresponding to the build date given
@@ -459,6 +459,8 @@ if args.verbose:
 else:
     try:
         main()
+    except KeyboardInterrupt:
+        print("\nCancelled.")
     except BootloadError as e:
         print(str(e))
         exit(1)
