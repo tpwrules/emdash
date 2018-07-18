@@ -7,16 +7,24 @@ CAN_BAUDRATE = 500000
 BOOTLOAD_CAN_CMD_ADDR = 0x7EF
 BOOTLOAD_CAN_RESP_ADDR = 0x7EE
 
+# map from system names to IDs
+BOOTLOAD_SYS_NAME_MAP = {
+    "dashboard": 1,
+    "wheelboard": 2
+}
+
+# the same map, from IDs to system names
+BOOTLOAD_SYS_ID_MAP = {v: k for k, v in BOOTLOAD_SYS_NAME_MAP.items()}
+
 import argparse
 import struct
 import binascii
 import time
 
 parser = argparse.ArgumentParser(description=
-    "Program the Einstein Motorsport dashboard or wheelboard over CAN. "
-    "The device to program is read from the application image.")
-parser.add_argument('application', type=argparse.FileType('rb'),
-    help="Application memory image (.bin) to program.")
+    "Program the Einstein Motorsport dashboard or wheelboard over CAN.")
+parser.add_argument('application', type=str, nargs='?',
+    help="Application memory image (.bin) to use.")
 parser.add_argument('-u', '--utilization', type=int, default=25,
     help="Maximum bus utilization permitted, in percent. Higher values "
          "allow faster programming, but may cause other devices on the "
@@ -24,11 +32,30 @@ parser.add_argument('-u', '--utilization', type=int, default=25,
          "default value is 25.")
 parser.add_argument('-v', '--verbose', action="store_true", default=False,
     help="Provide more detail during programming and after errors.")
+parser.add_argument('-d', '--device', type=str, default=None,
+    help="Specify the name of the device to program. If not specified, "
+         "the ID stored in the header of the application image is used.")
+
+args_tasks = parser.add_argument_group("tasks", 
+    "Tasks for programmer to perform. You can select multiple tasks.")
+args_tasks.add_argument('-i', '--info', action="store_true", default=False,
+    help="Show information (version and destination device) stored in "
+         "the application image.")
+args_tasks.add_argument('-c', '--check', action="store_true", default=False,
+    help="Connect to the device and check its bootloader and application "
+         "version.")
+args_tasks.add_argument('-p', '--program', action="store_true", default=None,
+    help="Connect to the device and program the application image into it. "
+         "This is the default unless -i or -c is specified.")
 
 args = parser.parse_args()
 
 class BootloadError(Exception):
     pass
+
+class ArgumentError(BootloadError):
+    def __str__(self):
+        return "Invalid argument: "+super().__str__()
 
 class ImageError(BootloadError):
     def __str__(self):
@@ -42,8 +69,25 @@ class ProgramError(BootloadError):
     def __str__(self):
         return "Programming failed: "+super().__str__()
 
-def read_image():
-    image = args.application.read()
+def str_version(num):
+    # return a string corresponding to the version given
+    return "{:08x}".format(num)
+
+def str_build_date(num):
+    # return a string corresponding to the build date given
+    # for now it's just gross string parsing
+    s = str(num)
+    return "20"+s[0:2]+"-"+s[2:4]+"-"+s[4:6]+" "+s[6:8]+":"+s[8:10]
+
+def read_image(show_info):
+    try:
+        imf = open(args.application, "rb")
+        image = imf.read()
+        imf.close()
+    except IOError as e:
+        raise ArgumentError("could not read application image: {}".format(
+            str(e)))
+
     # header is 32 bytes
     if len(image) < 32:
         raise ImageError("header is missing.")
@@ -73,8 +117,20 @@ def read_image():
     if len(image) % 256 != 0:
         image += b"\xFF"*(256-(len(image)%256))
 
+    # get more of the vector table for more cool stuff
+    header = struct.unpack("<12I", image[:48])
+
+    # if we're not printing info, the image is ready
+    if not show_info:
+        return image, header[8]
+
+    print("APPLICATION IMAGE INFORMATION:")
+    print("    Device: {}".format(BOOTLOAD_SYS_ID_MAP.get(header[8], "<unknown>")))
+    print("    Version:", str_version(header[9]))
+    print("    Build date:", str_build_date(header[10]))
+
     # finally, return the validated and padded image
-    return image
+    return image, header[8]
 
 import logging
 # this prints out some garbage on startup that we don't want to see
@@ -210,17 +266,14 @@ class CAN:
 
 
 class Programmer:
-    def __init__(self, bus, image):
+    def __init__(self, bus):
         self.bus = bus
-        self.image = image
 
-    def connect(self):
-        # retrieve the system ID from the image
-        system_id = struct.unpack("<I", self.image[32:36])[0]&0xFFFF
+    def connect(self, device):
         # try to send the Hello command until we get a response
         for hi in range(10):
             self.bus.send_data(struct.pack("<BHI",
-                CMD_HELLO, system_id, CMD_HELLO_KEY))
+                CMD_HELLO, device, CMD_HELLO_KEY))
             try:
                 resp, data = self.bus.recv_response(
                     timeout=0.2, expected_resp=RESP_HELLO)
@@ -230,7 +283,7 @@ class Programmer:
         else: # loop did not break -> receive always timed out
             raise ProgramError("connection failed. Device did not respond "
                 "to 'Hello'. Is it turned on?")
-        return data
+        return True if data else False
 
     def erase(self):
         # send erase command and wait for it to happen
@@ -279,8 +332,40 @@ class Programmer:
 
 
 def main():
-    # start out by reading in the image data
-    image = read_image()
+    # enforce argument logic
+    # make sure program is default
+    if args.program is None:
+        if args.info or args.check:
+            args.program = False
+        else:
+            args.program = True
+    # make sure an app image is specified if required
+    if args.application is None:
+        if args.info:
+            raise ArgumentError("application image required to check "
+                                "application image information.")
+        if args.program:
+            raise ArgumentError("application image required to program.")
+        if args.check and args.device is None:
+            raise ArgumentError("provide application image or use -d to select "
+                                "device to check.")
+    # figure out what device the user wants
+    device = None
+    if args.device is not None:
+        device = BOOTLOAD_SYS_NAME_MAP.get(args.device.strip().lower())
+        if device is None:
+            raise ArgumentError("unrecognized device: '{}'".format(args.device))
+
+    # read in the image data if necessary
+    # also display info about it, if asked
+    if args.info or args.program or device is None:
+        image, app_device = read_image(args.info)
+        if not args.program and not args.check:
+            return # info is all we need
+        if device is None:
+            device = app_device
+        elif device != app_device:
+            print("Warning: application image does not match requested device!")
 
     # now that is done, initialize the CAN interface
     bus = CAN(VECTOR_APP_NAME,
@@ -289,32 +374,42 @@ def main():
         args.utilization)
 
     # now we can do the programming! make a programmer
-    prog = Programmer(bus, image)
+    prog = Programmer(bus)
 
     # and run through all the steps
     print("Connecting to device... ", end="", flush=True)
-    valid = prog.connect()
+    app_valid = prog.connect(device)
     print("connected!")
-    print("Current application is {}valid.".format("" if valid else "not "))
-    if valid:
-        print("Current app version: {:08X}\nCurrent app build: {}\n".format(
-            prog.read_flash(0x1000+(4*9)), prog.read_flash(0x1000+(4*10))))
-    print("Erasing Flash... ", end="", flush=True)
-    prog.erase()
-    print("erased!")
 
-    num_pages = int(len(image)/256)
-    for page in range(num_pages):
-        print("\rProgramming page {}/{}... ".format(page+1, num_pages),
-            end="", flush=True)
-        prog.program_page(page)
-    print("programmed!")
+    # print out the check information if asked
+    if args.check:
+        print("DEVICE CHECK INFORMATION:")
+        print("    Bootloader version:", str_version(prog.read_flash(4*9)))
+        print("    Bootloader build date:", str_build_date(prog.read_flash(4*10)))
+        print("    Application is valid: {}".format(app_valid))
+        if app_valid:
+            print("    Application version:", 
+                str_version(prog.read_flash(0x1000+(4*9))))
+            print("    Application build date:",
+                str_build_date(prog.read_flash(0x1000+(4*10))))
+
+    if args.program:
+        print("Erasing Flash... ", end="", flush=True)
+        prog.erase()
+        print("erased!")
+
+        num_pages = int(len(image)/256)
+        for page in range(num_pages):
+            print("\rProgramming page {}/{}... ".format(page+1, num_pages),
+                end="", flush=True)
+            prog.program_page(page)
+        print("programmed!")
 
     print("Rebooting into application... ", end="", flush=True)
     prog.reboot()
     print("rebooted!")
     print("")
-    print("Programming Complete")
+    print("Task Complete")
 
 if args.verbose:
     main()
