@@ -16,26 +16,24 @@ void bp_process(void) {
         st->raw = def->update_func();
 
         // step 2: debounce it, if necessary
-        if (st->state == st->raw && st->last_raw == st->raw) {
-            // state hasn't changed, so clear the debounce timer
-            st->debounce = 0;
+        if (st->state == st->raw || st->last_raw != st->raw) {
+            // either the current state matches the raw state
+            // and we should reset the debounce timer cause there's
+            // nothing to debounce,
+            // or the raw state does not match the previous raw state
+            // and we should reset the debounce timer cause the
+            // raw state bounced
+            if (st->raw)
+                st->debounce = def->debounce_press;
+            else
+                st->debounce = def->debounce_release;
         } else {
-            // it has changed, we need to start counting
-            if (st->debounce == 0) {
-                // load the timer
-                if (st->raw)
-                    st->debounce = def->debounce_press;
-                else
-                    st->debounce = def->debounce_release;
-            } else {
-                // decrement the timer and update button state if now zero
-                if (--st->debounce == 0) {
-                    st->state = st->raw;
-                    st->last_raw = st->raw;
-                    msg_states[def->msg_idx].send_timeout = 0; // message is dirty
-                    // update message with new value
-                    msg_states[def->msg_idx].msg.data[def->msg_byte] = st->raw;
-                }
+            // decrement the timer and update button state if now zero
+            if (--st->debounce == 0) {
+                st->state = st->raw;
+                // update message with new value
+                msg_states[def->msg_idx].msg.data[def->msg_byte] = st->state;
+                msg_states[def->msg_idx].send_timeout = 0; // message is dirty
             }
         }
 
