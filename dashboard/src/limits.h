@@ -1,7 +1,7 @@
 #ifndef LIMITS_H
 #define LIMITS_H
 
-// this file contains various limits and definitions for the display
+// this file contains various limits and definitions for the dashboard
 
 // warn.c limits
 // if the value is outside of the range,
