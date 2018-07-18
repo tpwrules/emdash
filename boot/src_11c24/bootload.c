@@ -135,6 +135,18 @@ static inline void bl_cmd_reboot(bool into_app) {
     reboot(into_app);
 }
 
+static inline uint8_t bl_cmd_read_flash(uint32_t addr) {
+    // make sure address is within flash
+    if (addr >= PAGE_TO_ADDRESS(HW_AVAIL_PAGES) - 3) {
+        return RESP_INVALID_COMMAND;
+    }
+
+    // do the read. we need memcpy cause both src
+    // and dest are unaligned
+    memcpy(&txmsg.data[2], (uint8_t*)addr, 4);
+    return RESP_SUCCESS;
+}
+
 bool said_hello = false;
 
 void bootload(void) {
@@ -225,6 +237,17 @@ void bootload(void) {
                 } else {
                     bl_cmd_reboot(rxmsg.data[1] != 0);
                     // response is handled within command function
+                }
+                break;
+
+            case CMD_READ_FLASH:
+                if (rxmsg.dlc != CMDLEN_READ_FLASH) {
+                    bl_respond(RESP_INVALID_COMMAND);
+                } else {
+                    // extract parameters
+                    uint32_t addr;
+                    memcpy(&addr, &rxmsg.data[1], 4);
+                    bl_respond(bl_cmd_read_flash(addr));
                 }
                 break;
 

@@ -88,6 +88,7 @@ CMD_ERASE_ALL = 1
 CMD_EMPTY = 2
 CMD_PROGRAM_VERIFY = 3
 CMD_REBOOT = 4
+CMD_READ_FLASH = 5
 
 RESP_SUCCESS = 0
 RESP_HELLO = 1
@@ -194,7 +195,7 @@ class CAN:
         # some responses we can deal with here
         if cmd != self.last_cmd:
             raise ProgramError("received response to incorrect command: {}".format(cmd))
-        elif cmd > CMD_REBOOT:
+        elif cmd > CMD_READ_FLASH:
             raise ProgramError("received response for invalid command: {}".format(cmd))
         if resp == RESP_INVALID_COMMAND:
             raise ProgramError("received 'invalid command' response.")
@@ -269,6 +270,13 @@ class Programmer:
         self.bus.send_data(struct.pack("<BB", CMD_REBOOT, True))
         self.bus.recv_response(expected_resp=RESP_SUCCESS)
 
+    def read_flash(self, addr):
+        # send read flash command
+        self.bus.send_data(struct.pack("<BI", CMD_READ_FLASH, addr))
+        # wait for data to come back
+        resp, data = self.bus.recv_response(expected_resp=RESP_SUCCESS)
+        return data
+
 
 def main():
     # start out by reading in the image data
@@ -288,6 +296,9 @@ def main():
     valid = prog.connect()
     print("connected!")
     print("Current application is {}valid.".format("" if valid else "not "))
+    if valid:
+        print("Current app version: {:08X}\nCurrent app build: {}\n".format(
+            prog.read_flash(0x1000+(4*9)), prog.read_flash(0x1000+(4*10))))
     print("Erasing Flash... ", end="", flush=True)
     prog.erase()
     print("erased!")

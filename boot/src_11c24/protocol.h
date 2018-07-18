@@ -16,7 +16,7 @@
 // the command DLC (data length code) must exactly equal the CMDLEN given
 // once a command is processed, a response is generated
 // first byte is the command ID, the second byte is the response code,
-// and the next four bytes are the 32 bit response data
+// and the next four bytes are the 32 bit little endian response data
 // all commands can send the following responses:
 // RESP_SUCCESS:
 //      everything went fine. send next command
@@ -57,7 +57,7 @@
 // the CMD_HELLO command must be sent to enter and connect to the
 // bootloader. if the application is running, it will reboot into
 // the bootloader without a response. so this command must be sent
-// multiple times. perhaps resend if there is no response after 100ms
+// multiple times. perhaps resend if there is no response after 200ms
 // and abort after 10 tries.
 
 // the Hello command (actual definitions in bootload_integrate.h)
@@ -115,6 +115,14 @@
 // a response is sent before the chip reboots
 #define CMD_REBOOT (4)
 #define CMDLEN_REBOOT (2)
+
+// the Read Flash command
+// send this to read a 32 bit word from Flash
+// argument is a 32 bit little endian address to read from. the address must
+//      be within Flash region but does not need to be 32 bit aligned.
+// response data is the 32 bit little endian word at the given location
+#define CMD_READ_FLASH (5)
+#define CMDLEN_READ_FLASH (5)
 
 // response definitions
 #define RESP_SUCCESS (0)
