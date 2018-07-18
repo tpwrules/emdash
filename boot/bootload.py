@@ -35,6 +35,10 @@ parser.add_argument('-v', '--verbose', action="store_true", default=False,
 parser.add_argument('-d', '--device', type=str, default=None,
     help="Specify the name of the device to program. If not specified, "
          "the ID stored in the header of the application image is used.")
+parser.add_argument('-r', '--rescue', action="store_true", default=False,
+    help="Operate in rescue mode. Attempts connection more frequently and "
+         "doesn't time out. Start program in rescue mode, then reset "
+         "affected device.")
 
 args_tasks = parser.add_argument_group("tasks", 
     "Tasks for programmer to perform. You can select multiple tasks.")
@@ -269,20 +273,31 @@ class Programmer:
     def __init__(self, bus):
         self.bus = bus
 
-    def connect(self, device):
+    def connect(self, device, rescue):
         # try to send the Hello command until we get a response
-        for hi in range(10):
-            self.bus.send_data(struct.pack("<BHI",
-                CMD_HELLO, device, CMD_HELLO_KEY))
-            try:
-                resp, data = self.bus.recv_response(
-                    timeout=0.2, expected_resp=RESP_HELLO)
-                break
-            except CANError:
-                continue
-        else: # loop did not break -> receive always timed out
-            raise ProgramError("connection failed. Device did not respond "
-                "to 'Hello'. Is it turned on?")
+        if rescue:
+            while True:
+                self.bus.send_data(struct.pack("<BHI",
+                    CMD_HELLO, device, CMD_HELLO_KEY))
+                try:
+                    resp, data = self.bus.recv_response(
+                        timeout=0.05, expected_resp=RESP_HELLO)
+                    break
+                except CANError:
+                    continue
+        else:
+            for hi in range(10):
+                self.bus.send_data(struct.pack("<BHI",
+                    CMD_HELLO, device, CMD_HELLO_KEY))
+                try:
+                    resp, data = self.bus.recv_response(
+                        timeout=0.2, expected_resp=RESP_HELLO)
+                    break
+                except CANError:
+                    continue
+            else: # loop did not break -> receive always timed out
+                raise ProgramError("connection failed. Device did not respond "
+                    "to 'Hello'. Is it turned on?")
         return True if data else False
 
     def erase(self):
@@ -290,14 +305,13 @@ class Programmer:
         self.bus.send_data(struct.pack("<B", CMD_ERASE_ALL))
         self.bus.recv_response(expected_resp=RESP_SUCCESS)
 
-    def program_page(self, page):
+    def program_page(self, page, pdata):
         # try multiple times in case data transfer failed
         for program_try in range(5):
             # empty page buffer
             self.bus.send_data(struct.pack("<B", CMD_EMPTY))
             self.bus.recv_response(expected_resp=RESP_SUCCESS)
 
-            pdata = self.image[page*256:page*256+256]
             # send the page in 8 byte chunks
             for pos in range(0, 256, 8):
                 self.bus.send_data(pdata[pos:pos+8])
@@ -365,7 +379,7 @@ def main():
         if device is None:
             device = app_device
         elif device != app_device:
-            print("Warning: application image does not match requested device!")
+            raise ImageError("application image does not match requested device.")
 
     # now that is done, initialize the CAN interface
     bus = CAN(VECTOR_APP_NAME,
@@ -378,7 +392,7 @@ def main():
 
     # and run through all the steps
     print("Connecting to device... ", end="", flush=True)
-    app_valid = prog.connect(device)
+    app_valid = prog.connect(device, args.rescue)
     print("connected!")
 
     # print out the check information if asked
@@ -402,7 +416,7 @@ def main():
         for page in range(num_pages):
             print("\rProgramming page {}/{}... ".format(page+1, num_pages),
                 end="", flush=True)
-            prog.program_page(page)
+            prog.program_page(page, image[page*256:page*256+256])
         print("programmed!")
 
     print("Rebooting into application... ", end="", flush=True)

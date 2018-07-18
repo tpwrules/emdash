@@ -16,7 +16,10 @@ static void boot_app(void) {
             "bx r2"); // is the address of the first instruction
 }
 
+bool rescue_mode = false;
+
 // if this function returns, something went wrong
+// if it returns true, enter rescue mode
 void boot_app_if_possible(void) {
     // make sure the bootloader itself is valid
     // the header must be, or the bootloader couldn't have started
@@ -48,8 +51,18 @@ void boot_app_if_possible(void) {
     // and boot it if it checks out
     if (boot_check_app_validity()) {
         // all checks passed!
-        // boot into the application
-        boot_app();
+        // but first make sure rescue mode has had a chance
+        uint32_t* rescue_key = (uint32_t*)BOOTLOAD_RESCUE_KEY_ADDR;
+        // if the rescue key is present, rescue mode has executed
+        if (*rescue_key == BOOTLOAD_RESCUE_KEY) {
+            // clear that flag for next reset
+            *rescue_key = 0;
+            // and boot the application
+            boot_app();
+        }
+        // otherwise, rescue mode hasn't happened
+        // so set the flag to enter it
+        rescue_mode = true;
     }
 }
 
@@ -86,6 +99,12 @@ void reboot(bool into_app) {
         uint32_t* boot_enter_key = (uint32_t*)(BOOTLOAD_ENTER_KEY_ADDR);
         *boot_enter_key = BOOTLOAD_ENTER_KEY;
     }
-    // and reset system
+
+    // if the bootloader is active and causing a reboot, rescue mode finished
+    // so set the flag to prevent re-entering it
+    uint32_t* rescue_key = (uint32_t*)BOOTLOAD_RESCUE_KEY_ADDR;
+    *rescue_key = BOOTLOAD_RESCUE_KEY;
+
+    // now reset system
     NVIC_SystemReset();
 }

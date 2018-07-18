@@ -14,4 +14,6 @@ bool boot_check_app_validity(void);
 // called to reboot into application or the bootloader again
 void reboot(bool into_app);
 
+extern bool rescue_mode;
+
 #endif

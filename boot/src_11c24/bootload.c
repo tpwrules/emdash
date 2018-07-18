@@ -58,15 +58,19 @@ void CAN_error(uint32_t error_info) {
 
 // wait for a message to be received
 // but reboot if one hasn't been in the last 10 seconds
+// it also reboots if rescue mode has timed out after 250ms
 static inline void can_wait_rx(void) {
-    int msg_timeout = 10000; // ms
+    static uint32_t rescue_mode_timeout = 250; // ms
+    uint32_t msg_timeout = 10000; // ms
     while (!msg_was_received) {
         LPC_CCAN_API->isr();
         // decrement timeout if one ms systick elapsed
         if (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) {
             msg_timeout--;
+            rescue_mode_timeout--;
         }
-        if (msg_timeout == 0) {
+        if (msg_timeout == 0 || 
+                (rescue_mode && rescue_mode_timeout == 0)) {
             // reboot back into the app
             reboot(true);
         }
@@ -184,7 +188,10 @@ void bootload(void) {
                 said_hello = true;
                 // and tell them if the flash is valid
                 txmsg.data[2] = boot_check_app_validity() ? 1 : 0;
-                // and say hi back
+                // once someone's said hi, rescue mode is over
+                // and now it's just the bootloader
+                rescue_mode = false;
+                // say hi back
                 bl_respond(RESP_HELLO);
             }
             continue; // done processing this command

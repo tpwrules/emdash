@@ -60,6 +60,11 @@
 // multiple times. perhaps resend if there is no response after 200ms
 // and abort after 10 tries.
 
+// Rescue Mode
+// After reset, the bootloader waits for CMD_HELLO for 250ms, then resets
+// again to start the application. This allows the bootloader to be entered
+// even if the application has a bug and will not enter the bootloader.
+
 // the Hello command (actual definitions in bootload_integrate.h)
 // send this to connect to the bootloader
 // first argument is 16 bit little endian system ID
