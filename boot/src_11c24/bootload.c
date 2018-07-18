@@ -24,7 +24,7 @@ static CCAN_MSG_OBJ_T rxmsg = {
 // default response is Hello
 static CCAN_MSG_OBJ_T txmsg = {
     BOOTLOAD_CAN_RESP_ADDR, 0,
-    {CMD_HELLO, RESP_HELLO, 0, 0, 0, 0, 0, 0}, 2,
+    {CMD_HELLO, RESP_HELLO, 0, 0, 0, 0, 0, 0}, 6,
     2
 };
 
@@ -156,6 +156,9 @@ void bootload(void) {
             continue;
         }
 
+        // clear out response data
+        memset(&txmsg.data[2], 0, 4);
+
         // process if it's a Hello command
         if (rxmsg.dlc == CMDLEN_HELLO && rxmsg.data[0] == CMD_HELLO) {
             // extract parameters
@@ -167,6 +170,8 @@ void bootload(void) {
             if (system_id == (CURR_SYSTEM_ID) && hello_key == CMD_HELLO_KEY) {
                 // they are! mark that someone greeted us
                 said_hello = true;
+                // and tell them if the flash is valid
+                txmsg.data[2] = boot_check_app_validity() ? 1 : 0;
                 // and say hi back
                 bl_respond(RESP_HELLO);
             }

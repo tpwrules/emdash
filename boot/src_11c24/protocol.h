@@ -15,7 +15,8 @@
 // the first byte of a command is its ID and the next are its arguments
 // the command DLC (data length code) must exactly equal the CMDLEN given
 // once a command is processed, a response is generated
-// first byte is the command ID and the second byte is the response code
+// first byte is the command ID, the second byte is the response code,
+// and the next four bytes are the 32 bit response data
 // all commands can send the following responses:
 // RESP_SUCCESS:
 //      everything went fine. send next command
@@ -25,6 +26,8 @@
 // RESP_ERROR:
 //      something unexpected happened internally and the command failed.
 //      reset bootloader and start programming again
+// if the response is not RESP_SUCCESS (or RESP_HELLO in the case of CMD_HELLO)
+// the response data will be 0
 
 // Page Data
 // The page data command fills the page buffer with data
@@ -71,6 +74,8 @@
 // possible responses
 // RESP_HELLO:
 //      connection successful
+// response data: 1 if the flash currently contains a valid
+// application, 0 otherwise
 
 // the Erase All command
 // send this to erase the chip

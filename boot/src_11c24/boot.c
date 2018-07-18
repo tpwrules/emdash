@@ -29,7 +29,16 @@ void boot_app_if_possible(void) {
 
     // if the enter key isn't correct, we verify the application
     // and boot it if it checks out
+    if (boot_check_app_validity()) {
+        // all checks passed!
+        // boot into the application
+        boot_app();
+    }
+}
 
+// returns true if application in flash is valid
+// currently just checks checksums
+bool boot_check_app_validity() {
     // application vectors start at the beginning of sector 1
     const uint32_t* app_vectors = (const uint32_t*)(0x1000);
     // sum of first 8 entries should be 0
@@ -37,23 +46,20 @@ void boot_app_if_possible(void) {
     for (int i=0; i<8; i++)
         sum += app_vectors[i];
     if (sum != 0)
-        return;
+        return false;
 
     // pull expected crc and image size from the vectors
     uint32_t expected_crc = app_vectors[4];
     uint32_t app_size = app_vectors[5];
     // make sure the size is plausible
     if (app_size > (0x7000-(4*8)) || app_size < 40*8)
-        return;
+        return false;
     // calculate CRC based on above data
     // it starts calculating at the 9th header entry
     uint32_t calculated_crc = crc32_calc((const uint8_t*)&app_vectors[8], app_size);
     if (calculated_crc != expected_crc)
-        return;
-
-    // all checks passed!
-    // boot into the application
-    boot_app();
+        return false;
+    return true;
 }
 
 // reboot either into application (if possible) or bootloader

@@ -188,9 +188,9 @@ class CAN:
         m = self.recv_filtered(timeout=timeout)
         if m is None:
             raise CANError("timed out waiting for message to be received.")
-        if len(m.data) != 2:
+        if len(m.data) != 6:
             raise ProgramError("response length is incorrect: {}".format(len(m.data)))
-        cmd, resp = m.data[0], m.data[1]
+        cmd, resp, data = m.data[0], m.data[1], struct.unpack("<I", m.data[2:6])[0]
         # some responses we can deal with here
         if cmd != self.last_cmd:
             raise ProgramError("received response to incorrect command: {}".format(cmd))
@@ -205,7 +205,7 @@ class CAN:
         elif expected_resp is not None and resp != expected_resp:
             raise ProgramError("unexpected response: {}".format(cmd))
         # otherwise, return it for the caller
-        return resp
+        return resp, data
 
 
 class Programmer:
@@ -221,13 +221,15 @@ class Programmer:
             self.bus.send_data(struct.pack("<BHI",
                 CMD_HELLO, system_id, CMD_HELLO_KEY))
             try:
-                self.bus.recv_response(timeout=0.2, expected_resp=RESP_HELLO)
+                resp, data = self.bus.recv_response(
+                    timeout=0.2, expected_resp=RESP_HELLO)
                 break
             except CANError:
                 continue
         else: # loop did not break -> receive always timed out
             raise ProgramError("connection failed. Device did not respond "
                 "to 'Hello'. Is it turned on?")
+        return data
 
     def erase(self):
         # send erase command and wait for it to happen
@@ -251,12 +253,12 @@ class Programmer:
             # and now program it
             self.bus.send_data(struct.pack("<BHI", CMD_PROGRAM_VERIFY,
                 page, crc))
-            r = self.bus.recv_response()
-            if r == RESP_CHECKSUM_INCORRECT:
+            resp, data = self.bus.recv_response()
+            if resp == RESP_CHECKSUM_INCORRECT:
                 continue
-            if r == RESP_SUCCESS:
+            if resp == RESP_SUCCESS:
                 break
-            raise ProgramError("unexpected response: {}".format(response))
+            raise ProgramError("unexpected response: {}".format(resp))
         else: # loop did not break -> we were never successful
             raise ProgramError("page transfer failed 5 times. "
                 "Are CANH and CANL connected properly? Is there noise on the bus?")
@@ -283,8 +285,9 @@ def main():
 
     # and run through all the steps
     print("Connecting to device... ", end="", flush=True)
-    prog.connect()
+    valid = prog.connect()
     print("connected!")
+    print("Current application is {}valid.".format("" if valid else "not "))
     print("Erasing Flash... ", end="", flush=True)
     prog.erase()
     print("erased!")
