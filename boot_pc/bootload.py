@@ -73,9 +73,38 @@ class ProgramError(BootloadError):
     def __str__(self):
         return "Programming failed: "+super().__str__()
 
+import subprocess
+
+def str_version_real(num):
+    # stringify number into commit hash
+    num = "{:08x}".format(num)
+
+    # ask git for the full tag name (i.e. the tag name and the next commit)
+    full_tag_name = subprocess.check_output(
+        ("git", "describe", num)).decode("utf-8").strip()
+    # plus the base tag name
+    tag_name = subprocess.check_output(
+        ("git", "describe", "--abbrev=0", num)).decode("utf-8").strip()
+    # now ask for that tag's description
+    tag_desc = subprocess.check_output(
+        ("git", "tag", "-n1", tag_name)).decode("utf-8").strip()
+    # get just the description
+    if tag_desc.startswith(tag_name):
+        tag_desc = tag_desc.replace(tag_name, "", 1).strip()
+    
+    # now get the description of the commit itself
+    commit_desc = subprocess.check_output(
+        ("git", "log", "-1", "--format=%s", num)).decode("utf-8").strip()
+
+    # and finally format everything
+    return "{}: {} ({} {})".format(full_tag_name, tag_desc, num, commit_desc)
+
 def str_version(num):
     # return a string corresponding to the version given
-    return "{:08x}".format(num)
+    #try:
+    return str_version_real(num)
+    #except:
+    #    return "{:08x} (further information could not be retrieved)".format(num)
 
 def str_build_date(num):
     # return a string corresponding to the build date given
