@@ -33,7 +33,7 @@ void drive_init(void) {
     // draw upshift marker on RPM bar
     scr_draw_text(SCR_TEXT_ADDR(0, 
         LIM_UPSHIFT_BLINK_RPM_START*((240-60)/6)/LIM_RPM_BAR_MAX, 0),
-        "|"); // vertical bar
+        "|"); // vertical bar, customized in font
 }
 
 static uint16_t old_rpm = 0;
