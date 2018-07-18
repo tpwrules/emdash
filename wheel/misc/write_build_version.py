@@ -9,7 +9,8 @@ def do_write():
 
     # get the current commit hash from git
     commit_hash = subprocess.check_output(
-        ("git", "log", "-1", "--format=%H"))
+        ("git", "log", "-1", "--format=%H",
+            "../../wheel", "../../wheel_11c24"))
 
     # we only want the first 8 hex chars
     first = commit_hash[:8]
