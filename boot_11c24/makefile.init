@@ -1,0 +1,3 @@
+allwithpre: 
+	/bin/sh ../run_build_src_gen_py.sh
+	$(MAKE) --no-print-directory all

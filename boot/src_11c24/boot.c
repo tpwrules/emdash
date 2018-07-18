@@ -18,6 +18,23 @@ static void boot_app(void) {
 
 // if this function returns, something went wrong
 void boot_app_if_possible(void) {
+    // make sure the bootloader itself is valid
+    // the header must be, or the bootloader couldn't have started
+
+    // avoid creating null pointer
+    const uint32_t* app_vectors = (const uint32_t*)(4);
+
+    // pull expected crc and image size from the vectors
+    uint32_t expected_crc = app_vectors[4-1];
+    uint32_t app_size = app_vectors[5-1];
+    // calculate CRC based on above data
+    // it starts calculating at the 9th header entry
+    uint32_t calculated_crc = crc32_calc((const uint8_t*)&app_vectors[8-1], app_size);
+    if (calculated_crc != expected_crc) {
+        // if the bootloader is corrupt, we can't do too much...
+        while (1); 
+    }
+
     // boot into bootloader if the enter key is at the correct address
     uint32_t* boot_enter_key = (uint32_t*)(BOOTLOAD_ENTER_KEY_ADDR);
     if (*boot_enter_key == BOOTLOAD_ENTER_KEY) {

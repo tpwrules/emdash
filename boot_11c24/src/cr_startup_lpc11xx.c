@@ -31,6 +31,8 @@
 
 #include "boot.h"
 
+#include "../src_gen/build_version.h"
+
 #if defined (__cplusplus)
 #ifdef __REDLIB__
 #error Redlib does not support C++
@@ -144,13 +146,15 @@ void (* const g_pfnVectors[])(void) = {
     ResetISR,                               // The reset handler
     NMI_Handler,                            // The NMI handler
     HardFault_Handler,                      // The hard fault handler
-    0,                                      // Reserved
-    0,                                      // Reserved
+    0,                                      // CRC of image, not including
+                                            // 32 byte header
+    0,                                      // Length of image, not including
+                                            // 32 byte header
     0,                                      // Reserved
     __valid_user_code_checksum,             // LPC MCU Checksum
     0,                                      // Reserved
-    0,                                      // Reserved
-    0,                                      // Reserved
+    (void (*)(void))BUILD_VERSION_COMMIT,   // Version: commmit
+    (void (*)(void))BUILD_VERSION_TIME,     // Version: build time
     SVC_Handler,                            // SVCall handler
     0,                                      // Reserved
     0,                                      // Reserved
