@@ -38,6 +38,15 @@
 // however the bootloader may have reset due to CAN bus state
 #define CMDLEN_PAGE_DATA (8)
 
+// Connecting
+// Connecting is done by sending CMD_HELLO to the bootloader. When the
+// bootloader responds with RESP_HELLO, the connection has been made. There
+// may not be a respone if the application is not listening, the application
+// receives the connection attempt, the bootloader is busy initializing, etc.
+// The suggested method is to send CMD_HELLO every 100ms until the bootloader
+// responds. If the bootloader responds with RESP_HELLO, the connection is
+// successful. If there is another response, the connection failed.
+
 // Error Handling
 // the bootloader verifies the CRC32 of flash before booting it
 // if the checksum fails, the bootloader will be entered automatically
@@ -52,28 +61,6 @@
 // enters error passive or busoff state, message integrity and delivery is no
 // longer guaranteed, so the bootloader will reset and the connection must be
 // re-established
-
-// Boot Process
-// After the device is reset, the bootloader starts and verifies the
-// application. If the application is valid, the bootloader waits 250ms for a
-// connection, then starts the application if no connection was made. If the
-// application is not valid, the bootloader waits indefinitely for a
-// connection.
-//
-// Once the application is started, it also listens for a connection and
-// restarts the bootloader if one is attempted. The bootloader then waits
-// indefinitely for a connection. If the application does not listen for a
-// connection, the only opportunity to conmect to the bootloader is the 250ms
-// after reset.
-
-// Connecting
-// Connecting is done by sending CMD_HELLO to the bootloader. When the
-// bootloader responds with RESP_HELLO, the connection has been made. There
-// may not be a respone if the application is not listening, the application
-// receives the connection attempt, the bootloader is busy initializing, etc.
-// The suggested method is to send CMD_HELLO every 100ms until the bootloader
-// responds. If the bootloader responds with RESP_HELLO, the connection is
-// successful. If there is another response, the connection failed.
 
 // the Hello command (actual definitions in bootload_integrate.h)
 // send this to connect to the bootloader
