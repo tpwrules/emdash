@@ -14,7 +14,7 @@ void handler (void) {\
 }
 
 // second version for address >= 128 (which first version cannot reach)
-#define IRQ_REDIRECT2(handler, which) IRQ_REDIRECT_real(handler, (which*4)-0x80)
+#define IRQ_REDIRECT2(handler, which) IRQ_REDIRECT2_real(handler, (which*4)-0x80)
 
 #define IRQ_REDIRECT2_real(handler, addr) \
 __attribute__  ((naked, noreturn, section(".after_vectors")))\
