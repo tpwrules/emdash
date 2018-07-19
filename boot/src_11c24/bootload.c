@@ -80,12 +80,23 @@ static inline void can_wait_rx(void) {
 
 // send a response and wait for successful transmission
 // (command field has already been populated by main loop)
+// if the message isn't transmitted after 5 seconds, the
+// bootloader reboots
 static void bl_respond(uint8_t response) {
     txmsg.data[1] = response;
     LPC_CCAN_API->can_transmit(&txmsg);
 
+    uint32_t respond_timeout = 5000; // ms
     while (!msg_was_transmitted) {
         LPC_CCAN_API->isr();
+        // decrement timeout if one ms systick elapsed
+        if (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) {
+            respond_timeout--;
+        }
+        if (respond_timeout == 0) {
+            // reboot back into the bootloader
+            reboot(false);
+        }
     }
     msg_was_transmitted = false;
 }
