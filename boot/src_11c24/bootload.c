@@ -145,8 +145,7 @@ static inline uint8_t bl_cmd_read_flash(uint32_t addr) {
         return RESP_INVALID_COMMAND;
     }
 
-    // do the read. we need memcpy cause both src
-    // and dest are unaligned
+    // do the read. we need memcpy cause both src and dest are unaligned
     memcpy(&txmsg.data[2], (uint8_t*)addr, 4);
     return RESP_SUCCESS;
 }
@@ -161,7 +160,7 @@ void bootload(void) {
         // wait for a command to be received
         can_wait_rx();
 
-        // update command for response
+        // update response with the command being responded to
         if (rxmsg.dlc > 0) {
             txmsg.data[0] = rxmsg.data[0];
         } else {
@@ -220,7 +219,8 @@ void bootload(void) {
                 if (rxmsg.dlc != CMDLEN_EMPTY) {
                     bl_respond(RESP_INVALID_COMMAND);
                 } else {
-                    bl_cmd_empty(); // nothing to fail
+                    bl_cmd_empty();
+                    // nothing to fail
                     bl_respond(RESP_SUCCESS);
                 }
                 break;
@@ -234,6 +234,7 @@ void bootload(void) {
                     uint32_t expected_crc;
                     memcpy(&page_num, &rxmsg.data[1], 2);
                     memcpy(&expected_crc, &rxmsg.data[3], 4);
+                    // and do the command
                     bl_respond(bl_cmd_program_verify(page_num, expected_crc));
                 }
                 break;
@@ -244,6 +245,7 @@ void bootload(void) {
                 } else {
                     bl_cmd_reboot(rxmsg.data[1] != 0);
                     // response is handled within command function
+                    // because the command function won't return
                 }
                 break;
 
@@ -254,6 +256,7 @@ void bootload(void) {
                     // extract parameters
                     uint32_t addr;
                     memcpy(&addr, &rxmsg.data[1], 4);
+                    // and do the command
                     bl_respond(bl_cmd_read_flash(addr));
                 }
                 break;

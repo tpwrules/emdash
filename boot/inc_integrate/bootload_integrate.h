@@ -17,7 +17,7 @@
 // address which the bootloader receives commands at
 // known so that the app can parse a Hello
 #define BOOTLOAD_CAN_CMD_ADDR (0x7EF)
-// defined here for consistency, shouldn't be used
+// defined here for consistency, shouldn't be used by application
 #define BOOTLOAD_CAN_RESP_ADDR (0x7EE)
 
 // Hello command definitions

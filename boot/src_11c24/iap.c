@@ -18,20 +18,20 @@
 #define COMPARE (56)
 #define REINVOKE_ISP (57)
 #define READ_UID (58)
-#define ERASE_PAGE (59) //not supported in LPC11C24
+#define ERASE_PAGE (59) // not supported in LPC11C24
 
-#define CMD_SUCCESS (0) //Command is executed successfully.
-#define INVALID_COMMAND (1) //Invalid command.
-#define SRC_ADDR_ERROR (2) //Source address is not on a word boundary.
-#define DST_ADDR_ERROR (3) //Destination address is not on a correct boundary.
-#define SRC_ADDR_NOT_MAPPED (4) //Source address is not mapped in the memory map. Count value is taken in to consideration where applicable.
-#define DST_ADDR_NOT_MAPPED (5) //Destination address is not mapped in the memory map. Count value is taken in to consideration where applicable.
-#define COUNT_ERROR (6) //Byte count is not multiple of 4 or is not a permitted value.
-#define INVALID_SECTOR (7) //Sector number is invalid.
-#define SECTOR_NOT_BLANK (8) //Sector is not blank.
-#define SECTOR_NOT_PREPARED_FOR_WRITE_OPERATION (9) //Command to prepare sector for write operation was not executed.
-#define COMPARE_ERROR (10) //Source and destination data is not same.
-#define BUSY 11 
+#define CMD_SUCCESS (0) // Command is executed successfully.
+#define INVALID_COMMAND (1) // Invalid command.
+#define SRC_ADDR_ERROR (2) // Source address is not on a word boundary.
+#define DST_ADDR_ERROR (3) // Destination address is not on a correct boundary.
+#define SRC_ADDR_NOT_MAPPED (4) // Source address is not mapped in the memory map. Count value is taken in to consideration where applicable.
+#define DST_ADDR_NOT_MAPPED (5) // Destination address is not mapped in the memory map. Count value is taken in to consideration where applicable.
+#define COUNT_ERROR (6) // Byte count is not multiple of 4 or is not a permitted value.
+#define INVALID_SECTOR (7) // Sector number is invalid.
+#define SECTOR_NOT_BLANK (8) // Sector is not blank.
+#define SECTOR_NOT_PREPARED_FOR_WRITE_OPERATION (9) // Command to prepare sector for write operation was not executed.
+#define COMPARE_ERROR (10) // Source and destination data is not same.
+#define BUSY (11) 
 
 // set up magic to jump into IAP
 // location of function
@@ -63,16 +63,14 @@ uint8_t iap_erase_and_blank_check(void) {
     // prepare the sectors for writing
     status = iap_call(PREPARE_SECTOR);
     if (status != CMD_SUCCESS) {
-        // this should succeed, so if it doesn't
-        // return a general error
+        // this should succeed, so if it doesn't, return a general error
         return RESP_ERROR;
     }
 
     // now erase them
     status = iap_call(ERASE_SECTOR);
     if (status != CMD_SUCCESS) {
-        // this should succeed, so if it doesn't
-        // return a general error
+        // this should succeed, so if it doesn't, return a general error
         return RESP_ERROR;
     }
 
@@ -99,20 +97,18 @@ uint8_t iap_program_and_verify(uint16_t page_num, uint32_t* data) {
     command[2] = PAGE_TO_SECTOR(page_num); // are the same
     status = iap_call(PREPARE_SECTOR);
     if (status != CMD_SUCCESS) {
-        // this should succeed, so if it doesn't
-        // return a general error
+        // this should succeed, so if it doesn't, return a general error
         return RESP_ERROR;
     }
 
     // now actually do the programming
     command[1] = PAGE_TO_ADDRESS(page_num); // destination flash address
     command[2] = (uint32_t)data; // source ram address
-    command[3] = 256; // writing 256 bytes
+    command[3] = 256; // write 256 bytes
     command[4] = CPU_CLK; // CPU frequency in kHz
     status = iap_call(RAM_TO_FLASH);
     if (status != CMD_SUCCESS) {
-        // this should succeed, so if it doesn't
-        // return a general error
+        // this should succeed, so if it doesn't, rreturn a general error
         return RESP_ERROR;
     }
 
@@ -121,7 +117,7 @@ uint8_t iap_program_and_verify(uint16_t page_num, uint32_t* data) {
     status = iap_call(COMPARE);
     if (status == COMPARE_ERROR) {
         // it should match since we just programmed it
-        // indicate flash program failure
+        // but it doesn't, so indicate flash program failure
         return RESP_PROGRAM_FAILURE;
     } else if (status == CMD_SUCCESS) {
         return RESP_SUCCESS;

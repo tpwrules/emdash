@@ -11,7 +11,7 @@ uint32_t crc32_calc(const uint8_t* data, uint32_t len) {
 
     uint32_t crc;
 
-    // calculate table if necessary
+    // calculate table if it hasn't been built yet
     if (table[1] == 0) {
         for(int i=0; i<256; i++) {
             crc = i;

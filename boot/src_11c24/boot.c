@@ -52,10 +52,17 @@ void boot_app_if_possible(void) {
     if (boot_check_app_validity()) {
         // all checks passed!
         // but first make sure rescue mode has had a chance
+
+        // We enter rescue mode when app is valid, bootloader entrance wasn't
+        // forced, and rescue mode hasn't already been entered. This gives
+        // 250ms to connect before the bootloader reboots and starts the
+        // application, in case the application is valid but can't enter the
+        // bootloader on its own.
+
         uint32_t* rescue_key = (uint32_t*)BOOTLOAD_RESCUE_KEY_ADDR;
         // if the rescue key is present, rescue mode has executed
         if (*rescue_key == BOOTLOAD_RESCUE_KEY) {
-            // clear that flag for next reset
+            // clear rescue key for next reset
             *rescue_key = 0;
             // and boot the application
             boot_app();
@@ -89,6 +96,7 @@ bool boot_check_app_validity() {
     uint32_t calculated_crc = crc32_calc((const uint8_t*)&app_vectors[8], app_size);
     if (calculated_crc != expected_crc)
         return false;
+    
     return true;
 }
 
@@ -100,8 +108,8 @@ void reboot(bool into_app) {
         *boot_enter_key = BOOTLOAD_ENTER_KEY;
     }
 
-    // if the bootloader is active and causing a reboot, rescue mode finished
-    // so set the flag to prevent re-entering it
+    // if the bootloader reboots, rescue mode must be finished
+    // so set the flag to say it happened
     uint32_t* rescue_key = (uint32_t*)BOOTLOAD_RESCUE_KEY_ADDR;
     *rescue_key = BOOTLOAD_RESCUE_KEY;
 

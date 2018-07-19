@@ -3,7 +3,7 @@ import struct
 
 # read in the whole memory image
 mem = open("mem_img.bin", "rb").read()
-# unpack header into 8 32-bit words
+# unpack header (first 8 vectors) into 8 32-bit words
 header = list(struct.unpack("<8I", mem[:32]))
 
 # crc32 everything but the header
@@ -13,7 +13,7 @@ header[4] = crc
 header[5] = (len(mem) - 32)&0xFFFFFFFF
 
 # recalculate header checksum
-# 8th entry is 0 - sum of first 7 entries
+# entries must sum to 0, so 8th entry is 0 - sum of first 7 entries
 header[7] = 0
 for he in header[:7]:
     header[7] -= he

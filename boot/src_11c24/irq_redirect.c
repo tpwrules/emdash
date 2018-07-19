@@ -1,6 +1,6 @@
 // redirects for all valid IRQs
 // note that WAKEUP_IRQHandler is redirected only once!
-// to PIO0_0's call. This is not a problem in the default LPC code
+// to PIO0_0's call. This is not a problem in the default LPCOpen template
 
 #include "irq_redirect.h"
 
@@ -15,7 +15,7 @@ IRQ_REDIRECT(CAN_IRQHandler, 29)
 IRQ_REDIRECT(SSP1_IRQHandler, 30)
 IRQ_REDIRECT(I2C_IRQHandler, 31)
 
-// IRQs >= 32 require different macro
+// IRQs >= 32 require different macro due to ARM assembly limitations
 IRQ_REDIRECT2(TIMER16_0_IRQHandler, 32)
 IRQ_REDIRECT2(TIMER16_1_IRQHandler, 33)
 IRQ_REDIRECT2(TIMER32_0_IRQHandler, 34)
