@@ -77,27 +77,27 @@ import subprocess
 
 def str_version_real(num):
     # stringify number into commit hash
-    num = "{:08x}".format(num)
+    commit = "{:08x}".format(num)
+
+    def git(*args):
+        return subprocess.check_output(("git", *args), timeout=5,
+            stderr=subprocess.STDOUT).decode("utf8").strip()
 
     # ask git for the full tag name (i.e. the tag name and the next commit)
-    full_tag_name = subprocess.check_output(
-        ("git", "describe", num)).decode("utf-8").strip()
+    full_tag_name = git("describe", commit)
     # plus the base tag name
-    tag_name = subprocess.check_output(
-        ("git", "describe", "--abbrev=0", num)).decode("utf-8").strip()
+    tag_name = git("describe", "--abbrev=0", commit)
     # now ask for that tag's description
-    tag_desc = subprocess.check_output(
-        ("git", "tag", "-n1", tag_name)).decode("utf-8").strip()
-    # get just the description
+    tag_desc = git("tag", "-n1", tag_name)
+    # remove tag name from description
     if tag_desc.startswith(tag_name):
         tag_desc = tag_desc.replace(tag_name, "", 1).strip()
     
     # now get the description of the commit itself
-    commit_desc = subprocess.check_output(
-        ("git", "log", "-1", "--format=%s", num)).decode("utf-8").strip()
+    commit_desc = git("log", "-1", "--format=%s", commit)
 
     # and finally format everything
-    return "{}: {} ({} {})".format(full_tag_name, tag_desc, num, commit_desc)
+    return "{}: {} ({} {})".format(full_tag_name, tag_desc, commit, commit_desc)
 
 def str_version(num):
     # return a string corresponding to the version given
@@ -150,23 +150,22 @@ def read_image(show_info):
     if len(image) % 256 != 0:
         image += b"\xFF"*(256-(len(image)%256))
 
-    # get more of the vector table for more cool stuff
+    # get more of the vector table for more information
     header = struct.unpack("<12I", image[:48])
 
-    # if we're not printing info, the image is ready
-    if not show_info:
-        return image, header[8]
-
-    print("APPLICATION IMAGE INFORMATION:")
-    print("    Device: {}".format(BOOTLOAD_SYS_ID_MAP.get(header[8], "<unknown>")))
-    print("    Version:", str_version(header[9]))
-    print("    Build date:", str_build_date(header[10]))
+    if show_info:
+        print("APPLICATION IMAGE INFORMATION:")
+        print("    Device: {} ({})".format(header[8],
+            BOOTLOAD_SYS_ID_MAP.get(header[8], "<unknown>")))
+        print("    Version:", str_version(header[9]))
+        print("    Build date:", str_build_date(header[10]))
 
     # finally, return the validated and padded image
+    # plus the device the image is for
     return image, header[8]
 
 import logging
-# this prints out some garbage on startup that we don't want to see
+# importing can prints out some garbage on startup that we don't want to see
 # so we shut it up until import is finished
 logging.disable(logging.CRITICAL)
 import can
@@ -190,8 +189,6 @@ CMD_HELLO_KEY = 0xb00710ad
 
 class CAN:
     def __init__(self, app_name, channel, baudrate, utilization):
-        if utilization < 1 or utilization > 100:
-            raise CANError("utilization percent must be an integer between 1 and 100.")
         try:
             self.bus = can.interface.Bus(
                 bustype='vector',
@@ -247,6 +244,8 @@ class CAN:
                     m.is_error_frame is False:
                 # a message made it past the filter
                 return m
+        # we've timed out also if timeout <= 0
+        return None
 
     def send_data(self, data):
         self.last_cmd = data[0] # used to verify response
@@ -255,7 +254,7 @@ class CAN:
         self.msgs_sent += 1
 
         # busywait until we're allowed to send the next message
-        # putting > 0 for sleep is way too slow
+        # sleeping is way too slow
         now = time.perf_counter()
         while self.next_msg_time > now:
             time.sleep(0)
@@ -280,7 +279,7 @@ class CAN:
             raise CANError("timed out waiting for message to be received.")
         if len(m.data) != 6:
             raise ProgramError("response length is incorrect: {}".format(len(m.data)))
-        cmd, resp, data = m.data[0], m.data[1], struct.unpack("<I", m.data[2:6])[0]
+        cmd, resp, data = struct.unpack("<BBI", m.data)
         # some responses we can deal with here
         if cmd != self.last_cmd:
             raise ProgramError("received response to incorrect command: {}".format(cmd))
@@ -327,6 +326,7 @@ class Programmer:
             else: # loop did not break -> receive always timed out
                 raise ProgramError("connection failed. Device did not respond "
                     "to 'Hello'. Is it turned on?")
+        # data is nonzero if application is valid
         return True if data else False
 
     def erase(self):
@@ -362,7 +362,7 @@ class Programmer:
 
     def reboot(self):
         # send reboot command and wait for it to happen
-        # True to reboot into app
+        # True tells bootloader to reboot into app
         self.bus.send_data(struct.pack("<BB", CMD_REBOOT, True))
         self.bus.recv_response(expected_resp=RESP_SUCCESS)
 
@@ -398,13 +398,17 @@ def main():
         device = BOOTLOAD_SYS_NAME_MAP.get(args.device.strip().lower())
         if device is None:
             raise ArgumentError("unrecognized device: '{}'".format(args.device))
+    # check that utilization is within range
+    if args.utilization < 1 or args.utilization > 100:
+        raise ArgumentError(
+            "utilization percent must be an integer between 1 and 100.")
 
     # read in the image data if necessary
     # also display info about it, if asked
     if args.info or args.program or device is None:
         image, app_device = read_image(args.info)
         if not args.program and not args.check:
-            return # info is all we need
+            return # info is all we need to do. program finished
         if device is None:
             device = app_device
         elif device != app_device:
