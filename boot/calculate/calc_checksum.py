@@ -10,7 +10,10 @@ header = list(struct.unpack("<8I", mem[:32]))
 crc = binascii.crc32(mem[32:], 0) & 0xFFFFFFFF
 # put CRC and image length into header
 header[4] = crc
-header[5] = (len(mem) - 32)&0xFFFFFFFF
+header[5] = len(mem)&0xFFFFFFFF
+
+if header[5] > 0x7000:
+    raise Exception("image is too large")
 
 # recalculate header checksum
 # entries must sum to 0, so 8th entry is 0 - sum of first 7 entries

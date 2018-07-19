@@ -121,8 +121,8 @@ def read_image(show_info):
     if len(image) < 32:
         raise ImageError("header is missing.")
 
-    # note that the bootloader does the same tests
-    # and checksums
+    # note that the bootloader does the same tests and checksums
+    # so if it passes these, it will pass in the bootloader
 
     # validate the header checksum
     header = struct.unpack("<8I", image[:32])
@@ -132,10 +132,11 @@ def read_image(show_info):
     # get the header size and crc, then validate it that way
     app_crc = header[4]
     app_size = header[5]
-    if app_size < 40*8 or app_size > (0x7000-(4*8)):
+    if app_size < 48*4 or app_size > 0x7000:
         raise ImageError("application size in header is invalid.")
-    if app_size != len(image)-32:
-        raise ImageError("application size in header is incorrect.")
+    if app_size != len(image):
+        raise ImageError(
+            "application size in header doesn't match image size.")
 
     crc = binascii.crc32(image[32:], 0)
     if crc != app_crc:

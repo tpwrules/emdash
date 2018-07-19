@@ -25,14 +25,15 @@ void boot_app_if_possible(void) {
     // the header must be, or the bootloader couldn't have started
 
     // avoid creating null pointer
-    const uint32_t* app_vectors = (const uint32_t*)(4);
+    const uint32_t* boot_vectors = (const uint32_t*)(4);
 
     // pull expected crc and image size from the vectors
-    uint32_t expected_crc = app_vectors[4-1];
-    uint32_t app_size = app_vectors[5-1];
+    uint32_t expected_crc = boot_vectors[4-1];
+    uint32_t boot_size = boot_vectors[5-1];
     // calculate CRC based on above data
     // it starts calculating at the 9th header entry
-    uint32_t calculated_crc = crc32_calc((const uint8_t*)&app_vectors[8-1], app_size);
+    uint32_t calculated_crc = crc32_calc((const uint8_t*)&boot_vectors[8-1], 
+        boot_size-32);
     if (calculated_crc != expected_crc) {
         // if the bootloader is corrupt, we can't do too much...
         while (1); 
@@ -89,11 +90,11 @@ bool boot_check_app_validity() {
     uint32_t expected_crc = app_vectors[4];
     uint32_t app_size = app_vectors[5];
     // make sure the size is plausible
-    if (app_size > (0x7000-(4*8)) || app_size < 40*8)
+    if (app_size > 0x7000 || app_size < 48*4)
         return false;
     // calculate CRC based on above data
     // it starts calculating at the 9th header entry
-    uint32_t calculated_crc = crc32_calc((const uint8_t*)&app_vectors[8], app_size);
+    uint32_t calculated_crc = crc32_calc((const uint8_t*)&app_vectors[8], app_size-32);
     if (calculated_crc != expected_crc)
         return false;
     
