@@ -35,10 +35,6 @@ parser.add_argument('-v', '--verbose', action="store_true", default=False,
 parser.add_argument('-d', '--device', type=str, default=None,
     help="Specify the name of the device to program. If not specified, "
          "the ID stored in the header of the application image is used.")
-parser.add_argument('-r', '--rescue', action="store_true", default=False,
-    help="Operate in rescue mode. Attempts connection more frequently and "
-         "doesn't time out. Start program in rescue mode, then reset "
-         "affected device.")
 
 args_tasks = parser.add_argument_group("tasks", 
     "Tasks for programmer to perform. You can select multiple tasks.")
@@ -301,31 +297,17 @@ class Programmer:
     def __init__(self, bus):
         self.bus = bus
 
-    def connect(self, device, rescue):
+    def connect(self, device):
         # try to send the Hello command until we get a response
-        if rescue:
-            while True:
-                self.bus.send_data(struct.pack("<BHI",
-                    CMD_HELLO, device, CMD_HELLO_KEY))
-                try:
-                    resp, data = self.bus.recv_response(
-                        timeout=0.05, expected_resp=RESP_HELLO)
-                    break
-                except CANError:
-                    continue
-        else:
-            for hi in range(10):
-                self.bus.send_data(struct.pack("<BHI",
-                    CMD_HELLO, device, CMD_HELLO_KEY))
-                try:
-                    resp, data = self.bus.recv_response(
-                        timeout=0.2, expected_resp=RESP_HELLO)
-                    break
-                except CANError:
-                    continue
-            else: # loop did not break -> receive always timed out
-                raise ProgramError("connection failed. Device did not respond "
-                    "to 'Hello'. Is it turned on?")
+        while True:
+            self.bus.send_data(struct.pack("<BHI",
+                CMD_HELLO, device, CMD_HELLO_KEY))
+            try:
+                resp, data = self.bus.recv_response(
+                    timeout=0.1, expected_resp=RESP_HELLO)
+                break
+            except CANError:
+                continue
         # data is nonzero if application is valid
         return True if data else False
 
@@ -425,7 +407,7 @@ def main():
 
     # and run through all the steps
     print("Connecting to device... ", end="", flush=True)
-    app_valid = prog.connect(device, args.rescue)
+    app_valid = prog.connect(device)
     print("connected!")
 
     # print out the check information if asked

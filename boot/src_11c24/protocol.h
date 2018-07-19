@@ -53,17 +53,27 @@
 // longer guaranteed, so the bootloader will reset and the connection must be
 // re-established
 
-// Connecting
-// the CMD_HELLO command must be sent to enter and connect to the
-// bootloader. if the application is running, it will reboot into
-// the bootloader without a response. so this command must be sent
-// multiple times. perhaps resend if there is no response after 200ms
-// and abort after 10 tries.
+// Boot Process
+// After the device is reset, the bootloader starts and verifies the
+// application. If the application is valid, the bootloader waits 250ms for a
+// connection, then starts the application if no connection was made. If the
+// application is not valid, the bootloader waits indefinitely for a
+// connection.
+//
+// Once the application is started, it also listens for a connection and
+// restarts the bootloader if one is attempted. The bootloader then waits
+// indefinitely for a connection. If the application does not listen for a
+// connection, the only opportunity to conmect to the bootloader is the 250ms
+// after reset.
 
-// Rescue Mode
-// After reset, the bootloader waits for CMD_HELLO for 250ms, then resets
-// again to start the application. This allows the bootloader to be entered
-// even if the application has a bug and will not enter the bootloader.
+// Connecting
+// Connecting is done by sending CMD_HELLO to the bootloader. When the
+// bootloader responds with RESP_HELLO, the connection has been made. There
+// may not be a respone if the application is not listening, the application
+// receives the connection attempt, the bootloader is busy initializing, etc.
+// The suggested method is to send CMD_HELLO every 100ms until the bootloader
+// responds. If the bootloader responds with RESP_HELLO, the connection is
+// successful. If there is another response, the connection failed.
 
 // the Hello command (actual definitions in bootload_integrate.h)
 // send this to connect to the bootloader
