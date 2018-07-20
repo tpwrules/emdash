@@ -44,12 +44,16 @@
 //      otherwise, the graphics page is switched
 // page: the new page to display
 PCFUNC(void, scr_show_page)(uint8_t text, uint8_t page);
+#define scr_show_graphics_page(page) scr_show_page(false, (page))
+#define scr_show_text_page(page) scr_show_page(true, (page))
 
 // clear a page (to white for graphics, all blank chars for text)
 // text: if true, a text page is cleared.
 //      otherwise, a graphics page is cleared
 // page: the page to clear
 PCFUNC(void, scr_clear_page)(uint8_t text, uint8_t page);
+#define scr_clear_graphics_page(page) scr_clear_page(false, (page))
+#define scr_clear_text_page(page) scr_clear_page(true, (page))
 
 // draw a rectangle
 // the color is non-zero for a black rectangle and 0 for white

@@ -74,12 +74,12 @@ void drive_blink(uint32_t timer_val) {
             return;
         if (inverted) {
             // switch to main pages
-            scr_show_page(false, 0);
-            scr_show_page(true, 0);
+            scr_show_graphics_page(0);
+            scr_show_text_page(0);
         } else {
             // switch to inverted pages
-            scr_show_page(false, 1);
-            scr_show_page(true, 1);
+            scr_show_graphics_page(1);
+            scr_show_text_page(1);
         }
         inverted = !inverted;
         blink_ctr = LIM_UPSHIFT_BLINK_PERIOD/2;

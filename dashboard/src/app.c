@@ -20,13 +20,13 @@ static int mode_was_ever_switched = 0;
 void app_entry(void) {
     // show page 0 for text and graphics
     // (we'll draw the splash here)
-    scr_show_page(false, 0);
-    scr_show_page(true, 0);
+    scr_show_graphics_page(0);
+    scr_show_text_page(0);
 
     // clear all pages
     for (int i=0; i<2; i++) {
-        scr_clear_page(false, i);
-        scr_clear_page(true, i);
+        scr_clear_graphics_page(i);
+        scr_clear_text_page(i);
     }
 
     // draw splash onto first page
@@ -44,8 +44,7 @@ void app_entry(void) {
     while (timer_val < LIM_BOOT_SPLASH_TIME);
 
     // now clear and build the main screen
-    scr_clear_page(false, 0);
-    scr_clear_page(true, 0);
+    scr_clear_graphics_page(0);
 
     // initialize the main display modules
     drive_init();
