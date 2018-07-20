@@ -62,135 +62,47 @@ piclist = [
     Picture("gears/gears.png", "gear_4", (32*8, 0, 30, 31))
 ]
 
-def pic_encode_raw(pixels):
-    # raw encoding just stuffs the pixels into bytes
-    data = bytearray()
-    for row in pixels:
-        bl = 0
-        b = 0
-        for pixel in row:
-            b <<= 1
-            b |= pixel
-            bl += 1
-            if bl == 6:
-                data.append(b)
-                bl = 0
-                b = 0
-    return data
+def pic_encode(pixels):
+    # picture data is split into 6 pixel chunks, to be compatible
+    # with 6x8 mode on the controller
+    # encode pictures by using high two bits of byte as RLE
+    # low six bits are picture data
+    # 00 -> no zero chunks before picture chunk
+    # 01 -> one zero chunk before picture chunk
+    # 10 -> two zero chunks before picture chunk
+    # 11 -> picture chunk is instead amount of zero chunks - 1
 
-def pic_encode_c1(pixels):
-    # encode pixels with a control byte
-    # each byte has 0 if the corresponding image byte is 0,
-    # or 1 if it's not
-    # LSB in control is leftmost pixel
-
-    ctl = 0
-    ctlc = 0
-    data = bytearray()
-    cdata = bytearray()
-    for row in pixels:
-        bl = 0
-        b = 0
-        for pixel in row:
-            b <<= 1
-            b |= pixel
-            bl += 1
-            if bl == 6:
-                if b > 0 :
-                    ctl |= (1 << ctlc)
-                    cdata.append(b)
-                bl = 0
-                b = 0
-                ctlc += 1
-                if ctlc == 8:
-                    data.append(ctl)
-                    data.extend(cdata)
-                    ctlc = 0
-                    ctl = 0
-                    cdata = bytearray()
-    if ctlc > 0:
-        data.append(ctl)
-        data.extend(cdata)
-
-    return data
-
-def pic_encode_c2(pixels):
-    # encode pixels with a control byte
-    # each byte has 0 if the corresponding image byte is 0,
-    # or 1 if it's not
-    # LSB in control is leftmost pixel
-    # same as above except XOR difference between bytes
-    # is encoded instead
-
-    ctl = 0
-    ctlc = 0
-    last = 0
-    data = bytearray()
-    cdata = bytearray()
-    for row in pixels:
-        bl = 0
-        b = 0
-        for pixel in row:
-            b <<= 1
-            b |= pixel
-            bl += 1
-            if bl == 6:
-                tb = b ^ last
-                last = b
-                if tb > 0 :
-                    ctl |= (1 << ctlc)
-                    cdata.append(tb)
-                bl = 0
-                b = 0
-                ctlc += 1
-                if ctlc == 8:
-                    data.append(ctl)
-                    data.extend(cdata)
-                    ctlc = 0
-                    ctl = 0
-                    cdata = bytearray()
-    if ctlc > 0:
-        data.append(ctl)
-        data.extend(cdata)
-
-    return data
-
-def pic_encode_c3(pixels, diff):
-    # raw encoding just stuffs the pixels into bytes
-    last = 0
     zeros = 0
     data = bytearray()
     for row in pixels:
-        bl = 0
-        b = 0
+        bits = 0
+        chunk = 0
         for pixel in row:
-            b <<= 1
-            b |= pixel
-            bl += 1
-            if bl == 6:
-                if diff:
-                    b, last = b ^ last, b
-                if b == 0:
+            chunk = (chunk << 1) | pixel
+            bits += 1
+            if bits == 6:
+                if chunk == 0:
                     zeros += 1
                 else:
+                    while zeros > 2:
+                        outzeros = min(zeros, 64)
+                        data.append((outzeros-1) | 0xC0)
+                        zeros -= outzeros
                     if zeros == 0:
-                        data.append(b)
+                        data.append(chunk)
                     elif zeros == 1:
-                        data.append(b | 0x40)
+                        data.append(chunk | 0x40)
                     elif zeros == 2:
-                        data.append(b | 0x80)
-                    else:
-                        if zeros-1 > 63:
-                            raise Exception("oops")
-                        data.append((zeros-1) | 0xC0)
-                        data.append(b)
+                        data.append(chunk | 0x80)
                     zeros = 0
-                bl = 0
-                b = 0
-    if zeros > 0:
-        if zeros - 1 > 63:
-            raise Exception("oops")
-        data.append((zeros-1) | 0xC0)
+                bits = 0
+                chunk = 0
+
+    while zeros > 0:
+        outzeros = min(zeros, 64)
+        data.append((outzeros-1) | 0xC0)
+        zeros -= outzeros
+
     return data
 
 def write_pic_data():
@@ -239,18 +151,16 @@ def write_pic_data():
             new_img.append(new_row)
 
         # now that we have only the image pixels, encode them
-        pms = [
-            #(pic_encode_raw(new_img), 0),
-            #(pic_encode_c1(new_img), 1),
-            #(pic_encode_c2(new_img), 2),
-            (pic_encode_c3(new_img, False), 3),
-        ]
+        encoded = pic_encode(new_img)
 
-        pms.sort(key=lambda m: (len(m[0]), m[1]))
+        pic_records.append((
+            int(len(new_img[0])/6), # width (in bytes)
+            len(new_img), # height
+            len(pic_bytes))) # offset within pic_bytes
+        pic_bytes.extend(encoded)
 
-        pic_records.append((int(len(new_img[0])/6), len(new_img),
-            len(pic_bytes), pms[0][1]))
-        pic_bytes.extend(pms[0][0])
+    # add padding byte so last picture won't read off the end of the array
+    pic_bytes.append(0)
 
     print("total picture bytes: {}".format(len(pic_bytes)))
 
@@ -269,8 +179,8 @@ def write_pic_data():
         len(pic_records)))
 
     for ri, r in enumerate(pic_records):
-        f.write("{{&pic_bytes[{}], {}, {}, {}}},\n".format(
-            r[2], r[0], r[1], r[3]))
+        f.write("{{&pic_bytes[{}], {}, {}}},\n".format(
+            r[2], r[0], r[1]))
 
     f.write("};\n")
 

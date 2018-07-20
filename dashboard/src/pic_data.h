@@ -8,7 +8,6 @@ typedef struct {
     const uint8_t *data; // pointer to picture data
     uint8_t width; // in bytes
     uint8_t height; // in pixels
-    uint8_t compress_type;
 } pic_data_t;
 
 
