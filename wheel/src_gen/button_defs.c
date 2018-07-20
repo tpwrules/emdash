@@ -25,7 +25,7 @@ const button_def_t button_defs[BP_NUM_BUTTONS] = {
     {br_autoshift, 0, 5, 10, 50},
     {br_launch, 0, 7, 10, 50},
     {br_lap, 1, 0, 10, 50},
-    {br_traction_knob, 0, 6, 100, 100},
+    {br_traction_knob, 0, 6, 75, 75},
 };
 
 button_state_t button_states[BP_NUM_BUTTONS];

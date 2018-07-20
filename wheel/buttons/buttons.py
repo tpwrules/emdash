@@ -65,7 +65,7 @@ buttons = [
     Button(
         name="wb_traction_knob", msg_id=0x131, byte=6,
         update="br_traction_knob",
-        debounce_press=100, debounce_release=100
+        debounce_press=75, debounce_release=75
     )
 ]
 
