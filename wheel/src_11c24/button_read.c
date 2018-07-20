@@ -37,10 +37,10 @@ static inline void br_traction_knob_init(void) {
 #define TRACTION_NUM_POS (12)
 
 uint8_t br_traction_knob(void) {
-    static uint8_t val = 0;
+    static uint8_t curr_pos = 0;
 
     // read value from ADC
-    uint16_t now = 0;
+    uint16_t adc_in = 0;
     Chip_ADC_EnableChannel(LPC_ADC, ADC_CH0, ENABLE);
     // start conversion
     Chip_ADC_SetStartMode(LPC_ADC, ADC_START_NOW, ADC_TRIGGERMODE_RISING);
@@ -48,34 +48,40 @@ uint8_t br_traction_knob(void) {
     while (Chip_ADC_ReadStatus(
         LPC_ADC, ADC_CH0, ADC_DR_DONE_STAT) != SET);
     // capture value
-    Chip_ADC_ReadValue(LPC_ADC, ADC_CH0, &now);
+    Chip_ADC_ReadValue(LPC_ADC, ADC_CH0, &adc_in);
     Chip_ADC_EnableChannel(LPC_ADC, ADC_CH0, DISABLE);
 
-    // split up ADC input into 4 sub-values per switch position
-    uint16_t switch_pos = (now * ((TRACTION_NUM_POS-1)*4)) / 1024;
+    // split up ADC input into 4 sub-positions per switch position
+    uint32_t adc_in32 = (uint32_t)adc_in; // so multiplication doesn't overflow
+    uint16_t switch_subpos = (uint16_t)((adc_in32 * ((TRACTION_NUM_POS-1)*4)) / 1024);
+
+    uint16_t new_pos = switch_subpos >> 2;
 
     // act on sub-values to apply hysteresis
-    switch (switch_pos & 3) {
+    switch (switch_subpos & 3) {
         case 0: // definitely new value
-            val = switch_pos >> 2;
+            curr_pos = new_pos;
             break;
         case 1: // should be new value
             // if the current value isn't new value + 1
-            if (val != (switch_pos >> 2) + 1)
-                val = switch_pos >> 2;
+            if (curr_pos != new_pos + 1)
+                curr_pos = new_pos;
             break;
         case 2: // should be new value + 1
             // if the current value isn't new value
-            if (val != switch_pos >> 2)
-                val = (switch_pos >> 2) + 1;
+            if (curr_pos != new_pos)
+                curr_pos = new_pos + 1;
             break;
         case 3: // definitely new value + 1
-            val = (switch_pos >> 2) + 1;
+            curr_pos = new_pos + 1;
+            break;
+
+        default: // should never happen
             break;
     }
 
     // return the currnet logical switch position
-    return val;
+    return curr_pos;
 }
 
 
