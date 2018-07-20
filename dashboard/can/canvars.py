@@ -16,7 +16,7 @@ class Variable:
                         # bit 0 is the LSB of byte 0
                         # bit 63 is the MSB of byte 7
             signed=False, # True if variable is signed
-            multiplex=None, # Multiplexer Value. if None, entire msg is not
+            multiplex=None, # Bosch Multiplexer Value. if None, entire msg is not
                             # multiplexed
 
             # information on acting on the variable
@@ -140,7 +140,7 @@ variables = [
     ),
 
     # relevant buttons from wheel
-
+    # all are 0 = released, 1 = pressed
     Variable(
         name="wb_upshift",
         msg_id=0x131, start=8, size=8, signed=False,
@@ -159,6 +159,7 @@ variables = [
         callback="drive_wb_radio_update"
     ),
 
+    # 0-11 to represent the 12 traction knob positions
     Variable(
         name="wb_traction_knob",
         msg_id=0x131, start=48, size=8, signed=False,
@@ -178,6 +179,7 @@ variables = [
         callback="modes_m1_ath_update"
     ),
 
+    # throttle pedal percentage in units of 0.01%, max 110%
     Variable(
         name="aps",
         msg_id=0x112, start=0, size=16, signed=False,
@@ -214,7 +216,7 @@ for i, var in enumerate(variables):
     var.canvar_id = i
 
 if len(variables) >= 255:
-    raise Exception("too many variables")
+    raise Exception("maximum of 254 variables supported")
 
 import threading
 
@@ -377,6 +379,8 @@ def build_defs():
         else:
             unused_callback = True
 
+    # only write unused callback if there is such
+    # to prevent the compiler whining about an unused unused function
     if unused_callback:
         f.write("\nstatic void unused_callback_dummy(uint32_t val) {}\n")
 

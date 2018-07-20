@@ -6,6 +6,7 @@ d2 = numpy.zeros((8*4, 6*64), dtype='uint8')
 
 f = open("font.h", "r")
 
+# get next byte from font.h
 def nb():
     while True:
         l = f.readline()
@@ -16,17 +17,19 @@ def nb():
         if len(n) == 4:
             return int(n[2:], 16)
 
+# for every character
 for c in range(256):
     cx = (c % 16)*6
     cy = (int(c / 16))*8
+    # and row of character
     for l in range(8):
-        b = nb()
+        b = nb() # get next byte
         b2 = b
-        for x in range(6):
+        for x in range(6): # put it in place for sim font
             if b & 0x80:
                 d[cy+l,cx+x] = 1
             b <<= 1
-        for x in range(6):
+        for x in range(6): # and in place for the actual device font
             if not (b2 & 0x80):
                 d2[c >> 3,((c&7)*48)+(l*6)+x] = 1
             b2 <<= 1

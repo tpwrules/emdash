@@ -1,3 +1,6 @@
+# render some text in the tiny font so it can be
+# copy and pasted into the bootsplash
+
 import pygame.freetype as ft
 import pygame
 import time
