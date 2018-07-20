@@ -80,7 +80,7 @@ uint8_t br_traction_knob(void) {
             break;
     }
 
-    // return the currnet logical switch position
+    // return the current logical switch position
     return curr_pos;
 }
 
