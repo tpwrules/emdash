@@ -33,7 +33,8 @@ void bp_process(void) {
                 st->state = st->raw;
                 // update message with new value
                 msg_states[def->msg_idx].msg.data[def->msg_byte] = st->state;
-                msg_states[def->msg_idx].send_timeout = 0; // message is dirty
+                // zero timeout so message is sent asap
+                msg_states[def->msg_idx].send_timeout = 0;
             }
         }
 

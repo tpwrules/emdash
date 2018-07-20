@@ -24,13 +24,14 @@ void app_timer_interrupt() {
         version_timer = 1000; // ms
     }
 
-    // and also all of the others
+    // transmit updated button states
     msg_state_t *st = &msg_states[0];
     for (int i=0; i<BP_NUM_CAN_MESSAGES; i++) {
         if (st->send_timeout == 0) {
-            // transmit the message if it is time
+            // it is time: transmit message
             LPC_CCAN_API->can_transmit(&st->msg);
-            st->send_timeout = 50;
+            // transmit again even if there is no change
+            st->send_timeout = 50; // ms
         } else {
             --st->send_timeout;
         }

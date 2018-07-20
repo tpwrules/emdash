@@ -1,10 +1,9 @@
-# this file contains the definitions of the buttons and their
-# CAN variables
+# this file contains the definitions of the buttons and their CAN variables
 # it generates the appropriate C definitions for the button processor
 
 class Button:
     def __init__(self,
-        # information about the button's CAN variable
+        # information about the button on the CAN bus
         name, # variable name
         msg_id, # can ID the variable is in
         byte, # which byte of the message the variable is in
@@ -123,7 +122,7 @@ def write_buttons():
     f.write("msg_state_t msg_states[BP_NUM_CAN_MESSAGES] = {\n")
     for msg_id, msg_idx in msg_ids.items():
         f.write("    {{{{0x{:03x}, 0, {{0,0,0,0,0,0,0,0}}, 8, {}}}".format(
-            msg_id, msg_idx+2))
+            msg_id, msg_idx+2)) # + 2 to skip version message & boot cmd message
         f.write(", 0},\n")
 
     f.write("};\n\n")

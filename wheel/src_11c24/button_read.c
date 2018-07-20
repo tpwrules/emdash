@@ -51,30 +51,30 @@ uint8_t br_traction_knob(void) {
     Chip_ADC_ReadValue(LPC_ADC, ADC_CH0, &now);
     Chip_ADC_EnableChannel(LPC_ADC, ADC_CH0, DISABLE);
 
-    // split up current value into 4 numbers per switch position
+    // split up ADC input into 4 sub-values per switch position
     uint16_t switch_pos = (now * ((TRACTION_NUM_POS-1)*4)) / 1024;
 
-    // act on that with hysteresis
+    // act on sub-values to apply hysteresis
     switch (switch_pos & 3) {
-        case 0: // definitely at current value
+        case 0: // definitely new value
             val = switch_pos >> 2;
             break;
-        case 1: // should be current value
-            // as long as it's not the next higher value
+        case 1: // should be new value
+            // if the current value isn't new value + 1
             if (val != (switch_pos >> 2) + 1)
                 val = switch_pos >> 2;
             break;
-        case 2: // should be next higher value
-            // as long as it's not current value
+        case 2: // should be new value + 1
+            // if the current value isn't new value
             if (val != switch_pos >> 2)
                 val = (switch_pos >> 2) + 1;
             break;
-        case 3: // definitely at next higher value
+        case 3: // definitely new value + 1
             val = (switch_pos >> 2) + 1;
             break;
     }
 
-    // return the switch position with hysteresis
+    // return the currnet logical switch position
     return val;
 }
 
