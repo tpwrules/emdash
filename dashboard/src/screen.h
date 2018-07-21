@@ -22,7 +22,7 @@
 #endif
 
 // The graphics layer can be addressed in byte or pixel mode.
-// in byte mode, each address is an 6x1 block of pixels
+// in byte mode, each address is a 6x1 block of pixels
 // the screen is thus 40x64 bytes visible, 64x64 in memory
 #define SCR_BYTE_ADDR(page, x, y) \
     (((page)*0x1000)+((y)<<6)+(x))

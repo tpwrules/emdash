@@ -4,6 +4,7 @@
 //  * oil temperature and pressure
 //  * engine block and water temperature
 //  * fuel temperature and pressure
+//  * battery voltage
 
 #include <stdio.h>
 
@@ -21,8 +22,8 @@ static uint8_t blink_state[NUM_BLINK_ICONS];
 
 // this holds the information on a particular icon to be blinked
 typedef struct {
-    uint16_t pic_loc; // address of icon picture in bytes
-    uint16_t text_loc; // address of value text in pixels
+    uint16_t pic_loc; // screen address of icon picture in bytes
+    uint16_t text_loc; // screen address of value text in pixels
 
     uint8_t pic_id; // id of picture for icon
     uint8_t text_width; // number of pixels in value text
@@ -79,6 +80,7 @@ static void warn_set(int blink_id, uint8_t should_warn) {
 // initializer: draws default screen state
 void warn_init(void) {
     // draw the value placeholders
+    // \xF8 -> degree symbol °
     scr_draw_text(SCR_TEXT_ADDR(0, 0, 5), "Oil ??.?bar ???\xF8""C");
     scr_draw_text(SCR_TEXT_ADDR(0, 0, 6), "Tmot???\xF8""C 2:???\xF8""C");
     scr_draw_text(SCR_TEXT_ADDR(0, 0, 7), "Fuel??.?bar ???\xF8""C");

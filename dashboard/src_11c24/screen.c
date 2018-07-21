@@ -19,7 +19,7 @@ void scr_show_page(uint8_t text, uint8_t page) {
 
 void scr_clear_page(uint8_t text, uint8_t page) {
     // fill desired page with zeros
-    int size, addr;
+    uint32_t size, addr;
     if (text) {
         size = 64*8;
         addr = SCR_TEXT_ADDR(page, 0, 0);
@@ -33,7 +33,7 @@ void scr_clear_page(uint8_t text, uint8_t page) {
 
     // start auto send mode
     lcd_send_0cmd(0xB0);
-    for (int i=0; i<size; i++)
+    for (uint32_t i=0; i<size; i++)
         lcd_send_auto(0, false);
     // end auto mode
     lcd_send_auto(0xB2, true);
@@ -110,12 +110,12 @@ void scr_draw_pic(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted) {
     // set up decompression context
     uint8_t din = 0xC0; // input compressed byte
     uint8_t out = 0; // byte to output
-    int zeros = 0; // number of zeros remaining before output
+    uint32_t zeros = 0; // number of zeros remaining before output
 
     const uint8_t *data = pic->data;
 
     // loop over rows in picture
-    for (int y=0; y<pic->height; y++) {
+    for (uint32_t y=pic->height; y>0; y--) {
         // set LCD address to the start of this row
         lcd_send_acmd(0x24, byte_addr);
         // increment to next row
@@ -123,32 +123,32 @@ void scr_draw_pic(uint32_t byte_addr, uint32_t pic_id, uint8_t inverted) {
         // start auto send mode
         lcd_send_0cmd(0xB0);
 
-        for (int x=0; x<pic->width; x++) {
-            out = 0xFF; // we need to output a byte
+        for (uint32_t x=pic->width; x>0; x--) {
+            out = 0xFF; // 0xFF -> we need to output a byte
             do {
-                if (zeros > 0) {
+                if (zeros) {
                     // output another zero
                     out = 0;
                     zeros--;
                 } else {
                     // no zeros remaining, output the data byte
-                    if ((din & 0xC0) != 0xC0) {
-                        // if it's not just a zero count!
+                    if (din >> 6 != 0x3) {
+                        // but only if it's not just a zero count!
                         out = din & 0x3F;
                     }
                     // now read and process the next byte
                     din = *data++;
-                    if ((din & 0xC0) == 0xC0) {
+                    if (din >> 6 == 0x3) {
                         // just a zero run
                         zeros = (din & 0x3F) + 1;
                     } else {
-                        zeros = (din & 0xC0) >> 6;
+                        zeros = din >> 6;
                     }
                 }
             } while (out == 0xFF);
 
             // invert byte if asked
-            if (inverted) out ^= 0xFF;
+            if (inverted) out ^= 0x3F;
 
             // output the byte
             lcd_send_auto(out, false);
@@ -165,9 +165,8 @@ void scr_draw_text(uint32_t text_addr, char *text) {
     // start auto mode
     lcd_send_0cmd(0xB0);
     // and output text
-    while (1) {
-        char c = *text++;
-        if (!c) break;
+    char c;
+    while ((c = *text++)) {
         lcd_send_auto(c, false);
     }
     // end auto mode

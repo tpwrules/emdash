@@ -3,8 +3,12 @@
 //  * RPM
 //  * current gear
 //  * current speed
+//  * traction control setting
+//  * upshift, downshift, radio buttons
+//  * auto and launch mode indicators
 
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "app.h"
 #include "platform.h"
@@ -43,20 +47,20 @@ void drive_blink(uint32_t timer_val) {
 
     // countdown to reverse blink state
     static uint32_t blink_ctr = 0;
-    // 1 if screen is inverted for blinking
-    static uint8_t inverted = 0;
-    // 1 if actively blinking
-    static uint8_t blinking = 0;
+    // true if screen is inverted for blinking
+    static bool inverted = 0;
+    // true if actively blinking
+    static bool blinking = 0;
 
     static uint32_t last_timer_val = 0;
 
     // update if we should be blinking or not based on RPM
     if (!blinking && old_rpm >= LIM_UPSHIFT_BLINK_RPM_START) {
-        blinking = 1;
-        inverted = 0;
+        blinking = true;
+        inverted = false;
         blink_ctr = 0;
     } else if (blinking && old_rpm <= LIM_UPSHIFT_BLINK_RPM_STOP) {
-        blinking = 0;
+        blinking = false;
     }
 
     uint32_t dt = timer_val - last_timer_val;

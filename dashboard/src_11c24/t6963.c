@@ -1,12 +1,28 @@
 // this file drives a t6963 compatible LCD
 
+// PIN MAPPINGS
+
+// /WR -> PIO2_6
+// /RD -> PIO2_0
+// /CE -> grounded -> always enabled
+// C/D -> PIO2_1
+// /RESET -> PIO1_8
+// FS -> tied high -> 6x8 font always selected
+
+// DB0 -> PIO0_2
+// DB1 -> PIO0_3
+// DB2 -> PIO2_7
+// DB3 -> PIO2_8
+// DB4 -> PIO0_6
+// DB5 -> PIO0_7
+// DB6 -> PIO0_8
+// DB7 -> PIO0_9
+
 #include <stdbool.h>
 
 #include "chip.h"
-
 #include "t6963.h"
 
-#include <stdbool.h>
 
 #define set_nWR(to) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 6, (to))
 #define set_nRD(to) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, (to))
@@ -30,7 +46,7 @@
 static inline void lcd_wait_S0S1(void) {
     set_CD(true); // command
     set_DB_output(false); // get ready to read status
-    uint8_t status;
+    uint32_t status;
     do {
         // assert read
         set_nRD(false);
@@ -73,7 +89,7 @@ uint8_t lcd_get() {
 static inline void lcd_wait_S3(void) {
     set_CD(true); // command
     set_DB_output(false); // get ready to read status
-    uint8_t status;
+    uint32_t status;
     do {
         // assert read
         set_nRD(false);
@@ -143,7 +159,7 @@ void lcd_init(void) {
     Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO0_9,
         IOCON_FUNC0 | IOCON_MODE_INACT);
 
-    // now we can begin actually initializing the chip
+    // now we can begin actually initializing the controller
 
     // assert reset
     set_nRESET(false);

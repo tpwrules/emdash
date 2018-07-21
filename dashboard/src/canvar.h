@@ -13,7 +13,7 @@ typedef void (*canvar_callback_t)(uint32_t val);
     } while (0)
 
 // force a variable to invalid if it's same, thereby
-// causing it to be called on the next update
+// causing it to become new and then called on the next update
 #define CV_CALL_NEXT_UPDATE(var) do {\
     if ((var).st == CV_ST_SAME) (var).st = CV_ST_INVALID;\
     } while (0)

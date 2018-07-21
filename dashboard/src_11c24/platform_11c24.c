@@ -21,7 +21,8 @@ void SysTick_Handler(void) {
     static uint32_t cpu_usage_timeout = 50;
     if (--cpu_usage_timeout == 0) {
         cpu_usage_timeout = 50;
-        uint32_t percent = cycles_asleep * 100 / (48000000/2);
+        // cycles_asleep * 100% / 48,000,000 cycles per second * 500ms
+        uint32_t percent = cycles_asleep / (480000/2);
         cycles_asleep = 0;
         app_canvar_interrupt(CV_ID_NOBUS_CPU_IDLE_PERCENT, percent);
     }
@@ -57,7 +58,7 @@ void interrupt_wait(void) {
     uint32_t end = SysTick->VAL;
     // SysTick->VAL counts down toward 0
     // we can't miss a reload since the interrupt would wake us up
-    // the only possibilities are that it wraps around 0 or 1 times
+    // the only possibilities are that it wrapped around 0 or 1 times
     if (end > start) // handle wrapping around once
         start += SysTick->LOAD;
     cycles_asleep += (start - end);

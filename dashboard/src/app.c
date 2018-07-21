@@ -50,7 +50,7 @@ void app_entry(void) {
     drive_init();
     warn_init();
 
-    // show the version mode
+    // set up the version mode
     app_mode_change_func = version_mode_change;
     // and now show it
     app_show_next_mode();
@@ -173,21 +173,21 @@ uint32_t hysteresis_div(uint32_t old, uint32_t new, uint32_t divisor) {
     num >>= 2; // finish division
     switch (num_sub) {
         default: // default will never happen, but it stops the compiler whining
-        case 0: // definitely at current value
+        case 0: // definitely the new value
             return num;
-        case 1: // should be current value
-            // as long as it's not the next higher value
+        case 1: // should be new value
+            // as long as current value is not new value + 1
             if (old != num + 1)
                 return num;
             else
                 return old;
-        case 2: // should be next higher value
-            // as long as it's not current value
+        case 2: // should be new value + 1
+            // as long as current value is not the new value
             if (old != num)
                 return num + 1;
             else
                 return old;
-        case 3: // definitely the next higher value
+        case 3: // definitely new value + 1
             return num + 1;
     }
 }

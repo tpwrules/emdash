@@ -4,7 +4,7 @@
 // this file contains various limits and definitions for the dashboard
 
 // warn.c limits
-// if the value is outside of the range,
+// if the value is outside of the range (larger or smaller),
 // the corresponding light will be turned on
 
 // minimum safe oil pressure, in 0.1 bar increments

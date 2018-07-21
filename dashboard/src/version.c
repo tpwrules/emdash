@@ -1,5 +1,5 @@
 // this file displays the versions of the dashboard
-// and wheel on the right area of the screen
+// and wheel on the mode area of the screen
 
 #include <stdio.h>
 #include <stdbool.h>

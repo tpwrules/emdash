@@ -20,7 +20,7 @@ void app_can_interrupt(uint32_t msg_id, uint8_t dlc, const uint8_t *data) {
     while (1) {
         var_idx = canvar_id_map[msg_idx];
         if (var_idx == 0xFF)
-            return; // this message isn't recognized
+            return; // this message isn't recognized, so just ignore it
         def = &canvar_defs[var_idx];
         if (def->msg_id == msg_id)
             break; // we found it
