@@ -22,12 +22,9 @@ void version_mode_change(bool next) {
     }
 
     // draw the dashboard version
-    char str[20];
     scr_draw_text(SCR_TEXT_ADDR(0, 27, 2), "FW VERSIONS");
-    sprintf(str, "Dash: %08x", BUILD_VERSION_COMMIT);
-    scr_draw_text(SCR_TEXT_ADDR(0, 26, 3), str);
-    sprintf(str, "20%010u", BUILD_VERSION_TIME);
-    scr_draw_text(SCR_TEXT_ADDR(0, 28, 4), str);
+    scr_draw_text(SCR_TEXT_ADDR(0, 26, 3), BUILD_VERSION_COMMIT_STR);
+    scr_draw_text(SCR_TEXT_ADDR(0, 28, 4), BUILD_VERSION_TIME_STR);
 
     // and put placeholders for the wheel version
     // we can't draw it until it comes in over CAN

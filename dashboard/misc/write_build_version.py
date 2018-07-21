@@ -28,6 +28,8 @@ def do_write():
     f.write("#ifndef BUILD_VERSION_H\n#define BUILD_VERSION_H\n\n")
     f.write("#define BUILD_VERSION_COMMIT (0x{:08x})\n".format(commit_num))
     f.write("#define BUILD_VERSION_TIME ({})\n\n".format(time_num))
+    f.write("#define BUILD_VERSION_COMMIT_STR (\"Dash: {:08x}\")\n".format(commit_num))
+    f.write("#define BUILD_VERSION_TIME_STR (\"20{:010d}\")\n\n".format(time_num))
     f.write("#endif\n")
     f.close()
 
