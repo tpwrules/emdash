@@ -24,7 +24,7 @@ void app_entry(void) {
     scr_show_text_page(0);
 
     // clear all pages
-    for (int i=0; i<2; i++) {
+    for (int i=0; i<4; i++) {
         scr_clear_graphics_page(i);
         scr_clear_text_page(i);
     }

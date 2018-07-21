@@ -145,10 +145,10 @@ timer_thread = threading.Thread(target=timer_thread_func, daemon=True)
 # set up graphics emulation stiuff
 
 # there is a queue of graphics operations which need to be acted on
-gfx_ops = queue.Queue(maxsize=10)
+gfx_ops = queue.Queue(maxsize=50)
 
-NUM_TEXT_PAGES = 2
-NUM_GRAPHICS_PAGES = 2
+NUM_TEXT_PAGES = 4
+NUM_GRAPHICS_PAGES = 4
 
 @ffi.def_extern()
 def pc_scr_show_page(text, page):
