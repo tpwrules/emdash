@@ -81,8 +81,14 @@ static void CAN_tx(uint8_t msg_obj_num) {
 }
 
 // called when a bus error has happened
+bool can_busoff_happened = false;
 static void CAN_error(uint32_t error_info) {
-
+    if (error_info & CAN_ERROR_BOFF) {
+        // busoff!
+        // set the flag to let the timer interrupt know what happened
+        // so that it can reinitialize the canbus
+        can_busoff_happened = true;
+    }
 }
 
 // CAN hardware interrupt

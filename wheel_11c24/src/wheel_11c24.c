@@ -19,7 +19,6 @@
 #include <cr_section_macros.h>
 
 // TODO: insert other include files here
-#include "../src_11c24/can_hw.h"
 #include "../src_11c24/app.h"
 
 // TODO: insert other definitions and declarations here
@@ -42,9 +41,6 @@ int main(void) {
 
     // configure SysTick timer to fire every millisecond
     SysTick_Config(SystemCoreClock/1000);
-
-    // initialize CAN hardware
-    can_hw_init();
 
     app_entry();
 

@@ -6,6 +6,7 @@
 #include "chip.h"
 #include "button_processor.h"
 #include "../src_gen/button_defs.h"
+#include "can_hw.h"
 
 #define DEFINE_BUILD_VERSION_MSG
 #include "../src_gen/build_version_msg.h"
@@ -15,6 +16,15 @@ void app_timer_interrupt() {
 
     // debounce all the buttons and build all the messages
     bp_process();
+
+    // make sure we're not in busoff
+    if (can_busoff_happened) {
+        // oops, we are for some reason
+        // but we're about to fix that
+        can_busoff_happened = false;
+        // reinitialize the CAN bus
+        can_hw_init();
+    }
 
     // send messages out, if necessary
     // starting with the version message
@@ -41,6 +51,9 @@ void app_timer_interrupt() {
 }
 
 void app_entry() {
+    // initialize CAN hardware
+    can_hw_init();
+
     // initialize button readers
     br_init();
 
